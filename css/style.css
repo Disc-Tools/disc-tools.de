@@ -2895,6 +2895,19 @@ footer {
     max-width: 300px;
 }
 
+.footer-github {
+    display: inline-block;
+    margin-top: 16px;
+    color: var(--muted);
+    font-size: 22px;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.footer-github:hover {
+    color: var(--accent2);
+    transform: translateY(-2px) scale(1.1);
+}
+
 .footer-section-title {
     font-family: var(--sans);
     font-size: 14px;
