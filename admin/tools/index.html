@@ -151,13 +151,16 @@
             const toolId = panel.dataset.tool;
             const checkbox = e.target;
             try {
-                const res = await fetch('/api/admin/tools/' + toolId + '/toggle', { method: 'POST' });
-                if (res.ok) {
-                    const tool = await res.json();
-                    const newPanel = createToolPanel(tool);
-                    panel.replaceWith(newPanel);
+                const res = await fetch('/api/admin/tools/' + encodeURIComponent(toolId) + '/toggle', { method: 'POST' });
+                if (!res.ok) { checkbox.checked = !checkbox.checked; return; }
+                const tool = await res.json();
+                const stats = panel.querySelector('.tool-stats');
+                if (tool.active) {
+                    stats.textContent = 'Active • ' + (tool.view_count || 0).toLocaleString() + ' views';
+                    stats.style.color = 'var(--muted)';
                 } else {
-                    checkbox.checked = !checkbox.checked;
+                    stats.textContent = 'Coming Soon';
+                    stats.style.color = '#e74c3c';
                 }
             } catch {
                 checkbox.checked = !checkbox.checked;
