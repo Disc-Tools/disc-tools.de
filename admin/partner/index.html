@@ -43,7 +43,10 @@
         .btn-sm:hover { background: #e74c3c; color: white; }
         .btn-danger { background: rgba(231, 76, 60, 0.1); color: #e74c3c; border-color: rgba(231, 76, 60, 0.2); }
         .btn-danger:hover { background: #e74c3c; color: white; }
-        .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); }
+        .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 80px 20px; color: var(--muted); text-align: center; }
+        .empty-state i { font-size: 48px; margin-bottom: 16px; opacity: 0.4; }
+        .empty-state p { margin: 0; font-size: 16px; }
+        .partners-container { min-height: 300px; }
         .add-partner-form { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 25px; margin-bottom: 30px; display: none; }
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .form-group { margin-bottom: 15px; }
@@ -137,20 +140,24 @@
                 </form>
             </div>
 
-            <table class="partners-table">
-                <thead>
-                    <tr>
-                        <th>Partner</th>
-                        <th>Description</th>
-                        <th>Links</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="partnersBody">
-                    <tr><td colspan="5" class="empty-state"><i class="fa-solid fa-inbox"></i> No partners yet</td></tr>
-                </tbody>
-            </table>
+            <div class="partners-container">
+                <table class="partners-table" id="partnersTable">
+                    <thead>
+                        <tr>
+                            <th>Partner</th>
+                            <th>Description</th>
+                            <th>Links</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="partnersBody"></tbody>
+                </table>
+                <div class="empty-state" id="emptyState" style="display:none;">
+                    <i class="fa-solid fa-inbox"></i>
+                    <p>No partners yet</p>
+                </div>
+            </div>
         </main>
     </div>
 
@@ -179,10 +186,17 @@
                 const partners = await res.json();
 
                 const tbody = document.getElementById('partnersBody');
+                const table = document.getElementById('partnersTable');
+                const emptyState = document.getElementById('emptyState');
+
                 if (partners.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="5" class="empty-state"><i class="fa-solid fa-inbox"></i> No partners yet</td></tr>';
+                    table.style.display = 'none';
+                    emptyState.style.display = 'flex';
                     return;
                 }
+
+                table.style.display = '';
+                emptyState.style.display = 'none';
 
                 tbody.innerHTML = partners.map(p => `
                     <tr>
