@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Linktree Profile | Admin Dashboard | disc-tools.de</title>
+    <title>Linktree Profile | Admin Dashboard | Disc-Tools</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="icon" type="image/png" href="/assets/img/admin_logo.png">
     <link rel="stylesheet" href="/css/style.css">
@@ -469,7 +469,7 @@
         <aside class="admin-sidebar">
             <a href="/" class="admin-logo">
                 <img src="/assets/img/admin_logo.png" alt="Logo">
-                <span>disc<span>-</span>tools</span>
+                <span>Disc<span>-</span>Tools</span>
             </a>
             <nav class="admin-nav">
                 <details open>
@@ -490,6 +490,13 @@
                     <a href="/admin/partner/"><i class="fa-solid fa-handshake"></i> Manage Partners</a>
                     <a href="/admin/partner/requests/"><i class="fa-solid fa-inbox"></i> Partnership Requests</a>
                 </details>
+                <details open>
+                    <summary><i class="fa-solid fa-cube"></i> Other Services <span class="arrow">&#9654;</span></summary>
+                    <a href="https://mail.disc-tools.de/mail/" target="_blank"><i class="fa-solid fa-envelope"></i> Mail</a>
+                    <a href="https://mail.disc-tools.de/iredadmin" target="_blank"><i class="fa-solid fa-user-shield"></i> Admin mail</a>
+                    <a href="https://umami.disc-tools.de" target="_blank"><i class="fa-solid fa-chart-line"></i> Umami</a>
+                    <a href="https://status.disc-tools.de/status/disc-tools" target="_blank"><i class="fa-solid fa-circle-check"></i> Status</a>
+                </details>
                 <a href="/" style="margin-top: auto; color: var(--muted); display: flex; align-items: center; gap: 12px; padding: 12px 15px; text-decoration: none; border-radius: 10px; font-weight: 500; font-size: 14px; transition: all 0.2s;"><i class="fa-solid fa-right-from-bracket"></i> Exit Admin</a>
             </nav>
         </aside>
@@ -499,6 +506,7 @@
                 <div>
                     <h1>Linktree Profile</h1>
                     <p style="color: var(--muted); margin-top: 5px;">Build your custom dark glassmorphic team profile page.</p>
+                    <a href="#" id="view-profile-link" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; color: var(--accent, #e74c3c); text-decoration: none; font-size: 14px; font-weight: 500;"><i class="fa-solid fa-arrow-up-right-from-square"></i> View your profile page</a>
                 </div>
                 <div class="user-profile" id="user-profile">
                     <!-- Injected by JS -->
@@ -675,7 +683,7 @@
                         </div>
                         <div class="save-bar">
                             <a href="/admin/overview/" class="btn-secondary" style="text-decoration:none; display:flex; align-items:center;">Discard</a>
-                            <button class="btn-primary" id="save-profile-btn">Save Changes</button>
+                            <button class="btn-primary" id="save-profile-btn">Save Changes <span style="font-size:11px;opacity:0.6;font-weight:400;margin-left:6px;">Ctrl+S</span></button>
                         </div>
                     </div>
 
@@ -690,12 +698,12 @@
                         <div class="activation-header">
                             <i class="fa-solid fa-link activation-icon"></i>
                             <h2>Activate Your Team Linktree</h2>
-                            <p>Claim your custom public username handle, build a stunning dark glassmorphic landing page on disc-tools.de, and showcase your Spotify listening activity live!</p>
+                            <p>Claim your custom public username handle, build a stunning dark glassmorphic landing page on Disc-Tools, and showcase your Spotify listening activity live!</p>
                         </div>
                         <div class="form-group" style="margin-top: 10px;">
                             <label for="activate-username" style="font-weight: 600; font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; display: block; text-align: left; margin-bottom: 8px;">Choose Username Handle</label>
                             <div class="username-input-wrapper">
-                                <span class="url-prefix">disc-tools.de/team/</span>
+                                <span class="url-prefix">Disc-Tools/team/</span>
                                 <input type="text" id="activate-username" placeholder="yourname" autocomplete="off" maxlength="20">
                             </div>
                             <div class="validation-hint">a-z, 0-9, underscores, and dashes only (3-20 characters)</div>
@@ -816,6 +824,10 @@
         // Verify Authentication and Load Profile Data
         async function loadProfile() {
             try {
+                const roleRes = await fetch('/api/auth/me/refresh');
+                const roleData = await roleRes.json();
+                const highestRole = roleData.authenticated ? (roleData.user.guild_role_data?.[0]?.name || 'Team Member') : 'Team Member';
+
                 const res = await fetch('/api/admin/linktree');
                 if (!res.ok) { window.location.href = '/'; return; }
                 
@@ -841,7 +853,7 @@
                     document.getElementById('user-profile').innerHTML = `
                         <div class="user-profile-info" style="text-align: right;">
                             <span class="user-profile-name">${currentProfile.displayName}</span>
-                            <span class="user-profile-role">Team Member</span>
+                            <span class="user-profile-role">${highestRole}</span>
                         </div>
                         <img src="${avatarUrl}" alt="Avatar">
                     `;
@@ -857,12 +869,16 @@
                 document.getElementById('user-profile').innerHTML = `
                     <div class="user-profile-info" style="text-align: right;">
                         <span class="user-profile-name">${currentProfile.displayName}</span>
-                        <span class="user-profile-role">Team Member</span>
+                        <span class="user-profile-role">${highestRole}</span>
                     </div>
                     <img src="${avatarUrl}" alt="Avatar">
                 `;
 
                 // Set Form Fields
+                const viewLink = document.getElementById('view-profile-link');
+                if (viewLink && currentProfile.username) {
+                    viewLink.href = `/team/${currentProfile.username}`;
+                }
                 document.getElementById('username').value = currentProfile.username || '';
                 document.getElementById('display-name').value = currentProfile.displayName || '';
                 document.getElementById('bio').value = currentProfile.bio || '';

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Announcements | Disc-Tools</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="/assets/img/logo.png">
+    <link rel="stylesheet" href="/css/style.css">
+    <script defer src="https://umami.disc-tools.de/script.js" data-website-id="0cf82497-80c8-42a2-b6e4-8a8ae179d1fe"></script>
+    <style>
+        .page-header { text-align: center; padding: 120px 20px 60px; background: radial-gradient(circle at 50% 150%, rgba(88, 101, 242, 0.1) 0%, transparent 50%); }
+        .page-header h1 { font-family: var(--sans); font-size: 42px; margin-bottom: 15px; }
+        .page-header p { color: var(--muted); font-size: 18px; max-width: 600px; margin: 0 auto; }
+        
+        .announcements-container { max-width: 800px; margin: 0 auto 100px; padding: 0 20px; display: flex; flex-direction: column; gap: 20px; }
+        
+        .ann-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 25px 30px; display: flex; gap: 20px; transition: transform 0.2s; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+        .ann-card:hover { transform: translateY(-3px); border-color: rgba(255,255,255,0.1); }
+        .ann-icon { font-size: 28px; padding-top: 2px; }
+        .ann-content { flex: 1; }
+        .ann-title { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 10px; font-family: var(--sans); }
+        .ann-text { font-size: 15px; color: var(--muted); line-height: 1.6; white-space: pre-line; }
+        
+        .ann-author { display: flex; align-items: center; gap: 10px; margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border); }
+        .ann-author img { width: 24px; height: 24px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.1); }
+        .ann-author-name { font-size: 13px; color: var(--muted); font-weight: 500; }
+        .ann-author-name span { color: #fff; font-weight: 600; }
+        .ann-date { font-family: var(--mono); font-size: 12px; color: var(--muted); margin-left: auto; }
+    </style>
+</head>
+<body>
+    <div class="glow"></div>
+    <header>
+        <a href="/" class="logo-container">
+            <img loading="lazy" src="/assets/img/logo.png" alt="Disc-Tools Logo" class="main-logo" onerror="this.style.display='none'">
+            <div class="logo">Disc<span>-</span>Tools</div>
+        </a>
+        <nav class="nav-links">
+            <a href="/tools/" class="nav-link">Tools</a>
+            <a href="/guides/" class="nav-link">Guides</a>
+            <a href="https://status.disc-tools.de/status/disc-tools" class="nav-link">Status</a>
+            <a href="/about/" class="nav-link">About</a>
+        </nav>
+        <span class="login-badge"><a href="/api/auth/login" class="login-btn"><i class="fa-brands fa-discord"></i> Login</a></span>
+    </header>
+
+    <main>
+        <div class="page-header">
+            <h1>Platform Announcements</h1>
+            <p>Stay up to date with the latest changes, bug fixes, and feature releases on Disc-Tools.</p>
+        </div>
+
+        <div class="announcements-container" id="ann-container">
+            <div style="text-align: center; color: var(--muted); padding: 50px;">
+                <i class="fa-solid fa-circle-notch fa-spin" style="font-size: 24px; margin-bottom: 15px;"></i>
+                <div>Loading announcements...</div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <a href="/" class="logo-container">
+                    <img loading="lazy" src="/assets/img/logo.png" alt="Disc-Tools Logo" class="main-logo" onerror="this.style.display='none'">
+                    <div class="logo">Disc<span>-</span>Tools</div>
+                </a>
+                <p>The ultimate collection of Discord utilities. Secure, fast, and privacy-focused.</p>
+                <a href="https://github.com/mistr-kebab/Disc-Tools" target="_blank" rel="noopener" class="footer-github" aria-label="GitHub Repository"><i class="fa-brands fa-github"></i></a>
+            </div>
+            <div class="footer-section">
+                <h3 class="footer-section-title">Explore</h3>
+                <ul class="footer-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/tools/">All Tools</a></li>
+                    <li><a href="https://status.disc-tools.de/status/disc-tools">System Status</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3 class="footer-section-title">Support</h3>
+                <ul class="footer-links">
+                    <li><a href="/about/">About Us</a></li>
+                    <li><a href="/guides/">Quick Start Guides</a></li>
+                    <li><a href="/team/">Our Team</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3 class="footer-section-title">Legal</h3>
+                <ul class="footer-links">
+                    <li><a href="/legal/privacy-policy/">Privacy Policy</a></li>
+                    <li><a href="/legal/terms-of-service/">Terms of Service</a></li>
+                    <li><a href="/legal/imprint/">Imprint</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Disc-Tools &mdash; not affiliated with <a href="https://discord.com" target="_blank">Discord Inc.</a> &mdash; <a href="https://github.com/mistr-kebab/Disc-Tools" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i> GitHub</a></p>
+            <div class="footer-sass">// screw them anyways</div>
+        </div>
+    </footer>
+
+    <script src="/js/main.js" defer></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const res = await fetch('/api/announcements');
+                const anns = await res.json();
+                const container = document.getElementById('ann-container');
+                container.innerHTML = '';
+                
+                if (anns.length === 0) {
+                    container.innerHTML = `
+                        <div style="text-align: center; color: var(--muted); padding: 50px; background: var(--surface); border: 1px solid var(--border); border-radius: 16px;">
+                            <i class="fa-solid fa-check-double" style="font-size: 32px; color: #2ecc71; margin-bottom: 15px;"></i>
+                            <div style="font-size: 16px; font-weight: 600; color: #fff;">You're all caught up!</div>
+                            <div style="margin-top: 5px;">There are no active announcements right now.</div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                anns.reverse().forEach(a => {
+                    let icon = 'fa-circle-info'; let color = '#3498db'; let glow = 'rgba(52, 152, 219, 0.1)';
+                    if (a.type === 'success') { icon = 'fa-check-circle'; color = '#2ecc71'; glow = 'rgba(46, 204, 113, 0.1)'; }
+                    else if (a.type === 'warning') { icon = 'fa-triangle-exclamation'; color = '#f1c40f'; glow = 'rgba(241, 196, 15, 0.1)'; }
+
+                    let authorHtml = '';
+                    if (a.author) {
+                        let avatarUrl = `https://cdn.discordapp.com/embed/avatars/${(a.author.discriminator || 0) % 5}.png`;
+                        if (a.author.avatar) {
+                            const ext = a.author.avatar.startsWith('a_') ? 'gif' : 'png';
+                            avatarUrl = `https://cdn.discordapp.com/avatars/${a.author.id}/${a.author.avatar}.${ext}?size=64`;
+                        }
+                        
+                        // Parse timestamp if id is a timestamp
+                        let dateStr = 'Recently';
+                        if (!isNaN(parseInt(a.id))) {
+                            const d = new Date(parseInt(a.id));
+                            if (d.getFullYear() > 2000) dateStr = d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+                        }
+
+                        authorHtml = `
+                            <div class="ann-author">
+                                <img src="${avatarUrl}" alt="">
+                                <div class="ann-author-name">Posted by <span>${a.author.username}</span></div>
+                                <div class="ann-date"><i class="fa-regular fa-clock"></i> ${dateStr}</div>
+                            </div>
+                        `;
+                    }
+
+                    container.innerHTML += `
+                        <div class="ann-card" style="border-left: 4px solid ${color};">
+                            <div class="ann-icon" style="color: ${color};"><i class="fa-solid ${icon}"></i></div>
+                            <div class="ann-content">
+                                <div class="ann-title">${a.title}</div>
+                                <div class="ann-text">${a.text}</div>
+                                ${authorHtml}
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch (err) {
+                document.getElementById('ann-container').innerHTML = `<div style="color: #e74c3c; text-align: center;">Failed to load announcements.</div>`;
+            }
+        });
+    </script>
+</body>
+</html>

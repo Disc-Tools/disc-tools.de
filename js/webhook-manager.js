@@ -43,7 +43,7 @@ function updatePreview() {
     const prevEmbed = document.getElementById('prevEmbed');
 
     const linkUrl = "https://disc-tools.de/tools/webhook-manager/";
-    const maskedLink = `[disc-tools Webhook manager](${linkUrl})`;
+    const maskedLink = `[Disc-Tools Webhook manager](${linkUrl})`;
 
     if (currentType === 'plain') {
         const content = document.getElementById('msgContent').value.trim();
@@ -204,7 +204,7 @@ function getPayload() {
     const username = document.getElementById('overrideName').value.trim();
     const avatar = document.getElementById('overrideAvatar').value.trim();
     const linkUrl = "https://disc-tools.de/tools/webhook-manager/";
-    const maskedLink = `[disc-tools Webhook manager](${linkUrl})`;
+    const maskedLink = `[Disc-Tools Webhook manager](${linkUrl})`;
     
     const payload = {};
     if (username) payload.username = username;
@@ -228,7 +228,7 @@ function getPayload() {
             description: (description ? (description + "\n\n") : "") + maskedLink,
             color: parseInt(color.replace('#', ''), 16),
             footer: {
-                text: "Sent via disc-tools Webhook manager",
+                text: "Sent via Disc-Tools Webhook manager",
                 icon_url: "https://disc-tools.de/assets/img/logo.png"
             }
         };

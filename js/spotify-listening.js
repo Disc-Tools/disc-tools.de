@@ -152,7 +152,7 @@
                 if (!currentTrackId) {
                     currentTrackId = track.url;
                     createCard(track);
-                    playback = { progressMs: 0, durationMs: track.durationMs, syncAt: Date.now() };
+                    playback = { progressMs: track.progressMs || 0, durationMs: track.durationMs, syncAt: Date.now() };
                     const pct = track.durationMs ? Math.min(100, (track.progressMs / track.durationMs) * 100) : 0;
                     animateProgress(pct, 500);
                 } else if (track.url !== currentTrackId) {
@@ -166,7 +166,7 @@
                 } else {
                     const localMs = getProgressMs();
                     const apiMs = Number(track.progressMs) || 0;
-                    if (Math.abs(apiMs - localMs) > 3000) {
+                    if (apiMs > localMs + 3000) {
                         playback = { progressMs: apiMs, durationMs: track.durationMs, syncAt: Date.now() };
                         animateProgress(track.durationMs ? Math.min(100, (apiMs / track.durationMs) * 100) : 0, 350);
                     }
@@ -187,6 +187,6 @@
     }
 
     updateListening();
-    setInterval(updateListening, 15000);
+    setInterval(updateListening, 5000);
     setInterval(updateProgressUI, 1000);
 })();
