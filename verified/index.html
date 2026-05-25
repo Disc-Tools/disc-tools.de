@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Verified - disc-tools.de</title>
+    <meta name="theme-color" content="#2ECC71">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="/assets/img/logo.png">
+    <style>
+        @keyframes checkIn {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .success-icon {
+            font-size: 72px;
+            color: #2ECC71;
+            filter: drop-shadow(0 0 30px rgba(46, 204, 113, 0.3));
+            animation: checkIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin-bottom: 24px;
+        }
+        .verified-title {
+            animation: fadeUp 0.4s 0.2s both;
+        }
+        .verified-desc {
+            animation: fadeUp 0.4s 0.3s both;
+        }
+        .verified-actions {
+            animation: fadeUp 0.4s 0.4s both;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            margin-top: 32px;
+        }
+        .btn-ghost {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 12px 28px;
+            border-radius: 12px;
+            font-family: var(--sans);
+            font-weight: 700;
+            font-size: 14px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            width: auto;
+            min-width: 200px;
+        }
+        .btn-ghost:hover {
+            background: rgba(255,255,255,0.08);
+            border-color: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+        .btn-ghost i {
+            font-size: 16px;
+            color: var(--muted);
+            transition: color 0.2s;
+        }
+        .btn-ghost:hover i {
+            color: var(--text);
+        }
+    </style>
+</head>
+<body>
+    <div class="glow"></div>
+    <header>
+        <a href="/" class="logo-container">
+            <img loading="lazy" src="/assets/img/logo.png" alt="disc-tools Logo" class="main-logo" onerror="this.style.display='none'">
+            <div class="logo">disc<span>-</span>tools</div>
+        </a>
+        <nav class="nav-links">
+            <a href="/tools/" class="nav-link">Tools</a>
+            <a href="/guides/" class="nav-link">Guides</a>
+            <a href="https://status.disc-tools.de/status/disc-tools" class="nav-link">Status</a>
+            <a href="/about/" class="nav-link">About</a>
+        </nav>
+    </header>
+
+    <div class="breadcrumbs">
+        <a href="/">Home</a>
+        <span>/</span>
+        <a href="/verify/">Verify</a>
+        <span>/</span>
+        <span class="current">Success</span>
+    </div>
+
+    <section class="centered-modal-page">
+        <div class="modal-container" style="padding: 56px 40px;">
+            <div class="success-icon">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <h1 class="verified-title" style="background: none; -webkit-text-fill-color: unset; background-clip: unset; color: #fff;">You're verified!</h1>
+            <p class="modal-description verified-desc">
+                You can close this tab and return to Discord.
+            </p>
+            <div class="verified-actions">
+                <a href="/" class="btn-ghost">
+                    <i class="fa-solid fa-arrow-left"></i> Back to Home
+                </a>
+                <a href="/tools/" class="btn-ghost">
+                    <i class="fa-solid fa-bolt"></i> Browse Tools
+                </a>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

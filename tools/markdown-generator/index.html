@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discord Markdown Generator | Text Formatting | disc-tools.de</title>
+    
+    
+    
+    <!-- Meta Tags for Discord/Social Media Embeds -->
+    <meta name="description" content="Easily generate formatted Discord text for roles, channels, and embeds.">
+    <meta name="theme-color" content="#5865F2">
+    <meta property="og:title" content="Markdown Generator - disc-tools">
+    <meta property="og:description" content="Create and preview Discord markdown messages with ease.">
+    <meta property="og:image" content="https://disc-tools.de/assets/img/logo.png">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="disc-tools">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:image" content="https://disc-tools.de/assets/img/logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="/assets/img/logo.png">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/style.css">
+<script defer src="https://umami.disc-tools.de/script.js" data-website-id="0cf82497-80c8-42a2-b6e4-8a8ae179d1fe"></script>
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://disc-tools.de/tools/markdown-generator/">
+</head>
+
+<body>
+    <div class="glow"></div>
+    <header>
+        <a href="/" class="logo-container">
+            <img loading="lazy" src="/assets/img/logo.png" alt="disc-tools Logo" class="main-logo" onerror="this.style.display='none'">
+            <div class="logo">disc<span>-</span>tools</div>
+        </a>
+        <nav class="nav-links">
+            <a href="/tools/" class="nav-link active">Tools</a>
+            <a href="/guides/" class="nav-link">Guides</a>
+            <a href="https://status.disc-tools.de/status/disc-tools" class="nav-link">Status</a>
+            <a href="/about/" class="nav-link">About</a>
+        </nav>
+        <span class="login-badge"></span>
+    </header>
+
+    <nav class="breadcrumbs">
+        <a href="/">Home</a>
+        <span>/</span>
+        <a href="/tools/">Tools</a>
+        <span>/</span>
+        <a href="./" class="current">Markdown Generator</a>
+    </nav>
+
+    <main class="tool-page">
+        <div class="tool-layout-single">
+            <div class="tool-container">
+                <section class="tool-hero" style="position: relative;">
+                    <span class="hero-tag">// content / editor</span>
+                    <h1>Markdown <em>Generator</em></h1>
+                    <p>Easily format your Discord messages with live preview and quick-copy.</p>
+                    <a href="/guides/markdown-generator/" class="help-link">
+                        <i class="fa-solid fa-circle-question"></i> How to?
+                    </a>
+                </section>
+                <div class="input-card">
+                    <div class="editor-header">
+                        <button class="md-btn" data-prefix="**" data-suffix="**" onclick="insertMD(this)" title="Bold"><i class="fa-solid fa-bold"></i></button>
+                        <button class="md-btn" data-prefix="*" data-suffix="*" onclick="insertMD(this)" title="Italic"><i class="fa-solid fa-italic"></i></button>
+                        <button class="md-btn" data-prefix="__" data-suffix="__" onclick="insertMD(this)" title="Underline"><i class="fa-solid fa-underline"></i></button>
+                        <button class="md-btn" data-prefix="~~" data-suffix="~~" onclick="insertMD(this)" title="Strikethrough"><i class="fa-solid fa-strikethrough"></i></button>
+                        <div style="width: 1px; height: 24px; background: var(--border); margin: 0 5px;"></div>
+                        <button class="md-btn" data-prefix="# " data-suffix="" onclick="insertMD(this)" title="Header 1"><i class="fa-solid fa-heading"></i>1</button>
+                        <button class="md-btn" data-prefix="## " data-suffix="" onclick="insertMD(this)" title="Header 2"><i class="fa-solid fa-heading"></i>2</button>
+                        <button class="md-btn" data-prefix="### " data-suffix="" onclick="insertMD(this)" title="Header 3"><i class="fa-solid fa-heading"></i>3</button>
+                        <div style="width: 1px; height: 24px; background: var(--border); margin: 0 5px;"></div>
+                        <button class="md-btn" data-prefix="`" data-suffix="`" onclick="insertMD(this)" title="Inline Code"><i class="fa-solid fa-code"></i></button>
+                        <button class="md-btn" data-prefix="```\n" data-suffix="\n```" onclick="insertMD(this)" title="Code Block"><i class="fa-solid fa-terminal"></i></button>
+                        <button class="md-btn" data-prefix="> " data-suffix="" onclick="insertMD(this)" title="Blockquote"><i class="fa-solid fa-quote-left"></i></button>
+                        <div style="width: 1px; height: 24px; background: var(--border); margin: 0 5px;"></div>
+                        <button class="md-btn" data-prefix="||" data-suffix="||" onclick="insertMD(this)" title="Spoiler"><i class="fa-solid fa-eye-slash"></i></button>
+                        <button class="md-btn" data-prefix="<t:" data-suffix=":R>" onclick="insertMD(this)" title="Timestamp (Relative)"><i class="fa-solid fa-clock"></i></button>
+                        <div style="width: 1px; height: 24px; background: var(--border); margin: 0 5px;"></div>
+                        <div style="display: flex; align-items: center; gap: 8px; background: rgba(88, 101, 242, 0.1); padding: 4px 10px; border-radius: 8px; border: 1px solid rgba(88, 101, 242, 0.2);">
+                            <span style="font-size: 11px; font-weight: 700; color: var(--accent); text-transform: uppercase;">ANSI Color</span>
+                            <select id="ansiColor" class="md-btn" style="min-width: 100px; font-size: 11px; padding: 4px;" onchange="insertAnsi()">
+                                <option value="none">Choose color...</option>
+                                <option value="0;31">Red</option>
+                                <option value="1;31">Red (Bold)</option>
+                                <option value="0;32">Green</option>
+                                <option value="1;32">Green (Bold)</option>
+                                <option value="0;33">Yellow</option>
+                                <option value="1;33">Yellow (Bold)</option>
+                                <option value="0;34">Blue</option>
+                                <option value="1;34">Blue (Bold)</option>
+                                <option value="0;35">Pink</option>
+                                <option value="1;35">Pink (Bold)</option>
+                                <option value="0;36">Cyan</option>
+                                <option value="1;36">Cyan (Bold)</option>
+                                <option value="0;37">White</option>
+                                <option value="1;37">White (Bold)</option>
+                            </select>
+                        </div>
+                        <button class="md-btn" style="margin-left: auto; color: #f04747;" onclick="clearEditor()" title="Clear All"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+
+                    <div class="md-editor-container">
+                        <div class="editor-side">
+                            <textarea id="mdInput" class="md-textarea" placeholder="Write your message here..." oninput="updatePreview()" onmouseup="checkActiveFormatting()" onkeyup="checkActiveFormatting()"></textarea>
+                        </div>
+                        <div class="preview-side">
+                            <div id="mdPreview" class="preview-box" style="font-family: var(--sans); white-space: pre-wrap; font-size: 15px; color: #dbdee1;"></div>
+                            <button class="copy-all-btn" onclick="copyMarkdown()">
+                                <i class="fa-solid fa-copy"></i> Copy Raw Markdown
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </main>
+
+    <div class="toast" id="toast"></div>
+
+        <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <a href="/" class="logo-container">
+                    <img loading="lazy" src="/assets/img/logo.png" alt="disc-tools Logo" class="main-logo" onerror="this.style.display='none'">
+                    <div class="logo">disc<span>-</span>tools</div>
+                </a>
+                <p>The ultimate collection of Discord utilities. Secure, fast, and privacy-focused.</p>
+            </div>
+            <div class="footer-section">
+                <h3 class="footer-section-title">Explore</h3>
+                <ul class="footer-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/tools/">All Tools</a></li>
+                    <li><a href="https://status.disc-tools.de/status/disc-tools">System Status</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3 class="footer-section-title">Support</h3>
+                <ul class="footer-links">
+                    <li><a href="/about/">About Us</a></li>
+                    <li><a href="/guides/">Quick Start Guides</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3 class="footer-section-title">Legal</h3>
+                <ul class="footer-links">
+                    <li><a href="/legal/privacy-policy/">Privacy Policy</a></li>
+                    <li><a href="/legal/terms-of-service/">Terms of Service</a></li>
+                    <li><a href="/legal/imprint/">Imprint</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 disc-tools.de &mdash; not affiliated with <a href="https://discord.com" target="_blank">Discord Inc.</a></p>
+            <div class="footer-sass">// screw them anyways</div>
+        </div>
+    </footer>
+
+
+    <script src="/js/markdown-generator.js" defer></script>
+    <script src="/js/main.js" defer></script>
+</body>
+
+</html>

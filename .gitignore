@@ -1,0 +1,11 @@
+/api/
+/fonts/
+/team/mistr_kebab/
+sw.js
+ads.txt
+node_modules/
+.env
+*.log
+*.json
+.git/
+/root/

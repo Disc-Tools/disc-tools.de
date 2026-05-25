@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Team | disc-tools.de</title>
+    
+    <!-- Meta Tags -->
+    <meta name="description" content="Meet the team behind disc-tools.de. The developers and moderators making Discord utilities better.">
+    <meta name="theme-color" content="#5865F2">
+    <meta property="og:title" content="Our Team - disc-tools">
+    <meta property="og:description" content="Meet the developers and moderators behind disc-tools.de.">
+    <meta property="og:image" content="https://disc-tools.de/assets/img/logo.png">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="disc-tools">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:image" content="https://disc-tools.de/assets/img/logo.png">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="/assets/img/logo.png">
+    <link rel="stylesheet" href="/css/style.css">
+    <script defer src="https://umami.disc-tools.de/script.js" data-website-id="0cf82497-80c8-42a2-b6e4-8a8ae179d1fe"></script>
+    
+    <style>
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 60px;
+        }
+
+        .role-section {
+            margin-bottom: 50px;
+        }
+
+        .role-title {
+            font-family: var(--sans);
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text-strong);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: color 0.3s ease;
+        }
+
+        .role-title span {
+            font-size: 14px;
+            color: var(--muted);
+            font-weight: 400;
+        }
+
+        .role-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .member-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .member-card .member-banner {
+            width: 100%;
+        }
+        .member-card .member-info {
+            width: 100%;
+        }
+
+        .member-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--role-color, var(--accent));
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3), 0 0 12px rgba(var(--role-color-rgb, 88, 101, 242), 0.08);
+            background: var(--surface2);
+        }
+
+        .member-banner {
+            height: 100px;
+            width: 100%;
+            background-color: var(--surface2);
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .member-banner.no-banner {
+            background: linear-gradient(135deg, var(--surface2), var(--bg));
+        }
+
+        .member-avatar-wrapper {
+            position: relative;
+            margin-top: -40px;
+            margin-left: 20px;
+            width: 80px;
+            height: 80px;
+            z-index: 2;
+        }
+
+        .member-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 4px solid var(--surface);
+            background: var(--surface);
+            object-fit: cover;
+        }
+
+        .member-avatar-decoration {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            height: 100px;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .member-avatar-decoration img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .status-dot {
+            position: absolute;
+            bottom: 4px;
+            right: 4px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 3px solid var(--surface);
+            z-index: 3;
+        }
+
+        .status-online { background-color: #23a55a; }
+        .status-idle { background-color: #f0b232; }
+        .status-dnd { background-color: #f23f43; }
+        .status-offline { background-color: #80848e; }
+
+        .member-info {
+            padding: 5px 20px 25px;
+            margin-top: -10px;
+        }
+
+        .member-display-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-strong);
+            margin-bottom: 2px;
+            display: block;
+        }
+
+        .member-username {
+            font-family: var(--mono);
+            font-size: 13px;
+            color: var(--muted);
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        .member-id {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--muted);
+            opacity: 0.5;
+            padding: 4px 8px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 6px;
+            width: fit-content;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .member-id i {
+            font-size: 10px;
+        }
+
+        .status-notice {
+            font-size: 11px;
+            color: var(--muted);
+            opacity: 0.6;
+            margin-top: 10px;
+            font-family: var(--mono);
+            display: block;
+        }
+
+        #loading-state {
+            text-align: center;
+            padding: 100px 0;
+            color: var(--muted);
+            font-family: var(--mono);
+        }
+
+        #error-state {
+            text-align: center;
+            padding: 60px 40px;
+            background: rgba(240, 71, 71, 0.05);
+            border: 1px solid rgba(240, 71, 71, 0.2);
+            border-radius: 16px;
+            color: #f04747;
+            margin-bottom: 40px;
+            display: none;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+
+        .skeleton {
+            background: var(--surface2);
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+
+        .empty-role-placeholder {
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px dashed var(--border);
+            border-radius: 16px;
+            color: var(--muted);
+            font-style: italic;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: var(--mono);
+            font-size: 14px;
+        }
+
+        .empty-role-placeholder i {
+            font-size: 18px;
+            opacity: 0.7;
+        }
+
+        /* Clickable profile cards */
+        .member-card.profile-link {
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="glow"></div>
+    <header>
+        <a href="/" class="logo-container">
+            <img loading="lazy" src="/assets/img/logo.png" alt="disc-tools Logo" class="main-logo" onerror="this.style.display='none'">
+            <div class="logo">disc<span>-</span>tools</div>
+        </a>
+        <nav class="nav-links">
+            <a href="/tools/" class="nav-link">Tools</a>
+            <a href="/guides/" class="nav-link">Guides</a>
+            <a href="https://status.disc-tools.de/status/disc-tools" class="nav-link">Status</a>
+            <a href="/about/" class="nav-link">About</a>
+        </nav>
+        <span class="login-badge"><a href="/api/auth/login" class="login-btn"><i class="fa-brands fa-discord"></i> Login</a></span>
+    </header>
+
+    <nav class="breadcrumbs">
+        <a href="/">Home</a>
+        <span>/</span>
+        <a href="/team/" class="current">Team</a>
+    </nav>
+
+    <main class="tool-page">
+        <section class="tool-hero">
+            <span class="hero-tag">// our humans</span>
+            <h1>The <em>Team</em></h1>
+            <p>Meet the dedicated individuals who build and maintain the disc-tools ecosystem.</p>
+        </section>
+
+        <div id="error-state">
+            <i class="fa-solid fa-triangle-exclamation" style="font-size: 32px; margin-bottom: 15px;"></i>
+            <p>Failed to load team members. Please try again later.</p>
+        </div>
+
+        <div id="loading-state">
+            <div class="spinner mb-20" style="margin: 0 auto;"></div>
+            <p>Fetching team data from Discord...</p>
+        </div>
+
+        <div id="team-content"></div>
+
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <a href="/" class="logo-container">
+                    <img loading="lazy" src="/assets/img/logo.png" alt="disc-tools Logo" class="main-logo" onerror="this.style.display='none'">
+                    <div class="logo">disc<span>-</span>tools</div>
+                </a>
+                <p>The ultimate collection of Discord utilities. Secure, fast, and privacy-focused.</p>
+            </div>
+            <div class="footer-section">
+                <h3 class="footer-section-title">Explore</h3>
+                <ul class="footer-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/tools/">All Tools</a></li>
+                    <li><a href="https://status.disc-tools.de/status/disc-tools">System Status</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3 class="footer-section-title">Support</h3>
+                <ul class="footer-links">
+                    <li><a href="/about/">About Us</a></li>
+                    <li><a href="/guides/">Quick Start Guides</a></li>
+                    <li><a href="/team/">Our Team</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3 class="footer-section-title">Legal</h3>
+                <ul class="footer-links">
+                    <li><a href="/legal/privacy-policy/">Privacy Policy</a></li>
+                    <li><a href="/legal/terms-of-service/">Terms of Service</a></li>
+                    <li><a href="/legal/imprint/">Imprint</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 disc-tools.de &mdash; not affiliated with <a href="https://discord.com" target="_blank">Discord Inc.</a></p>
+            <div class="footer-sass">// screw them anyways</div>
+        </div>
+    </footer>
+
+    <script src="/js/main.js" defer></script>
+    <script>
+        async function fetchTeam() {
+            const content = document.getElementById('team-content');
+            const loader = document.getElementById('loading-state');
+            const error = document.getElementById('error-state');
+
+            try {
+                const teamRes = await fetch('/api/team');
+                if (!teamRes.ok) throw new Error('API Error');
+                const rosterGroups = await teamRes.json();
+
+                loader.style.display = 'none';
+                error.style.display = 'none';
+                
+                let html = '';
+
+                // Discord Roster Sections
+                rosterGroups.forEach(group => {
+                    html += `
+                        <div class="role-section">
+                            <h2 class="role-title" style="color: ${group.color || 'var(--text-strong)'}">» ${group.name} <span>(${group.members.length})</span></h2>
+                            <div class="team-grid">
+                                ${group.members.length > 0 ? group.members.map(m => {
+                                    const cardStyle = `--role-color: ${group.color || 'var(--accent)'}`;
+                                    const cardContent = `
+                                            <div class="member-banner ${m.bannerURL ? '' : 'no-banner'}" 
+                                                 ${m.bannerURL ? `style="background-image: url('${m.bannerURL}')"` : ''}>
+                                            </div>
+                                            <div class="member-avatar-wrapper">
+                                                <img src="${m.avatarURL}" class="member-avatar" alt="${m.displayName}">
+                                                ${m.avatarDecorationAsset ? `<div class="member-avatar-decoration"><img src="https://cdn.discordapp.com/avatar-decoration-presets/${m.avatarDecorationAsset}.png" alt="" onerror="this.parentElement.style.display='none'"></div>` : ''}
+                                                <div class="status-dot status-${m.onlineStatus || 'offline'}" 
+                                                     title="${m.onlineStatus || 'offline'}"></div>
+                                            </div>
+                                            <div class="member-info">
+                                                <span class="member-display-name">${m.displayName}</span>
+                                                <span class="member-username">@${m.username}</span>
+                                                <div class="member-id">
+                                                    <i class="fa-solid fa-hashtag"></i>
+                                                    <span>${m.userId}</span>
+                                                </div>
+                                            </div>`;
+
+                                    return `<div class="member-card" style="${cardStyle}">${cardContent}</div>`;
+                                }).join('') : `
+                                    <div class="empty-role-placeholder">
+                                        <i class="fa-solid fa-face-sad-tear"></i>
+                                        No one has this role yet.
+                                    </div>
+                                `}
+                            </div>
+                        </div>
+                    `;
+                });
+
+                content.innerHTML = html;
+            } catch (err) {
+                loader.style.display = 'none';
+                error.style.display = 'block';
+                console.error('Fetch error:', err);
+            }
+        }
+
+        // Initial fetch
+        fetchTeam();
+
+        // Refresh every 60 seconds
+        setInterval(fetchTeam, 60000);
+    </script>
+</body>
+
+</html>

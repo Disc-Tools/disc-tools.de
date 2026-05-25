@@ -1,0 +1,1564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linktree Profile | Admin Dashboard | disc-tools.de</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="/assets/img/admin_logo.png">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+    <script defer src="https://umami.disc-tools.de/script.js" data-website-id="0cf82497-80c8-42a2-b6e4-8a8ae179d1fe"></script>
+    
+    <style>
+        .admin-layout { display: flex; min-height: 100vh; background: var(--bg); }
+        .admin-sidebar { width: 260px; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 20px 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+        .admin-logo { display: flex; align-items: center; gap: 10px; padding: 0 20px 20px; border-bottom: 1px solid var(--border); text-decoration: none; }
+        .admin-logo img { height: 32px; }
+        .admin-logo span { font-family: var(--sans); font-weight: 800; font-size: 18px; color: #fff; }
+        .admin-logo span span { color: #e74c3c; }
+        .admin-nav { display: flex; flex-direction: column; gap: 2px; padding: 15px 10px; flex: 1; }
+        .admin-nav details { display: flex; flex-direction: column; }
+        .admin-nav details summary { display: flex; align-items: center; gap: 10px; padding: 10px 15px; color: var(--muted); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; cursor: pointer; border-radius: 10px; user-select: none; list-style: none; transition: color 0.2s; }
+        .admin-nav details summary::-webkit-details-marker { display: none; }
+        .admin-nav details summary::marker { display: none; }
+        .admin-nav details summary i { font-size: 12px; width: 20px; text-align: center; }
+        .admin-nav details summary .arrow { margin-left: auto; font-size: 10px; transition: transform 0.2s; }
+        .admin-nav details[open] summary .arrow { transform: rotate(90deg); }
+        .admin-nav details summary:hover { color: #e74c3c; }
+        .admin-nav details a { display: flex; align-items: center; gap: 12px; padding: 10px 15px 10px 47px; color: var(--muted); text-decoration: none; border-radius: 8px; font-weight: 500; font-size: 14px; transition: all 0.2s; }
+        .admin-nav details a:hover, .admin-nav details a.active { background: rgba(231, 76, 60, 0.1); color: #e74c3c; }
+        .admin-nav details a i { width: 16px; text-align: center; font-size: 14px; }
+
+        .admin-content { flex: 1; padding: 40px; overflow-y: auto; }
+        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        .admin-header h1 { font-family: var(--sans); font-size: 28px; }
+        
+        .user-profile { display: flex; align-items: center; gap: 15px; background: var(--surface); padding: 10px 20px; border-radius: 100px; border: 1px solid var(--border); }
+        .user-profile img { width: 36px; height: 36px; border-radius: 50%; }
+        .user-profile-info { display: flex; flex-direction: column; }
+        .user-profile-name { font-weight: 600; font-size: 14px; }
+        .user-profile-role { font-size: 12px; color: #e74c3c; font-weight: 600; text-transform: uppercase; }
+
+        /* Custom Profile Grid */
+        .editor-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .editor-panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .editor-section-title {
+            font-size: 18px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #fff;
+            padding: 10px 0 12px;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            user-select: none;
+            transition: color 0.15s;
+        }
+        .editor-section-title:hover { color: #e74c3c; }
+        .editor-section-title span { flex: 1; display: flex; align-items: center; gap: 10px; }
+        .section-arrow {
+            font-size: 14px;
+            color: var(--muted);
+            transition: transform 0.2s;
+        }
+        .editor-section-title.collapsed .section-arrow { transform: rotate(-90deg); }
+        .editor-section-content {
+            overflow: hidden;
+            transition: max-height 0.25s ease, opacity 0.2s ease, margin 0.2s ease;
+            max-height: 2000px;
+            opacity: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            padding-top: 20px;
+        }
+        .editor-section-content.collapsed {
+            max-height: 0;
+            opacity: 0;
+            margin: 0;
+            padding-top: 0;
+            gap: 0;
+            overflow: hidden;
+        }
+        .editor-panel > .editor-section-content { gap: 0; }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+        @media (max-width: 600px) {
+            .form-row { flex-direction: column; gap: 15px; }
+        }
+        .form-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .form-group label {
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .form-group input, .form-group textarea, .form-group select {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 16px;
+            color: #fff;
+            font-family: inherit;
+            font-size: 15px;
+            transition: border-color 0.2s, background 0.2s;
+        }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            border-color: #e74c3c;
+            background: rgba(255, 255, 255, 0.05);
+            outline: none;
+        }
+        .form-group select {
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23888' d='M1.41 0L6 4.58 10.59 0 12 1.41l-6 6-6-6z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 40px;
+            cursor: pointer;
+        }
+        .form-group select option {
+            background: #1a1a24;
+            color: #fff;
+            padding: 8px;
+        }
+        .char-counter {
+            align-self: flex-end;
+            font-size: 11px;
+            color: var(--muted);
+            font-family: var(--mono);
+        }
+
+        /* Accent & Banner specific options */
+        .color-picker-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .color-picker-wrapper input[type="color"] {
+            -webkit-appearance: none;
+            appearance: none;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 10px;
+            cursor: pointer;
+            padding: 0;
+            background: none;
+        }
+        .color-picker-wrapper input[type="color"]::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+        .color-picker-wrapper input[type="color"]::-webkit-color-swatch {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+        }
+
+        .toggle-group {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .toggle-card {
+            flex: 1;
+            min-width: 140px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s;
+        }
+        .toggle-card.active {
+            border-color: #e74c3c;
+            background: rgba(231, 76, 60, 0.05);
+        }
+        .toggle-card span { font-weight: 600; font-size: 14px; }
+        .toggle-card i { font-size: 20px; color: var(--muted); }
+        .toggle-card.active i { color: #e74c3c; }
+
+        /* Links sorting styling */
+        .links-editor-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-height: 20px;
+        }
+        .link-edit-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: grab;
+            transition: border-color 0.2s;
+        }
+        .link-edit-card:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+        .link-edit-card:active { cursor: grabbing; }
+        .link-drag-handle { color: var(--muted); cursor: grab; font-size: 16px; }
+        .link-edit-info { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+        .link-edit-title { font-weight: 600; font-size: 14px; color: #fff; }
+        .link-edit-url { font-family: var(--mono); font-size: 11px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 300px; }
+        .link-edit-hint { font-size: 11px; color: #8e9ab3; }
+        .link-delete-btn, .link-open-btn {
+            background: none; border: none; color: var(--muted); cursor: pointer; padding: 5px; font-size: 14px; transition: color 0.2s;
+        }
+        .link-delete-btn:hover { color: #e74c3c; }
+        .link-open-btn:hover { color: #5b9aff; }
+
+        /* Preset Add options */
+        .preset-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .preset-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px 10px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--muted);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            transition: transform 0.12s, background 0.15s;
+            position: relative;
+        }
+        .preset-btn:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.07);
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        .preset-btn:active {
+            transform: translateY(0);
+        }
+        .preset-btn.selected {
+            border-color: #5865F2;
+            background: rgba(88, 101, 242, 0.12);
+            color: #fff;
+        }
+        .preset-btn.selected i { color: #5865F2; }
+        .preset-btn i {
+            font-size: 22px;
+            color: var(--muted);
+            transition: color 0.15s;
+        }
+        .preset-btn:hover i { color: #5865F2; }
+
+        /* Save & Floating Save bar */
+        .save-bar {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .btn-primary {
+            background: #e74c3c; color: #fff; border: none; padding: 12px 28px; border-radius: 10px; font-weight: 700; cursor: pointer; transition: all 0.2s;
+        }
+        .btn-primary:hover { background: #c0392b; transform: translateY(-1px); }
+        .btn-secondary {
+            background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: #fff; padding: 12px 24px; border-radius: 10px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+        }
+        .btn-secondary:hover { background: rgba(255,255,255,0.08); }
+
+        /* Modals & Inputs dialog */
+        .dialog-backdrop {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index: 2000; display: none; align-items: center; justify-content: center;
+        }
+        .dialog-box {
+            background: var(--surface); border: 1px solid var(--border); border-radius: 20px; width: 100%; max-width: 440px; padding: 25px; box-shadow: 0 20px 40px rgba(0,0,0,0.6); display: flex; flex-direction: column; gap: 15px;
+        }
+        .dialog-title { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 5px; }
+
+        .spotify-connect-card {
+            background: rgba(29, 185, 84, 0.05);
+            border: 1px solid rgba(29, 185, 84, 0.2);
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+        .spotify-btn {
+            background: #1db954; color: #fff; text-decoration: none; padding: 10px 18px; border-radius: 50px; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 8px; transition: transform 0.2s;
+        }
+        .spotify-btn:hover { transform: scale(1.03); }
+        .spotify-btn-disconnect {
+            background: rgba(231, 76, 60, 0.1); color: #e74c3c; border: 1px solid rgba(231, 76, 60, 0.3); cursor: pointer;
+        }
+        .spotify-btn-disconnect:hover { background: rgba(231, 76, 60, 0.2); transform: scale(1.03); }
+
+        .toast {
+            position: fixed; bottom: 30px; right: 30px; background: #2ecc71; color: #fff; padding: 14px 24px; border-radius: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); font-weight: 600; display: flex; align-items: center; gap: 10px; transform: translateY(100px); opacity: 0; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 3000;
+        }
+        .toast.show { transform: translateY(0); opacity: 1; }
+        .toast.error { background: #e74c3c; }
+
+        /* Hobby Pills */
+        .hobby-pill {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 7px 14px; border-radius: 999px;
+            border: 1px solid var(--border);
+            background: rgba(255,255,255,0.04);
+            color: var(--muted); font-size: 13px; font-weight: 600;
+            cursor: pointer; transition: all 0.18s ease;
+            user-select: none;
+        }
+        .hobby-pill:hover { border-color: rgba(255,255,255,0.25); color: #fff; background: rgba(255,255,255,0.07); }
+        .hobby-pill--active {
+            background: rgba(231,76,60,0.12); border-color: #e74c3c;
+            color: #fff; box-shadow: 0 0 10px rgba(231,76,60,0.18);
+        }
+        .hobby-pill--active i { color: #e74c3c; }
+        .admin-nav > a:last-child:hover { color: #e74c3c !important; text-shadow: 0 0 20px rgba(231, 76, 60, 0.5); }
+
+        /* Activation Screen Styles */
+        .activation-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 55vh;
+            padding: 20px;
+        }
+        .activation-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 540px;
+            width: 100%;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .activation-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(231, 76, 60, 0.05) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .activation-icon {
+            font-size: 50px;
+            color: #e74c3c;
+            margin-bottom: 5px;
+            filter: drop-shadow(0 0 10px rgba(231, 76, 60, 0.3));
+            display: inline-block;
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        .activation-header h2 {
+            font-family: var(--sans);
+            font-size: 24px;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+        .activation-header p {
+            font-size: 14px;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+        .username-input-wrapper {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 4px 16px;
+            transition: all 0.2s;
+        }
+        .username-input-wrapper:focus-within {
+            border-color: #e74c3c;
+            background: rgba(255, 255, 255, 0.04);
+            box-shadow: 0 0 15px rgba(231, 76, 60, 0.15);
+        }
+        .url-prefix {
+            font-family: var(--mono);
+            color: var(--muted);
+            font-size: 14px;
+            user-select: none;
+        }
+        #activate-username {
+            flex: 1;
+            background: none !important;
+            border: none !important;
+            padding: 12px 8px !important;
+            font-size: 16px !important;
+            color: #fff !important;
+            font-family: var(--sans);
+            font-weight: 600;
+        }
+        #activate-username:focus {
+            outline: none !important;
+            box-shadow: none !important;
+        }
+        .validation-hint {
+            font-size: 12px;
+            color: var(--muted);
+            text-align: left;
+            margin-top: 6px;
+            padding-left: 5px;
+        }
+        .btn-activate {
+            padding: 16px 30px !important;
+            font-size: 16px !important;
+            border-radius: 12px !important;
+            font-weight: 800 !important;
+            letter-spacing: 0.02em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <a href="/" class="admin-logo">
+                <img src="/assets/img/admin_logo.png" alt="Logo">
+                <span>disc<span>-</span>tools</span>
+            </a>
+            <nav class="admin-nav">
+                <details open>
+                    <summary><i class="fa-solid fa-layer-group"></i> General <span class="arrow">&#9654;</span></summary>
+                    <a href="/admin/overview/"><i class="fa-solid fa-house"></i> Overview</a>
+                    <a href="/admin/linktree/" class="active"><i class="fa-solid fa-link"></i> Linktree Profile</a>
+                    <a href="/admin/members/"><i class="fa-solid fa-users"></i> Members</a>
+                    <a href="/admin/tools/"><i class="fa-solid fa-wrench"></i> Tools</a>
+                    <a href="/admin/announcements/"><i class="fa-solid fa-bullhorn"></i> Announcements</a>
+                </details>
+                <details open>
+                    <summary><i class="fa-solid fa-server"></i> System <span class="arrow">&#9654;</span></summary>
+                    <a href="/admin/logs/"><i class="fa-solid fa-file-lines"></i> Logs</a>
+                    <a href="/admin/system/"><i class="fa-solid fa-server"></i> System</a>
+                </details>
+                <details open>
+                    <summary><i class="fa-solid fa-handshake"></i> Partnerships <span class="arrow">&#9654;</span></summary>
+                    <a href="/admin/partner/"><i class="fa-solid fa-handshake"></i> Manage Partners</a>
+                    <a href="/admin/partner/requests/"><i class="fa-solid fa-inbox"></i> Partnership Requests</a>
+                </details>
+                <a href="/" style="margin-top: auto; color: var(--muted); display: flex; align-items: center; gap: 12px; padding: 12px 15px; text-decoration: none; border-radius: 10px; font-weight: 500; font-size: 14px; transition: all 0.2s;"><i class="fa-solid fa-right-from-bracket"></i> Exit Admin</a>
+            </nav>
+        </aside>
+
+        <main class="admin-content">
+            <header class="admin-header">
+                <div>
+                    <h1>Linktree Profile</h1>
+                    <p style="color: var(--muted); margin-top: 5px;">Build your custom dark glassmorphic team profile page.</p>
+                </div>
+                <div class="user-profile" id="user-profile">
+                    <!-- Injected by JS -->
+                </div>
+            </header>
+
+            <div id="editor-layout" style="display: none;">
+                <div class="editor-container">
+                
+                <!-- Left: Form Controls -->
+                <div class="editor-panel">
+                    
+                    <!-- Section: Core Details -->
+                    <div class="editor-section-title" onclick="toggleSection(this)">
+                        <span><i class="fa-solid fa-user"></i> Core Details</span>
+                        <i class="fa-solid fa-chevron-down section-arrow"></i>
+                    </div>
+                    <div class="editor-section-content">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="username">Public Handle (@)</label>
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <span style="font-family:var(--mono); color:var(--muted); font-size:16px;">/team/</span>
+                                    <input type="text" id="username" placeholder="username" style="flex:1;">
+                                </div>
+                                <span class="char-counter" style="align-self:flex-start;">a-z, 0-9, underscores, dashes only</span>
+                            </div>
+                            <div class="form-group">
+                                <label for="display-name">Display Name</label>
+                                <input type="text" id="display-name" placeholder="John Doe">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="bio">Profile Bio</label>
+                            <textarea id="bio" placeholder="Write a short summary about yourself..." rows="4" maxlength="1000"></textarea>
+                            <div style="display:flex; justify-content:space-between;">
+                                <span class="char-counter" style="align-self:flex-start;">Markdown not supported. Keep it descriptive!</span>
+                                <span class="char-counter" id="bio-counter">0 / 1000</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section: Aesthetics -->
+                    <div class="editor-section-title" onclick="toggleSection(this)">
+                        <span><i class="fa-solid fa-palette"></i> Aesthetics & Layout</span>
+                        <i class="fa-solid fa-chevron-down section-arrow"></i>
+                    </div>
+                    <div class="editor-section-content">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="layout">Profile Layout</label>
+                                <select id="layout">
+                                    <option value="centered">Centered (Classic Linktree)</option>
+                                    <option value="left">Left Aligned (Modern Minimal)</option>
+                                    <option value="card">Card Grid (Links as Cards)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Accent Theme Color</label>
+                                <div class="color-picker-wrapper">
+                                    <input type="color" id="accent-color" value="#5865f2">
+                                    <input type="text" id="accent-color-hex" value="#5865f2" style="width: 100px; text-transform: uppercase; font-family: var(--mono);">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Profile Banner Source</label>
+                            <select id="banner-type" style="margin-bottom: 10px;">
+                                <option value="discord">Use Discord Banner (Default)</option>
+                                <option value="color">Custom Solid Color</option>
+                                <option value="image">Custom Image URL</option>
+                            </select>
+                            <div id="banner-value-container" style="display: none;">
+                                <input type="text" id="banner-value" placeholder="Hex color or Image URL">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Avatar Decoration</label>
+                            <div class="toggle-card" id="decoration-card">
+                                <span>Show Avatar Decoration</span>
+                                <i class="fa-solid fa-toggle-off" id="decoration-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section: Links System -->
+                    <div class="editor-section-title" onclick="toggleSection(this)">
+                        <span><i class="fa-solid fa-link"></i> Socials & Links</span>
+                        <div style="display:flex; gap:8px;">
+                            <button class="btn-secondary" id="add-preset-modal-btn" style="padding: 6px 12px; font-size: 12px; border-radius: 8px;" onclick="event.stopPropagation()"><i class="fa-solid fa-plus"></i> Add Social</button>
+                            <button class="btn-secondary" id="add-custom-modal-btn" style="padding: 6px 12px; font-size: 12px; border-radius: 8px;" onclick="event.stopPropagation()"><i class="fa-solid fa-globe"></i> Add Custom Link</button>
+                        </div>
+                        <i class="fa-solid fa-chevron-down section-arrow"></i>
+                    </div>
+                    <div class="editor-section-content">
+                        <div id="links-editor-list" class="links-editor-list">
+                            <!-- Links injected dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Section: Hobbies -->
+                    <div class="editor-section-title" onclick="toggleSection(this)">
+                        <span><i class="fa-solid fa-heart"></i> Hobbies &amp; Interests</span>
+                        <i class="fa-solid fa-chevron-down section-arrow"></i>
+                    </div>
+                    <div class="editor-section-content">
+                        <div class="form-group">
+                            <label>Select up to <strong>5</strong> hobbies to show on your profile</label>
+                            <div id="hobby-pills" style="display:flex; flex-wrap:wrap; gap:8px; margin-top:10px;"></div>
+                            <span class="char-counter" id="hobby-counter" style="margin-top:8px; display:block;">0 / 5 selected</span>
+                        </div>
+                    </div>
+
+                    <!-- Section: Music & Integrations -->
+
+                    <div class="editor-section-title" onclick="toggleSection(this)">
+                        <span><i class="fa-solid fa-music"></i> Music & embeds</span>
+                        <i class="fa-solid fa-chevron-down section-arrow"></i>
+                    </div>
+                    <div class="editor-section-content">
+                        <div class="form-group">
+                            <label for="spotify-embed">Spotify Song URL (Embed)</label>
+                            <input type="text" id="spotify-embed" placeholder="https://open.spotify.com/track/4PTG3Z6ehGkBFwbzwskcR8">
+                        </div>
+                        <div class="form-group">
+                            <label for="soundcloud-embed">SoundCloud Track URL (Embed)</label>
+                            <input type="text" id="soundcloud-embed" placeholder="https://soundcloud.com/artist/track-name">
+                        </div>
+                        <div class="form-group">
+                            <label>Spotify API Integration</label>
+                            <div class="spotify-connect-card">
+                                <div>
+                                    <div style="font-weight:700; font-size:14px;" id="spotify-status-title">Spotify Disconnected</div>
+                                    <div style="font-size:12px; color:var(--muted); margin-top:2px;" id="spotify-status-desc">Allow site visitors to view your active playing track.</div>
+                                </div>
+                                <div style="display:flex; gap:8px;">
+                                    <a href="/api/auth/spotify" class="spotify-btn" id="spotify-conn-btn">
+                                        <i class="fa-brands fa-spotify"></i>
+                                        <span>Connect</span>
+                                    </a>
+                                    <button class="spotify-btn spotify-btn-disconnect" id="spotify-disconnect-btn" style="display:none;">
+                                        <i class="fa-solid fa-plug"></i>
+                                        <span>Disconnect</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" id="listening-toggle-wrapper" style="display: none; margin-top: 16px;">
+                            <div class="toggle-card" id="listening-toggle-card">
+                                <span style="display:flex; align-items:center; gap:8px;">
+                                    <i class="fa-brands fa-spotify spotify-color"></i>
+                                    Display Active Spotify Listening Status
+                                </span>
+                                <i class="fa-solid fa-toggle-off" id="listening-toggle-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section: Visibility -->
+                    <div class="editor-section-title" onclick="toggleSection(this)">
+                        <span><i class="fa-solid fa-eye"></i> Publishing & Visibility</span>
+                        <i class="fa-solid fa-chevron-down section-arrow"></i>
+                    </div>
+                    <div class="editor-section-content">
+                        <div class="toggle-group">
+                            <div class="toggle-card" id="visibility-card">
+                                <span>Publicly Accessible</span>
+                                <i class="fa-solid fa-toggle-off" id="visibility-icon"></i>
+                            </div>
+                            <div class="toggle-card" id="featured-card">
+                                <span>Show other team members on your profile page</span>
+                                <i class="fa-solid fa-toggle-off" id="featured-icon"></i>
+                            </div>
+                        </div>
+                        <div class="save-bar">
+                            <a href="/admin/overview/" class="btn-secondary" style="text-decoration:none; display:flex; align-items:center;">Discard</a>
+                            <button class="btn-primary" id="save-profile-btn">Save Changes</button>
+                        </div>
+                    </div>
+
+                </div>
+                </div>
+            </div>
+
+            <!-- Right/Center: Activation Onboarding Card -->
+            <div id="activation-layout" style="display: none;">
+                <div class="activation-container">
+                    <div class="activation-card">
+                        <div class="activation-header">
+                            <i class="fa-solid fa-link activation-icon"></i>
+                            <h2>Activate Your Team Linktree</h2>
+                            <p>Claim your custom public username handle, build a stunning dark glassmorphic landing page on disc-tools.de, and showcase your Spotify listening activity live!</p>
+                        </div>
+                        <div class="form-group" style="margin-top: 10px;">
+                            <label for="activate-username" style="font-weight: 600; font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; display: block; text-align: left; margin-bottom: 8px;">Choose Username Handle</label>
+                            <div class="username-input-wrapper">
+                                <span class="url-prefix">disc-tools.de/team/</span>
+                                <input type="text" id="activate-username" placeholder="yourname" autocomplete="off" maxlength="20">
+                            </div>
+                            <div class="validation-hint">a-z, 0-9, underscores, and dashes only (3-20 characters)</div>
+                        </div>
+                        <button class="btn-primary btn-activate" id="activate-profile-btn">
+                            <i class="fa-solid fa-bolt"></i> Activate Linktree Profile
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals backdrop -->
+    <div class="dialog-backdrop" id="dialog-backdrop">
+        
+        <!-- Preset Add modal -->
+        <div class="dialog-box" id="preset-dialog" style="display:none;">
+            <div class="dialog-title">Select Platform</div>
+            <div class="preset-grid">
+                <button class="preset-btn" data-platform="instagram"><i class="fa-brands fa-instagram"></i> Instagram</button>
+                <button class="preset-btn" data-platform="twitter"><i class="fa-brands fa-x-twitter"></i> Twitter/X</button>
+                <button class="preset-btn" data-platform="github"><i class="fa-brands fa-github"></i> GitHub</button>
+                <button class="preset-btn" data-platform="youtube"><i class="fa-brands fa-youtube"></i> YouTube</button>
+                <button class="preset-btn" data-platform="twitch"><i class="fa-brands fa-twitch"></i> Twitch</button>
+                <button class="preset-btn" data-platform="tiktok"><i class="fa-brands fa-tiktok"></i> TikTok</button>
+                <button class="preset-btn" data-platform="linkedin"><i class="fa-brands fa-linkedin"></i> LinkedIn</button>
+                <button class="preset-btn" data-platform="discord"><i class="fa-brands fa-discord"></i> Discord</button>
+                <button class="preset-btn" data-platform="steam"><i class="fa-brands fa-steam"></i> Steam</button>
+                <button class="preset-btn" data-platform="spotify"><i class="fa-brands fa-spotify"></i> Spotify</button>
+                <button class="preset-btn" data-platform="soundcloud"><i class="fa-brands fa-soundcloud"></i> SoundCloud</button>
+                <button class="preset-btn" data-platform="reddit"><i class="fa-brands fa-reddit"></i> Reddit</button>
+            </div>
+            <div class="form-group" style="margin-top: 10px;">
+                <label id="preset-username-label">Username / Handle</label>
+                <input type="text" id="preset-username-input" placeholder="e.g. disc_tools">
+            </div>
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:10px;">
+                <button class="btn-secondary" id="preset-cancel-btn">Cancel</button>
+                <button class="btn-primary" id="preset-save-btn" style="padding:10px 20px;">Add Link</button>
+            </div>
+        </div>
+
+        <!-- Custom Add modal -->
+        <div class="dialog-box" id="custom-dialog" style="display:none;">
+            <div class="dialog-title">Add Custom Link</div>
+            <div class="form-group">
+                <label for="custom-label-input">Link Label</label>
+                <input type="text" id="custom-label-input" placeholder="e.g. Visit My Website">
+            </div>
+            <div class="form-group">
+                <label for="custom-url-input">Target URL</label>
+                <input type="text" id="custom-url-input" placeholder="e.g. https://example.com">
+            </div>
+            <div class="form-group">
+                <label for="custom-icon-input">Icon URL <span style="color:var(--muted); font-weight:400;">(optional)</span></label>
+                <input type="text" id="custom-icon-input" placeholder="e.g. https://example.com/icon.png">
+            </div>
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:10px;">
+                <button class="btn-secondary" id="custom-cancel-btn">Cancel</button>
+                <button class="btn-primary" id="custom-save-btn" style="padding:10px 20px;">Add Link</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Notification Toast -->
+    <div class="toast" id="toast">
+        <i class="fa-solid fa-circle-check"></i>
+        <span id="toast-text">Profile saved successfully!</span>
+    </div>
+
+    <script>
+        let currentProfile = null;
+        let selectedPresetPlatform = null;
+        let linksList = [];
+        let sortable = null;
+        let editingLinkId = null;
+        let isDirty = false;
+
+        // Sidebar collapse state persistence
+        document.querySelectorAll('.admin-nav details').forEach(d => {
+            const key = 'nav-' + d.querySelector('summary').textContent.trim().toLowerCase().replace(/\s+/g, '-');
+            const saved = localStorage.getItem(key);
+            if (saved !== null) d.open = saved === 'true';
+            d.addEventListener('toggle', () => {
+                localStorage.setItem(key, d.open);
+            });
+        });
+
+        function markDirty() { isDirty = true; }
+        function markClean() { isDirty = false; }
+
+        function toggleSection(titleEl) {
+            const content = titleEl.nextElementSibling;
+            if (!content || !content.classList.contains('editor-section-content')) return;
+            const isCollapsed = content.classList.toggle('collapsed');
+            titleEl.classList.toggle('collapsed', isCollapsed);
+            const key = 'section_' + (titleEl.textContent || '').trim().replace(/\s+/g, '_');
+            try { localStorage.setItem(key, isCollapsed ? '1' : '0'); } catch(e) {}
+        }
+
+        function restoreSections() {
+            document.querySelectorAll('.editor-section-title').forEach(title => {
+                const key = 'section_' + (title.textContent || '').trim().replace(/\s+/g, '_');
+                try {
+                    if (localStorage.getItem(key) === '1') {
+                        const content = title.nextElementSibling;
+                        if (content && content.classList.contains('editor-section-content')) {
+                            content.classList.add('collapsed');
+                            title.classList.add('collapsed');
+                        }
+                    }
+                } catch(e) {}
+            });
+        }
+
+        // Verify Authentication and Load Profile Data
+        async function loadProfile() {
+            try {
+                const res = await fetch('/api/admin/linktree');
+                if (!res.ok) { window.location.href = '/'; return; }
+                
+                currentProfile = await res.json();
+                
+                // Activation Layout Toggle
+                const editorLayout = document.getElementById('editor-layout');
+                const activationLayout = document.getElementById('activation-layout');
+                
+                if (currentProfile.activated) {
+                    editorLayout.style.display = 'block';
+                    activationLayout.style.display = 'none';
+                } else {
+                    editorLayout.style.display = 'none';
+                    activationLayout.style.display = 'block';
+                    document.getElementById('activate-username').value = currentProfile.username || '';
+                    
+                    // Render simple authenticated user profile
+                    let avatarUrl = `https://cdn.discordapp.com/embed/avatars/${(currentProfile.userId || 0) % 5}.png`;
+                    if (currentProfile.avatar) {
+                        avatarUrl = currentProfile.avatar;
+                    }
+                    document.getElementById('user-profile').innerHTML = `
+                        <div class="user-profile-info" style="text-align: right;">
+                            <span class="user-profile-name">${currentProfile.displayName}</span>
+                            <span class="user-profile-role">Team Member</span>
+                        </div>
+                        <img src="${avatarUrl}" alt="Avatar">
+                    `;
+                    return;
+                }
+                
+                // Set Header User Profile Card
+                let avatarUrl = `https://cdn.discordapp.com/embed/avatars/${(currentProfile.userId || 0) % 5}.png`;
+                if (currentProfile.avatar) {
+                    avatarUrl = currentProfile.avatar;
+                }
+                
+                document.getElementById('user-profile').innerHTML = `
+                    <div class="user-profile-info" style="text-align: right;">
+                        <span class="user-profile-name">${currentProfile.displayName}</span>
+                        <span class="user-profile-role">Team Member</span>
+                    </div>
+                    <img src="${avatarUrl}" alt="Avatar">
+                `;
+
+                // Set Form Fields
+                document.getElementById('username').value = currentProfile.username || '';
+                document.getElementById('display-name').value = currentProfile.displayName || '';
+                document.getElementById('bio').value = currentProfile.bio || '';
+                document.getElementById('bio-counter').textContent = `${(currentProfile.bio || '').length} / 1000`;
+                
+                document.getElementById('layout').value = currentProfile.layout || 'centered';
+                document.getElementById('accent-color').value = currentProfile.accentColor || '#5865f2';
+                document.getElementById('accent-color-hex').value = currentProfile.accentColor || '#5865f2';
+                
+                document.getElementById('banner-type').value = currentProfile.banner?.type || 'discord';
+                document.getElementById('banner-value').value = currentProfile.banner?.value || '';
+                toggleBannerInput(currentProfile.banner?.type || 'discord');
+
+                document.getElementById('spotify-embed').value = currentProfile.music?.spotifyEmbed || currentProfile.music?.favoriteSpotify || '';
+                document.getElementById('soundcloud-embed').value = currentProfile.music?.soundcloudEmbed || '';
+
+                // Spotify API Integration setup
+                const isSpotifyConnected = currentProfile.music?.spotifyConnected;
+                const spotifyTitle = document.getElementById('spotify-status-title');
+                const spotifyDesc = document.getElementById('spotify-status-desc');
+                const spotifyBtn = document.getElementById('spotify-conn-btn');
+                const spotifyDisconnectBtn = document.getElementById('spotify-disconnect-btn');
+                const listeningToggleWrapper = document.getElementById('listening-toggle-wrapper');
+
+                if (isSpotifyConnected) {
+                    const spotifyName = currentProfile.music?.spotifyDisplayName;
+                    spotifyTitle.innerHTML = spotifyName ? `Spotify Connected – <span style="font-weight:400;">${spotifyName}</span>` : 'Spotify Connected – <span style="font-weight:400;">Reconnect to see account name</span>';
+                    spotifyTitle.style.color = "#1db954";
+                    
+                    spotifyBtn.innerHTML = '<i class="fa-solid fa-rotate"></i> Reconnect';
+                    spotifyBtn.style.background = 'rgba(29, 185, 84, 0.1)';
+                    spotifyBtn.style.color = '#1db954';
+                    spotifyBtn.style.border = '1px solid rgba(29, 185, 84, 0.3)';
+                    spotifyDisconnectBtn.style.display = '';
+                    listeningToggleWrapper.style.display = 'block';
+                    
+                    const isListeningEnabled = currentProfile.music?.currentlyListeningEnabled;
+                    setToggleState('listening-toggle-card', 'listening-toggle-icon', isListeningEnabled);
+                    updateSpotifyDesc();
+                } else {
+                    spotifyTitle.textContent = "Spotify Disconnected";
+                    spotifyTitle.style.color = "#fff";
+                    spotifyDesc.textContent = "Connect your Spotify account to share your live track with visitors.";
+                    spotifyBtn.innerHTML = '<i class="fa-brands fa-spotify"></i> Connect';
+                    spotifyBtn.style.background = '#1db954';
+                    spotifyBtn.style.color = '#fff';
+                    spotifyBtn.style.border = 'none';
+                    spotifyDisconnectBtn.style.display = 'none';
+                    listeningToggleWrapper.style.display = 'none';
+                }
+
+                // Visibility and Featured
+                setToggleState('visibility-card', 'visibility-icon', currentProfile.visibility === 'public');
+                setToggleState('featured-card', 'featured-icon', currentProfile.featured);
+                setToggleState('decoration-card', 'decoration-icon', currentProfile.showAvatarDecoration !== false);
+
+                // Hobbies
+                renderHobbyPills(currentProfile.hobbies || []);
+
+                // Links List
+                linksList = currentProfile.links || [];
+                renderLinksList();
+                
+                
+
+            } catch (e) {
+                console.error(e);
+                window.location.href = '/';
+            }
+        }
+
+        // Render Sortable Links List
+        function renderLinksList() {
+            const container = document.getElementById('links-editor-list');
+            container.innerHTML = '';
+            
+            if (linksList.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 25px; color: var(--muted); font-size: 13px; border: 1px dashed var(--border); border-radius: 12px; font-family: var(--mono);">
+                        No links added yet. Click one of the buttons above to add a social media link or custom URL!
+                    </div>
+                `;
+                return;
+            }
+
+            const presetIcons = {
+                instagram: 'fa-brands fa-instagram',
+                twitter: 'fa-brands fa-x-twitter',
+                github: 'fa-brands fa-github',
+                youtube: 'fa-brands fa-youtube',
+                twitch: 'fa-brands fa-twitch',
+                tiktok: 'fa-brands fa-tiktok',
+                linkedin: 'fa-brands fa-linkedin',
+                discord: 'fa-brands fa-discord',
+                steam: 'fa-brands fa-steam',
+                spotify: 'fa-brands fa-spotify',
+                soundcloud: 'fa-brands fa-soundcloud',
+                reddit: 'fa-brands fa-reddit'
+            };
+
+            linksList.forEach(link => {
+                const card = document.createElement('div');
+                card.className = 'link-edit-card';
+                card.dataset.id = link.id;
+
+                let iconHtml = '';
+                let title = '';
+                let url = '';
+
+                if (link.type === 'preset') {
+                    const iconClass = presetIcons[link.platform] || 'fa-solid fa-link';
+                    iconHtml = `<i class="${iconClass}" style="font-size:20px; color:#5865F2;"></i>`;
+                    title = link.platform.charAt(0).toUpperCase() + link.platform.slice(1);
+                    if (title === 'Twitter') title = 'Twitter/X';
+                    url = `@${link.username}`;
+                } else {
+                    let hostname = 'disc-tools.de';
+                    try { hostname = new URL(link.url).hostname; } catch(e) {}
+                    const iconSrc = link.icon || `https://www.google.com/s2/favicons?sz=64&domain=${hostname}`;
+                    iconHtml = `<img src="${iconSrc}" style="width:20px; height:20px; border-radius:4px;" alt="" onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<i class=\\'fa-solid fa-globe\\' style=\\'font-size:20px;color:#888;\\'></i>')">`;
+                    title = link.label || link.url;
+                    url = link.url;
+                }
+
+                card.innerHTML = `
+                    <div class="link-drag-handle"><i class="fa-solid fa-bars"></i></div>
+                    <div class="link-icon">${iconHtml}</div>
+                    <div class="link-edit-info">
+                        <div class="link-edit-title">${title}</div>
+                        <div class="link-edit-url">${url}</div>
+                        <div class="link-edit-hint">Click to edit</div>
+                    </div>
+                    <button class="link-open-btn" onclick="event.stopPropagation(); window.open('${escapePreviewHtml(url)}', '_blank', 'noopener')" title="Open link"><i class="fa-solid fa-up-right-from-square"></i></button>
+                    <button class="link-delete-btn" onclick="event.stopPropagation(); deleteLink('${link.id}')"><i class="fa-solid fa-trash"></i></button>
+                `;
+                card.addEventListener('click', () => editLink(link.id));
+                container.appendChild(card);
+            });
+
+            // Initialize SortableJS
+            if (sortable) sortable.destroy();
+            sortable = Sortable.create(container, {
+                handle: '.link-drag-handle',
+                animation: 150,
+                onEnd: () => {
+                    const orderedIds = sortable.toArray();
+                    linksList = orderedIds.map(id => linksList.find(l => l.id === id));
+                    markDirty();
+                }
+            });
+        }
+
+        // Delete link
+        window.deleteLink = function(id) {
+            linksList = linksList.filter(l => l.id !== id);
+            renderLinksList();
+            markDirty();
+        };
+
+        // Banner selection input toggle
+        function toggleBannerInput(type) {
+            const container = document.getElementById('banner-value-container');
+            const input = document.getElementById('banner-value');
+            if (type === 'discord') {
+                container.style.display = 'none';
+            } else if (type === 'color') {
+                container.style.display = 'block';
+                input.placeholder = 'Enter solid HEX color, e.g. #ff0055';
+            } else {
+                container.style.display = 'block';
+                input.placeholder = 'Enter direct image URL, e.g. https://site.com/image.jpg';
+            }
+        }
+
+        document.getElementById('banner-type').addEventListener('change', (e) => {
+            toggleBannerInput(e.target.value);
+        });
+
+        // Set state for custom toggles
+        function setToggleState(cardId, iconId, active) {
+            const card = document.getElementById(cardId);
+            const icon = document.getElementById(iconId);
+            if (active) {
+                card.classList.add('active');
+                icon.className = 'fa-solid fa-toggle-on';
+            } else {
+                card.classList.remove('active');
+                icon.className = 'fa-solid fa-toggle-off';
+            }
+        }
+
+        function toggleState(cardId, iconId) {
+            const card = document.getElementById(cardId);
+            const isActive = card.classList.contains('active');
+            setToggleState(cardId, iconId, !isActive);
+        }
+
+        function updateSpotifyDesc() {
+            const spotifyDesc = document.getElementById('spotify-status-desc');
+            const spotifyName = currentProfile.music?.spotifyDisplayName;
+            const isListening = document.getElementById('listening-toggle-card')?.classList.contains('active');
+            const nameDisplay = spotifyName ? `Connected as <strong>${spotifyName}</strong>` : 'Reconnect to see account name';
+            if (isListening) {
+                spotifyDesc.innerHTML = `${nameDisplay} &bull; Live track is visible to visitors.`;
+            } else {
+                spotifyDesc.innerHTML = `${nameDisplay} &bull; Enable the toggle below to share your live track.`;
+            }
+        }
+
+        // ── Hobby Pills ────────────────────────────────────────────────────────
+        const HOBBIES = [
+            { id: 'music',       label: 'Music',         icon: 'fa-solid fa-music' },
+            { id: 'movies',      label: 'Movies',        icon: 'fa-solid fa-film' },
+            { id: 'gaming',      label: 'Gaming',        icon: 'fa-solid fa-gamepad' },
+            { id: 'biking',      label: 'Biking',        icon: 'fa-solid fa-bicycle' },
+            { id: 'hiking',      label: 'Hiking',        icon: 'fa-solid fa-person-hiking' },
+            { id: 'cooking',     label: 'Cooking',       icon: 'fa-solid fa-utensils' },
+            { id: 'reading',     label: 'Reading',       icon: 'fa-solid fa-book' },
+            { id: 'photography', label: 'Photography',   icon: 'fa-solid fa-camera' },
+            { id: 'travel',      label: 'Travel',        icon: 'fa-solid fa-plane' },
+            { id: 'fitness',     label: 'Fitness',       icon: 'fa-solid fa-dumbbell' },
+            { id: 'art',         label: 'Art',           icon: 'fa-solid fa-palette' },
+            { id: 'coding',      label: 'Coding',        icon: 'fa-solid fa-code' },
+            { id: 'anime',       label: 'Anime',         icon: 'fa-solid fa-star' },
+            { id: 'sports',      label: 'Sports',        icon: 'fa-solid fa-trophy' },
+            { id: 'football',    label: 'Football',      icon: 'fa-solid fa-futbol' },
+            { id: 'basketball',  label: 'Basketball',    icon: 'fa-solid fa-basketball' },
+            { id: 'dancing',     label: 'Dancing',       icon: 'fa-solid fa-music' },
+            { id: 'streaming',   label: 'Streaming',     icon: 'fa-solid fa-tower-broadcast' },
+            { id: 'youtube',     label: 'YouTube',       icon: 'fa-brands fa-youtube' },
+            { id: 'cats',        label: 'Cats',          icon: 'fa-solid fa-cat' },
+            { id: 'dogs',        label: 'Dogs',          icon: 'fa-solid fa-dog' },
+            { id: 'cars',        label: 'Cars',          icon: 'fa-solid fa-car' },
+            { id: 'fashion',     label: 'Fashion',       icon: 'fa-solid fa-shirt' },
+            { id: 'sneakers',    label: 'Sneakers',      icon: 'fa-solid fa-shoe-prints' },
+            { id: 'skateboard',  label: 'Skateboarding', icon: 'fa-solid fa-person-skating' },
+            { id: 'swimming',    label: 'Swimming',      icon: 'fa-solid fa-person-swimming' },
+            { id: 'yoga',        label: 'Yoga',          icon: 'fa-solid fa-spa' },
+            { id: 'minecraft',   label: 'Minecraft',     icon: 'fa-solid fa-cube' },
+            { id: 'chess',       label: 'Chess',         icon: 'fa-solid fa-chess' },
+            { id: 'boxing',      label: 'Boxing',        icon: 'fa-solid fa-hand-fist' },
+        ];
+
+        function renderHobbyPills(selected = []) {
+            const container = document.getElementById('hobby-pills');
+            const counter   = document.getElementById('hobby-counter');
+            if (!container) return;
+            container.innerHTML = '';
+            HOBBIES.forEach(h => {
+                const isActive = selected.includes(h.id);
+                const pill = document.createElement('button');
+                pill.type = 'button';
+                pill.dataset.id = h.id;
+                pill.className = 'hobby-pill' + (isActive ? ' hobby-pill--active' : '');
+                pill.innerHTML = `<i class="${h.icon}"></i> ${h.label}`;
+                pill.addEventListener('click', () => {
+                    const active = container.querySelectorAll('.hobby-pill--active');
+                    if (pill.classList.contains('hobby-pill--active')) {
+                        pill.classList.remove('hobby-pill--active');
+                    } else {
+                        if (active.length >= 5) return; // max 5
+                        pill.classList.add('hobby-pill--active');
+                    }
+                    const count = container.querySelectorAll('.hobby-pill--active').length;
+                    counter.textContent = `${count} / 5 selected`;
+                    markDirty();
+                });
+                container.appendChild(pill);
+            });
+            const count = selected.length;
+            counter.textContent = `${count} / 5 selected`;
+        }
+
+        function getSelectedHobbies() {
+            const container = document.getElementById('hobby-pills');
+            if (!container) return [];
+            return Array.from(container.querySelectorAll('.hobby-pill--active')).map(p => p.dataset.id);
+        }
+        // ── End Hobby Pills ────────────────────────────────────────────────────
+
+        document.getElementById('visibility-card').addEventListener('click', () => toggleState('visibility-card', 'visibility-icon'));
+        document.getElementById('featured-card').addEventListener('click', () => toggleState('featured-card', 'featured-icon'));
+        document.getElementById('decoration-card').addEventListener('click', () => toggleState('decoration-card', 'decoration-icon'));
+        document.getElementById('listening-toggle-card').addEventListener('click', () => {
+            toggleState('listening-toggle-card', 'listening-toggle-icon');
+            updateSpotifyDesc();
+        });
+
+    
+
+        // Handle Add Social Presets Modal
+        const dialogBackdrop = document.getElementById('dialog-backdrop');
+        const presetDialog = document.getElementById('preset-dialog');
+        const customDialog = document.getElementById('custom-dialog');
+        
+        function resetModalState() {
+            editingLinkId = null;
+            selectedPresetPlatform = null;
+            setSelectedPresetButton(null);
+            document.getElementById('preset-username-input').value = '';
+            document.getElementById('custom-label-input').value = '';
+            document.getElementById('custom-url-input').value = '';
+            document.getElementById('custom-icon-input').value = '';
+            document.getElementById('preset-username-label').textContent = 'Username / Handle';
+            document.getElementById('preset-save-btn').textContent = 'Add Link';
+            document.getElementById('custom-save-btn').textContent = 'Add Link';
+            document.querySelector('#preset-dialog .dialog-title').textContent = 'Select Platform';
+            document.querySelector('#custom-dialog .dialog-title').textContent = 'Add Custom Link';
+        }
+
+        function setSelectedPresetButton(platform) {
+            document.querySelectorAll('.preset-btn').forEach(b => {
+                b.classList.toggle('selected', b.dataset.platform === platform);
+            });
+        }
+
+        function openPresetDialog(link = null) {
+            dialogBackdrop.style.display = 'flex';
+            presetDialog.style.display = 'block';
+            customDialog.style.display = 'none';
+
+            if (link) {
+                editingLinkId = link.id;
+                selectedPresetPlatform = link.platform;
+                setSelectedPresetButton(selectedPresetPlatform);
+                const labels = {
+                    instagram: 'Instagram Handle',
+                    twitter: 'Twitter/X Handle',
+                    github: 'GitHub Username',
+                    youtube: 'YouTube Channel Custom Handle (no @)',
+                    twitch: 'Twitch Channel Name',
+                    tiktok: 'TikTok Handle (no @)',
+                    linkedin: 'LinkedIn Profile Username',
+                    discord: 'Discord User ID / Username',
+                    steam: 'Steam Community ID',
+                    spotify: 'Spotify Username',
+                    soundcloud: 'SoundCloud Profile Username',
+                    reddit: 'Reddit Username'
+                };
+                document.getElementById('preset-username-label').textContent = labels[selectedPresetPlatform] || 'Username / Handle';
+                document.getElementById('preset-username-input').value = link.username || '';
+                document.querySelector('#preset-dialog .dialog-title').textContent = 'Edit Social Link';
+                document.getElementById('preset-save-btn').textContent = 'Save Changes';
+            } else {
+                resetModalState();
+            }
+        }
+
+        function openCustomDialog(link = null) {
+            dialogBackdrop.style.display = 'flex';
+            presetDialog.style.display = 'none';
+            customDialog.style.display = 'block';
+
+            if (link) {
+                editingLinkId = link.id;
+                document.getElementById('custom-label-input').value = link.label || '';
+                document.getElementById('custom-url-input').value = link.url || '';
+                document.getElementById('custom-icon-input').value = link.icon || '';
+                document.querySelector('#custom-dialog .dialog-title').textContent = 'Edit Custom Link';
+                document.getElementById('custom-save-btn').textContent = 'Save Changes';
+            } else {
+                resetModalState();
+            }
+        }
+
+        function editLink(id) {
+            const link = linksList.find(l => l.id === id);
+            if (!link) return;
+
+            if (link.type === 'preset') openPresetDialog(link);
+            else openCustomDialog(link);
+        }
+
+        document.getElementById('add-preset-modal-btn').addEventListener('click', () => {
+            openPresetDialog();
+        });
+
+        document.getElementById('add-custom-modal-btn').addEventListener('click', () => {
+            openCustomDialog();
+        });
+
+        function closeModal() {
+            dialogBackdrop.style.display = 'none';
+            presetDialog.style.display = 'none';
+            customDialog.style.display = 'none';
+            editingLinkId = null;
+        }
+
+        document.getElementById('preset-cancel-btn').addEventListener('click', closeModal);
+        document.getElementById('custom-cancel-btn').addEventListener('click', closeModal);
+
+        // Select platform inside preset grid
+        document.querySelectorAll('.preset-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                selectedPresetPlatform = btn.dataset.platform;
+                setSelectedPresetButton(selectedPresetPlatform);
+                
+                const labels = {
+                    instagram: 'Instagram Handle',
+                    twitter: 'Twitter/X Handle',
+                    github: 'GitHub Username',
+                    youtube: 'YouTube Channel Custom Handle (no @)',
+                    twitch: 'Twitch Channel Name',
+                    tiktok: 'TikTok Handle (no @)',
+                    linkedin: 'LinkedIn Profile Username',
+                    discord: 'Discord User ID / Username',
+                    steam: 'Steam Community ID',
+                    spotify: 'Spotify Username',
+                    soundcloud: 'SoundCloud Profile Username',
+                    reddit: 'Reddit Username'
+                };
+                
+                document.getElementById('preset-username-label').textContent = labels[selectedPresetPlatform] || 'Username / Handle';
+            });
+        });
+
+        // Add link presets save
+        document.getElementById('preset-save-btn').addEventListener('click', () => {
+            const val = document.getElementById('preset-username-input').value.trim();
+            if (!selectedPresetPlatform) {
+                showToast('Please select a social platform first.', true);
+                return;
+            }
+            if (!val) {
+                showToast('Please enter your handle/username.', true);
+                return;
+            }
+
+            if (editingLinkId) {
+                const existingLink = linksList.find(l => l.id === editingLinkId);
+                if (existingLink) {
+                    existingLink.type = 'preset';
+                    existingLink.platform = selectedPresetPlatform;
+                    existingLink.username = val;
+                }
+            } else {
+                linksList.push({
+                    id: `l_${Date.now()}`,
+                    type: 'preset',
+                    platform: selectedPresetPlatform,
+                    username: val
+                });
+            }
+
+            renderLinksList();
+            markDirty();
+            closeModal();
+        });
+
+        // Add custom link save
+        document.getElementById('custom-save-btn').addEventListener('click', () => {
+            const label = document.getElementById('custom-label-input').value.trim();
+            const url = document.getElementById('custom-url-input').value.trim();
+            let iconUrl = document.getElementById('custom-icon-input').value.trim();
+
+            if (!label || !url) {
+                showToast('Please enter both label and target URL.', true);
+                return;
+            }
+
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                showToast('URL must start with http:// or https://', true);
+                return;
+            }
+
+            let hostname = 'disc-tools.de';
+            try { hostname = new URL(url).hostname; } catch(e) {}
+
+            if (iconUrl && !iconUrl.startsWith('http://') && !iconUrl.startsWith('https://')) {
+                showToast('Icon URL must start with http:// or https://', true);
+                return;
+            }
+            if (!iconUrl) {
+                iconUrl = `https://www.google.com/s2/favicons?sz=64&domain=${hostname}`;
+            }
+
+            if (editingLinkId) {
+                const existingLink = linksList.find(l => l.id === editingLinkId);
+                if (existingLink) {
+                    existingLink.type = 'custom';
+                    existingLink.label = label;
+                    existingLink.url = url;
+                    existingLink.icon = iconUrl;
+                }
+            } else {
+                linksList.push({
+                    id: `l_${Date.now()}`,
+                    type: 'custom',
+                    url,
+                    label,
+                    icon: iconUrl
+                });
+            }
+
+            renderLinksList();
+            markDirty();
+            closeModal();
+        });
+
+        function escapePreviewHtml(value) {
+            return String(value || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        // Save Profile via POST /api/admin/profile
+        document.getElementById('save-profile-btn').addEventListener('click', async () => {
+            const username = document.getElementById('username').value.trim();
+            const displayName = document.getElementById('display-name').value.trim();
+            const bio = document.getElementById('bio').value.trim();
+            const accentColor = document.getElementById('accent-color').value;
+            const layout = document.getElementById('layout').value;
+            
+            const bannerType = document.getElementById('banner-type').value;
+            const bannerValue = document.getElementById('banner-value').value.trim();
+
+            const spotifyEmbed = document.getElementById('spotify-embed').value.trim();
+            const soundcloudEmbed = document.getElementById('soundcloud-embed').value.trim();
+
+            const isListeningEnabled = document.getElementById('listening-toggle-card').classList.contains('active');
+            const isPublic = document.getElementById('visibility-card').classList.contains('active');
+            const isFeatured = document.getElementById('featured-card').classList.contains('active');
+            const showDecoration = document.getElementById('decoration-card').classList.contains('active');
+            const selectedHobbies = getSelectedHobbies();
+
+            if (!username) {
+                showToast('Handle / username is required.', true);
+                return;
+            }
+
+            const bodyData = {
+                username,
+                displayName,
+                bio,
+                accentColor,
+                layout,
+                banner: {
+                    type: bannerType,
+                    value: bannerValue || null
+                },
+                visibility: isPublic ? 'public' : 'private',
+                featured: isFeatured,
+                showAvatarDecoration: showDecoration,
+                hobbies: selectedHobbies,
+                links: linksList,
+                music: {
+                    spotifyEmbed,
+                    soundcloudEmbed,
+                    currentlyListeningEnabled: isListeningEnabled
+                }
+            };
+
+            try {
+                const res = await fetch('/api/admin/linktree', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(bodyData)
+                });
+
+                const data = await res.json();
+                if (!res.ok) {
+                    showToast(data.error || 'Failed to save profile.', true);
+                } else {
+                    showToast('Profile saved and sitemap updated successfully!');
+                    markClean();
+                    loadProfile(); // reload fresh state
+                }
+            } catch(e) {
+                showToast('Server error while saving profile.', true);
+            }
+        });
+
+        // Toast Helper
+        function showToast(text, isError = false) {
+            const toast = document.getElementById('toast');
+            const textEl = document.getElementById('toast-text');
+            
+            textEl.textContent = text;
+            toast.className = 'toast';
+            if (isError) {
+                toast.classList.add('error');
+                toast.querySelector('i').className = 'fa-solid fa-circle-xmark';
+            } else {
+                toast.querySelector('i').className = 'fa-solid fa-circle-check';
+            }
+            
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 4000);
+        }
+
+        // Spotify disconnect
+        document.getElementById('spotify-disconnect-btn').addEventListener('click', async () => {
+            if (!confirm('Disconnect your Spotify account? This will remove the live listening feature.')) return;
+            try {
+                const res = await fetch('/api/auth/spotify/disconnect', { method: 'POST' });
+                const data = await res.json();
+                if (res.ok) {
+                    showToast('Spotify disconnected.');
+                    loadProfile();
+                } else {
+                    showToast(data.error || 'Failed to disconnect.', true);
+                }
+            } catch (e) {
+                showToast('Server error.', true);
+            }
+        });
+
+        // Parse query params for Spotify oauth feedback
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('spotify') === 'success') {
+            showToast('Spotify successfully connected!');
+            // Clean URL query params without reloading
+            window.history.replaceState({}, document.title, window.location.pathname);
+        } else if (urlParams.get('spotify') === 'error') {
+            showToast('Failed to connect Spotify account.', true);
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+
+        // Activation flow event handlers
+        document.getElementById('activate-profile-btn').addEventListener('click', async () => {
+            const activateUsername = document.getElementById('activate-username').value.trim();
+            if (!activateUsername) {
+                showToast('Username handle is required.', true);
+                return;
+            }
+            if (activateUsername.length < 3 || activateUsername.length > 20) {
+                showToast('Username must be between 3 and 20 characters.', true);
+                return;
+            }
+            
+            const btn = document.getElementById('activate-profile-btn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Activating...';
+            
+            try {
+                const res = await fetch('/api/admin/linktree/activate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: activateUsername })
+                });
+                
+                const data = await res.json();
+                if (!res.ok) {
+                    showToast(data.error || 'Failed to activate profile.', true);
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fa-solid fa-bolt"></i> Activate Linktree Profile';
+                } else {
+                    showToast('Profile activated successfully!');
+                    setTimeout(() => {
+                        loadProfile();
+                    }, 800);
+                }
+            } catch(e) {
+                showToast('Server error during activation.', true);
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-bolt"></i> Activate Linktree Profile';
+            }
+        });
+        
+        document.getElementById('activate-username').addEventListener('input', (e) => {
+            e.target.value = e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, '');
+        });
+
+        // Restore collapsed sections from localStorage
+        restoreSections();
+
+        // Ctrl+S to save
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault();
+                document.getElementById('save-profile-btn').click();
+            }
+        });
+
+        // Unsaved changes warning
+        window.addEventListener('beforeunload', (e) => {
+            if (isDirty) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
+
+        // Mark dirty on all form inputs
+        document.querySelectorAll('#profile-editor-form input, #profile-editor-form textarea, #profile-editor-form select').forEach(el => {
+            el.addEventListener('input', markDirty);
+            el.addEventListener('change', markDirty);
+        });
+        document.querySelectorAll('.toggle-card').forEach(el => {
+            el.addEventListener('click', markDirty);
+        });
+
+        // Start initialization
+        loadProfile();
+    </script>
+</body>
+</html>

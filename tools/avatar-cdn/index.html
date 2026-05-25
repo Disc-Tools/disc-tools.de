@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discord Avatar CDN Links | User & Server Icons | disc-tools.de</title>
+    
+    <meta name="description" content="Quickly generate direct CDN links for Discord avatars and icons in all formats.">
+    <meta name="theme-color" content="#5865F2">
+    <meta property="og:title" content="Avatar CDN - disc-tools">
+    <meta property="og:description" content="Generate direct Discord CDN links for any user avatar in various formats and sizes.">
+    <meta property="og:image" content="https://disc-tools.de/assets/img/logo.png">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="disc-tools">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:image" content="https://disc-tools.de/assets/img/logo.png">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="/assets/img/logo.png">
+    <link rel="stylesheet" href="/css/style.css">
+    <script defer src="https://umami.disc-tools.de/script.js" data-website-id="0cf82497-80c8-42a2-b6e4-8a8ae179d1fe"></script>
+    <link rel="canonical" href="https://disc-tools.de/tools/avatar-cdn/">
+</head>
+<body>
+    <div class="glow"></div>
+    <header>
+        <a href="/" class="logo-container">
+            <img loading="lazy" src="/assets/img/logo.png" alt="disc-tools Logo" class="main-logo" onerror="this.style.display='none'">
+            <div class="logo">disc<span>-</span>tools</div>
+        </a>
+        <nav class="nav-links">
+            <a href="/tools/" class="nav-link active">Tools</a>
+            <a href="/guides/" class="nav-link">Guides</a>
+            <a href="https://status.disc-tools.de/status/disc-tools" class="nav-link">Status</a>
+            <a href="/about/" class="nav-link">About</a>
+        </nav>
+        <span class="login-badge"></span>
+    </header>
+
+    <nav class="breadcrumbs">
+        <a href="/">Home</a>
+        <span>/</span>
+        <a href="/tools/">Tools</a>
+        <span>/</span>
+        <a href="./" class="current">Avatar CDN</a>
+    </nav>
+
+    <main class="tool-page">
+        <div class="tool-layout-single">
+            <div class="tool-container">
+                <section class="tool-hero" style="position: relative;">
+                    <span class="hero-tag">// image utility</span>
+                    <h1>Avatar <em>CDN</em> Generator</h1>
+                    <p>Fetch direct high-quality CDN links for any Discord profile. Perfect for designers and developers.</p>
+                    <a href="/guides/avatar-cdn/" class="help-link">
+                        <i class="fa-solid fa-circle-question"></i> How to?
+                    </a>
+                </section>
+
+                <div class="input-card">
+                    <div class="input-group">
+                        <input type="text" id="userId" placeholder="Paste Discord User ID here...">
+                        <button onclick="fetchUser()" style="border-radius: 0 10px 10px 0;">Generate</button>
+                    </div>
+                </div>
+
+                <div id="result-area" class="result-area" style="display: none; margin-top: 30px;">
+                    <div class="profile-card" style="margin-bottom: 30px;">
+                        <div class="profile-banner" id="user-banner"></div>
+                        <div class="profile-content">
+                            <div class="profile-header-flex">
+                                <img src="" alt="disc-tools Logo" id="user-avatar" class="profile-avatar">
+                                <div class="profile-main-info">
+                                    <h2 id="user-name">Loading...</h2>
+                                    <p id="user-id-display" class="profile-id">ID: 0000000000</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="data-section">
+                        <div class="data-section-title">
+                            <i class="fa-solid fa-layer-group"></i> CDN Link Matrix
+                            <div class="format-tabs" id="format-tabs"></div>
+                        </div>
+                        <div class="cdn-grid" id="cdn-matrix"></div>
+                    </div>
+                </div>
+
+                <div id="empty-state" class="empty-state">
+                    <i class="fa-solid fa-image" style="font-size: 48px; opacity: 0.1; margin-bottom: 15px;"></i>
+                    <p>Enter a User ID to generate CDN links.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer style="margin-top: 80px;">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <a href="/" class="logo-container">
+                    <img loading="lazy" src="/assets/img/logo.png" alt="disc-tools Logo" class="main-logo" onerror="this.style.display='none'">
+                    <div class="logo">disc<span>-</span>tools</div>
+                </a>
+                <p>The ultimate collection of Discord utilities. Secure, fast, and privacy-focused.</p>
+            </div>
+            <div class="footer-section">
+                <h3 class="footer-section-title">Explore</h3>
+                <ul class="footer-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/tools/">All Tools</a></li>
+                    <li><a href="/guides/">All Guides</a></li>
+                    <li><a href="https://status.disc-tools.de/status/disc-tools">System Status</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3 class="footer-section-title">Support</h3>
+                <ul class="footer-links">
+                    <li><a href="/about/">About Us</a></li>
+                    <li><a href="/guides/">Quick Start Guides</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3 class="footer-section-title">Legal</h3>
+                <ul class="footer-links">
+                    <li><a href="/legal/privacy-policy/">Privacy Policy</a></li>
+                    <li><a href="/legal/terms-of-service/">Terms of Service</a></li>
+                    <li><a href="/legal/imprint/">Imprint</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 disc-tools.de &mdash; not affiliated with <a href="https://discord.com" target="_blank">Discord Inc.</a></p>
+            <div class="footer-sass">// screw them anyways</div>
+        </div>
+    </footer>
+
+    <div class="toast" id="toast"></div>
+
+    <style>
+        .format-tabs {
+            display: flex;
+            gap: 10px;
+            margin-left: auto;
+            text-transform: none;
+        }
+        .format-tab {
+            padding: 4px 12px;
+            border-radius: 6px;
+            background: rgba(255,255,255,0.05);
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+        .format-tab.active {
+            background: var(--accent);
+            border-color: rgba(255,255,255,0.2);
+        }
+        .cdn-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .cdn-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            padding: 15px;
+            border-radius: 12px;
+            transition: all 0.2s;
+        }
+        .cdn-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+        .cdn-info {
+            font-size: 10px;
+            color: var(--muted);
+            text-transform: uppercase;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+        .cdn-link-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .cdn-input {
+            background: rgba(0,0,0,0.2);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-family: var(--mono);
+            flex: 1;
+            width: 100%;
+        }
+        .copy-btn-mini {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .copy-btn-mini:hover {
+            background: var(--accent2);
+            transform: scale(1.1);
+        }
+    </style>
+
+        <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <a href="/" class="logo-container">
+                    <img loading="lazy" src="/assets/img/logo.png" alt="disc-tools Logo" class="main-logo" onerror="this.style.display='none'">
+                    <div class="logo">disc<span>-</span>tools</div>
+                </a>
+                <p>The ultimate collection of Discord utilities. Secure, fast, and privacy-focused.</p>
+            </div>
+            <div class="footer-section">
+                <h3 class="footer-section-title">Explore</h3>
+                <ul class="footer-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/tools/">All Tools</a></li>
+                    <li><a href="https://status.disc-tools.de/status/disc-tools">System Status</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3 class="footer-section-title">Support</h3>
+                <ul class="footer-links">
+                    <li><a href="/about/">About Us</a></li>
+                    <li><a href="/guides/">Quick Start Guides</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3 class="footer-section-title">Legal</h3>
+                <ul class="footer-links">
+                    <li><a href="/legal/privacy-policy/">Privacy Policy</a></li>
+                    <li><a href="/legal/terms-of-service/">Terms of Service</a></li>
+                    <li><a href="/legal/imprint/">Imprint</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 disc-tools.de &mdash; not affiliated with <a href="https://discord.com" target="_blank">Discord Inc.</a></p>
+            <div class="footer-sass">// screw them anyways</div>
+        </div>
+    </footer>
+
+
+    <script src="/js/main.js" defer></script>
+    <script src="/js/avatar-cdn.js" defer></script>
+</body>
+</html>

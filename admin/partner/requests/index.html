@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Partnership Requests | Admin Dashboard | disc-tools.de</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="/assets/img/admin_logo.png">
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .admin-layout { display: flex; min-height: 100vh; background: var(--bg); }
+        .admin-sidebar { width: 260px; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 20px 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+        .admin-logo { display: flex; align-items: center; gap: 10px; padding: 0 20px 20px; border-bottom: 1px solid var(--border); text-decoration: none; }
+        .admin-logo img { height: 32px; }
+        .admin-logo span { font-family: var(--sans); font-weight: 800; font-size: 18px; color: #fff; }
+        .admin-logo span span { color: #e74c3c; }
+        .admin-nav { display: flex; flex-direction: column; gap: 2px; padding: 15px 10px; flex: 1; }
+        .admin-nav details { display: flex; flex-direction: column; }
+        .admin-nav details summary { display: flex; align-items: center; gap: 10px; padding: 10px 15px; color: var(--muted); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; cursor: pointer; border-radius: 10px; user-select: none; list-style: none; transition: color 0.2s; }
+        .admin-nav details summary::-webkit-details-marker { display: none; }
+        .admin-nav details summary::marker { display: none; }
+        .admin-nav details summary i { font-size: 12px; width: 20px; text-align: center; }
+        .admin-nav details summary .arrow { margin-left: auto; font-size: 10px; transition: transform 0.2s; }
+        .admin-nav details[open] summary .arrow { transform: rotate(90deg); }
+        .admin-nav details summary:hover { color: #e74c3c; }
+        .admin-nav details a { display: flex; align-items: center; gap: 12px; padding: 10px 15px 10px 47px; color: var(--muted); text-decoration: none; border-radius: 8px; font-weight: 500; font-size: 14px; transition: all 0.2s; }
+        .admin-nav details a:hover, .admin-nav details a.active { background: rgba(231, 76, 60, 0.1); color: #e74c3c; }
+        .admin-nav details a i { width: 16px; text-align: center; font-size: 14px; }
+
+        .admin-content { flex: 1; padding: 40px; overflow-y: auto; }
+        .admin-header { margin-bottom: 30px; }
+        .admin-header h1 { font-family: var(--sans); font-size: 28px; margin: 0; }
+        .admin-subtitle { color: var(--muted); margin-top: 5px; }
+        .requests-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 20px; }
+        .request-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 25px; }
+        .request-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px; }
+        .request-title { display: flex; align-items: center; gap: 12px; }
+        .user-avatar { width: 40px; height: 40px; border-radius: 50%; background: #e74c3c; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; color: white; }
+        .request-name { font-size: 16px; font-weight: 600; }
+        .request-user { font-size: 13px; color: var(--muted); }
+        .request-field { margin-bottom: 15px; }
+        .request-label { font-weight: 600; font-size: 12px; color: var(--muted); text-transform: uppercase; margin-bottom: 5px; }
+        .request-value { font-size: 14px; line-height: 1.5; }
+        .request-actions { display: flex; gap: 10px; margin-top: 20px; border-top: 1px solid var(--border); padding-top: 15px; }
+        .btn-approve { flex: 1; padding: 10px; background: rgba(46, 204, 113, 0.1); color: #2ecc71; border: 1px solid rgba(46, 204, 113, 0.2); border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; transition: all 0.2s; }
+        .btn-approve:hover { background: #2ecc71; color: white; }
+        .btn-reject { flex: 1; padding: 10px; background: rgba(231, 76, 60, 0.1); color: #e74c3c; border: 1px solid rgba(231, 76, 60, 0.2); border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; transition: all 0.2s; }
+        .btn-reject:hover { background: #e74c3c; color: white; }
+        .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); grid-column: 1 / -1; }
+        .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.7); z-index: 1000; align-items: center; justify-content: center; }
+        .modal.active { display: flex; }
+        .modal-content { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 30px; max-width: 500px; width: 90%; }
+        .modal-title { font-size: 20px; font-weight: 700; margin-bottom: 15px; }
+        .modal-group { margin-bottom: 15px; }
+        .modal-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 13px; }
+        .modal-group textarea { width: 100%; padding: 10px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: white; font-family: var(--sans); min-height: 80px; font-size: 14px; }
+        .modal-group textarea:focus { outline: none; border-color: #e74c3c; }
+        .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+        .modal-btn { flex: 1; padding: 10px; background: #e74c3c; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.2s; }
+        .modal-btn.cancel { background: rgba(255, 255, 255, 0.1); color: var(--text); border: 1px solid var(--border); }
+        @media (max-width: 768px) {
+            .requests-grid { grid-template-columns: 1fr; }
+            .admin-content { padding: 20px; }
+        }
+        .admin-nav > a:last-child:hover { color: #e74c3c !important; text-shadow: 0 0 20px rgba(231, 76, 60, 0.5); }
+    </style>
+</head>
+<body>
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <a href="/" class="admin-logo"><img src="/assets/img/admin_logo.png" alt="Admin"><span>disc<span>-</span>tools</span></a>
+            <nav class="admin-nav">
+                <details open>
+                    <summary><i class="fa-solid fa-layer-group"></i> General <span class="arrow">&#9654;</span></summary>
+                    <a href="/admin/overview/"><i class="fa-solid fa-house"></i> Overview</a>
+                    <a href="/admin/linktree/"><i class="fa-solid fa-link"></i> Linktree Profile</a>
+                    <a href="/admin/members/"><i class="fa-solid fa-users"></i> Members</a>
+                    <a href="/admin/tools/"><i class="fa-solid fa-wrench"></i> Tools</a>
+                    <a href="/admin/announcements/"><i class="fa-solid fa-bullhorn"></i> Announcements</a>
+                </details>
+                <details open>
+                    <summary><i class="fa-solid fa-server"></i> System <span class="arrow">&#9654;</span></summary>
+                    <a href="/admin/logs/"><i class="fa-solid fa-file-lines"></i> Logs</a>
+                    <a href="/admin/system/"><i class="fa-solid fa-server"></i> System</a>
+                </details>
+                <details open>
+                    <summary><i class="fa-solid fa-handshake"></i> Partnerships <span class="arrow">&#9654;</span></summary>
+                    <a href="/admin/partner/"><i class="fa-solid fa-handshake"></i> Manage Partners</a>
+                    <a href="/admin/partner/requests/" class="active"><i class="fa-solid fa-inbox"></i> Partnership Requests</a>
+                </details>
+                <a href="/" style="margin-top: auto; color: var(--muted); display: flex; align-items: center; gap: 12px; padding: 12px 15px; text-decoration: none; border-radius: 10px; font-weight: 500; font-size: 14px; transition: all 0.2s;"><i class="fa-solid fa-right-from-bracket"></i> Exit Admin</a>
+            </nav>
+        </aside>
+
+        <main class="admin-content">
+            <header class="admin-header">
+                <h1><i class="fa-solid fa-inbox" style="color: #e74c3c;"></i> Partnership Requests</h1>
+                <p class="admin-subtitle">Review and approve pending partnership applications</p>
+            </header>
+
+            <div class="requests-grid" id="requestsGrid">
+                <div class="empty-state"><i class="fa-solid fa-check-circle"></i> No pending requests</div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Reject Modal -->
+    <div id="rejectModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title">Reject Partnership Request</div>
+            <div class="modal-group">
+                <label>Rejection Reason (will be sent to the user)</label>
+                <textarea id="rejectReason" placeholder="Be constructive and helpful..."></textarea>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn" onclick="submitReject()"><i class="fa-solid fa-check"></i> Reject</button>
+                <button class="modal-btn cancel" onclick="closeRejectModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentRejectId = null;
+
+        async function checkAuth() {
+            try {
+                const res = await fetch('/api/admin/check');
+                if (!res.ok) { window.location.href = '/'; return; }
+            } catch (e) { window.location.href = '/'; }
+        }
+        checkAuth();
+
+        // Sidebar collapse state persistence
+        document.querySelectorAll('.admin-nav details').forEach(d => {
+            const key = 'nav-' + d.querySelector('summary').textContent.trim().toLowerCase().replace(/\s+/g, '-');
+            const saved = localStorage.getItem(key);
+            if (saved !== null) d.open = saved === 'true';
+            d.addEventListener('toggle', () => {
+                localStorage.setItem(key, d.open);
+            });
+        });
+
+        async function loadRequests() {
+            try {
+                const res = await fetch('/api/admin/partner/requests');
+                const requests = await res.json();
+
+                const grid = document.getElementById('requestsGrid');
+                
+                if (requests.length === 0) {
+                    grid.innerHTML = '<div class="empty-state"><i class="fa-solid fa-check-circle"></i> No pending requests</div>';
+                    return;
+                }
+
+                grid.innerHTML = requests.map(req => `
+                    <div class="request-card">
+                        <div class="request-header">
+                            <div class="request-title">
+                                <div class="user-avatar">${req.username.charAt(0).toUpperCase()}</div>
+                                <div>
+                                    <div class="request-name">${req.name}</div>
+                                    <div class="request-user">by ${req.username}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="request-field">
+                            <div class="request-label">Description</div>
+                            <div class="request-value">${req.description}</div>
+                        </div>
+
+                        <div class="request-field">
+                            <div class="request-label">What They Offer</div>
+                            <div class="request-value">${req.offer}</div>
+                        </div>
+
+                        <div class="request-field">
+                            <div class="request-label">Member Count</div>
+                            <div class="request-value">${req.memberCount.toLocaleString()} members</div>
+                        </div>
+
+                        <div class="request-field">
+                            <div class="request-label">Discord Server</div>
+                            <div class="request-value">
+                                <a href="${req.discordServer}" target="_blank" style="color: var(--accent); text-decoration: none;">
+                                    <i class="fa-brands fa-discord"></i> Join Server
+                                </a>
+                            </div>
+                        </div>
+
+                        ${req.website ? `
+                            <div class="request-field">
+                                <div class="request-label">Website</div>
+                                <div class="request-value">
+                                    <a href="${req.website}" target="_blank" style="color: var(--accent); text-decoration: none;">
+                                        <i class="fa-solid fa-globe"></i> ${req.website}
+                                    </a>
+                                </div>
+                            </div>
+                        ` : ''}
+
+                        <div class="request-field" style="font-size: 12px; color: var(--muted);">
+                            Submitted: ${new Date(req.createdAt).toLocaleDateString()}
+                        </div>
+
+                        <div class="request-actions">
+                            <button class="btn-approve" onclick="approveRequest('${req.id}')">
+                                <i class="fa-solid fa-check"></i> Approve
+                            </button>
+                            <button class="btn-reject" onclick="openRejectModal('${req.id}')">
+                                <i class="fa-solid fa-times"></i> Reject
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (err) {
+                console.error('Failed to load requests:', err);
+            }
+        }
+
+        async function approveRequest(id) {
+            if (!confirm('Approve this partnership request?')) return;
+
+            try {
+                const res = await fetch(`/api/admin/partner/requests/${id}/approve`, { method: 'POST' });
+                if (res.ok) {
+                    alert('Partnership approved! User has been notified.');
+                    loadRequests();
+                } else {
+                    alert('Failed to approve request');
+                }
+            } catch (err) {
+                alert('Error: ' + err.message);
+            }
+        }
+
+        function openRejectModal(id) {
+            currentRejectId = id;
+            document.getElementById('rejectReason').value = '';
+            document.getElementById('rejectModal').classList.add('active');
+        }
+
+        function closeRejectModal() {
+            document.getElementById('rejectModal').classList.remove('active');
+            currentRejectId = null;
+        }
+
+        async function submitReject() {
+            const reason = document.getElementById('rejectReason').value.trim();
+            if (!reason) {
+                alert('Please enter a rejection reason');
+                return;
+            }
+
+            try {
+                const res = await fetch(`/api/admin/partner/requests/${currentRejectId}/reject`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ reason })
+                });
+
+                if (res.ok) {
+                    alert('Request rejected. User has been notified.');
+                    closeRejectModal();
+                    loadRequests();
+                } else {
+                    alert('Failed to reject request');
+                }
+            } catch (err) {
+                alert('Error: ' + err.message);
+            }
+        }
+
+        loadRequests();
+        setInterval(loadRequests, 30000); // Refresh every 30s
+
+        // Close modal when clicking outside
+        document.getElementById('rejectModal').addEventListener('click', (e) => {
+            if (e.target.id === 'rejectModal') closeRejectModal();
+        });
+    </script>
+</body>
+</html>
