@@ -89,56 +89,7 @@
                 </div>
             </header>
 
-            <div class="tools-grid">
-                <div class="tool-panel" data-tool="token-info">
-                    <div class="tool-icon" style="color: #3498db;"><i class="fa-solid fa-screwdriver-wrench"></i></div>
-                    <div class="tool-info">
-                        <div class="tool-name">Token Info</div>
-                        <div class="tool-stats">Active • 1,204 views</div>
-                    </div>
-                    <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
-                </div>
-                <div class="tool-panel" data-tool="webhook-manager">
-                    <div class="tool-icon" style="color: #e74c3c;"><i class="fa-solid fa-satellite-dish"></i></div>
-                    <div class="tool-info">
-                        <div class="tool-name">Webhook Manager</div>
-                        <div class="tool-stats">Active • 856 views</div>
-                    </div>
-                    <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
-                </div>
-                <div class="tool-panel" data-tool="nitro-checker">
-                    <div class="tool-icon" style="color: #2ecc71;"><i class="fa-solid fa-gift"></i></div>
-                    <div class="tool-info">
-                        <div class="tool-name">Nitro Checker</div>
-                        <div class="tool-stats">Active • 2,130 views</div>
-                    </div>
-                    <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
-                </div>
-                <div class="tool-panel" data-tool="timestamp-generator">
-                    <div class="tool-icon" style="color: #f1c40f;"><i class="fa-solid fa-calendar-day"></i></div>
-                    <div class="tool-info">
-                        <div class="tool-name">Timestamp Generator</div>
-                        <div class="tool-stats">Active • 420 views</div>
-                    </div>
-                    <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
-                </div>
-                <div class="tool-panel" data-tool="rpc-generator">
-                    <div class="tool-icon" style="color: #9b59b6;"><i class="fa-solid fa-code"></i></div>
-                    <div class="tool-info">
-                        <div class="tool-name">RPC Generator</div>
-                        <div class="tool-stats" style="color: #e74c3c;">Coming Soon</div>
-                    </div>
-                    <label class="switch"><input type="checkbox"><span class="slider"></span></label>
-                </div>
-                <div class="tool-panel" data-tool="bot-invite-maker">
-                    <div class="tool-icon" style="color: #1abc9c;"><i class="fa-solid fa-robot"></i></div>
-                    <div class="tool-info">
-                        <div class="tool-name">Bot Invite Maker</div>
-                        <div class="tool-stats" style="color: #e74c3c;">Coming Soon</div>
-                    </div>
-                    <label class="switch"><input type="checkbox"><span class="slider"></span></label>
-                </div>
-            </div>
+            <div class="tools-grid" id="toolsGrid"></div>
         </main>
     </div>
 
@@ -161,60 +112,59 @@
             });
         });
 
-        const TOOL_VIEWS = {
-            'token-info': 1204,
-            'webhook-manager': 856,
-            'nitro-checker': 2130,
-            'timestamp-generator': 420,
-            'rpc-generator': 0,
-            'bot-invite-maker': 0,
-        };
+        function createToolPanel(tool) {
+            const panel = document.createElement('div');
+            panel.className = 'tool-panel';
+            panel.dataset.tool = tool.id;
+            const activeClass = tool.active ? '' : ' style="color: #e74c3c;"';
+            panel.innerHTML = ''
+                + '<div class="tool-icon" style="color: ' + tool.color + ';"><i class="' + tool.icon + '"></i></div>'
+                + '<div class="tool-info">'
+                + '<div class="tool-name">' + tool.name + '</div>'
+                + '<div class="tool-stats"' + (tool.active ? '' : ' style="color: #e74c3c;"') + '>'
+                + (tool.active ? 'Active • ' + (tool.view_count || 0).toLocaleString() + ' views' : 'Coming Soon')
+                + '</div>'
+                + '</div>'
+                + '<label class="switch"><input type="checkbox"' + (tool.active ? ' checked' : '') + '><span class="slider"></span></label>';
+            return panel;
+        }
 
-        function loadToolStates() {
+        async function loadTools() {
             try {
-                const saved = localStorage.getItem('admin_tools_state');
-                return saved ? JSON.parse(saved) : {};
-            } catch { return {}; }
-        }
-
-        function saveToolState(toolId, active) {
-            const states = loadToolStates();
-            states[toolId] = active;
-            localStorage.setItem('admin_tools_state', JSON.stringify(states));
-        }
-
-        function applyToolUI(panel, active) {
-            const checkbox = panel.querySelector('input[type="checkbox"]');
-            const stats = panel.querySelector('.tool-stats');
-            checkbox.checked = active;
-            if (active) {
-                stats.textContent = 'Active • ' + (TOOL_VIEWS[panel.dataset.tool] || 0).toLocaleString() + ' views';
-                stats.style.color = 'var(--muted)';
-            } else {
-                stats.textContent = 'Coming Soon';
-                stats.style.color = '#e74c3c';
+                const res = await fetch('/api/admin/tools');
+                if (!res.ok) return;
+                const tools = await res.json();
+                const grid = document.getElementById('toolsGrid');
+                grid.innerHTML = '';
+                tools.forEach(tool => {
+                    grid.appendChild(createToolPanel(tool));
+                });
+            } catch (e) {
+                console.error('Failed to load tools:', e);
             }
         }
 
-        function initTools() {
-            const states = loadToolStates();
-            document.querySelectorAll('.tool-panel').forEach(panel => {
-                const toolId = panel.dataset.tool;
-                const active = toolId in states ? states[toolId] : panel.querySelector('input[type="checkbox"]').checked;
-                applyToolUI(panel, active);
-            });
-        }
-
-        document.querySelector('.tools-grid').addEventListener('change', (e) => {
+        document.getElementById('toolsGrid').addEventListener('change', async (e) => {
             if (e.target.type !== 'checkbox') return;
             const panel = e.target.closest('.tool-panel');
             if (!panel) return;
             const toolId = panel.dataset.tool;
-            saveToolState(toolId, e.target.checked);
-            applyToolUI(panel, e.target.checked);
+            const checkbox = e.target;
+            try {
+                const res = await fetch('/api/admin/tools/' + toolId + '/toggle', { method: 'POST' });
+                if (res.ok) {
+                    const tool = await res.json();
+                    const newPanel = createToolPanel(tool);
+                    panel.replaceWith(newPanel);
+                } else {
+                    checkbox.checked = !checkbox.checked;
+                }
+            } catch {
+                checkbox.checked = !checkbox.checked;
+            }
         });
 
-        initTools();
+        loadTools();
     </script>
 </body>
 </html>
