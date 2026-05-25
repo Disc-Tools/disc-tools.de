@@ -221,31 +221,41 @@ document.addEventListener('DOMContentLoaded', async () => {
             const res = await fetch('/api/stats/popular');
             const tools = await res.json();
             
+            const toolCounts = {};
+            tools.forEach(t => toolCounts[t.id] = t.count);
+
             const allCards = document.querySelectorAll('.tool-card');
             allCards.forEach(card => {
                 const href = card.getAttribute('href') || '';
                 const toolId = href.split('/').filter(Boolean).pop();
-                const tool = tools.find(t => t.id === toolId);
-                
-                if (tool) {
-                    card.setAttribute('data-popularity', tool.count);
-                }
+                const count = toolCounts[toolId] || 0;
+                card.setAttribute('data-popularity', count);
             });
 
-            // Special handling for the Popular Tools section on home page
+            // Dynamic Popular Tools section on home page
             const popularContainer = document.getElementById('popular-tools-container');
-            if (popularContainer) {
-                const popularCards = Array.from(popularContainer.querySelectorAll('.tool-card'));
-                const sortedCards = popularCards.sort((a, b) => (Number(b.getAttribute('data-popularity')) || 0) - (Number(a.getAttribute('data-popularity')) || 0));
+            if (popularContainer && window.POPULAR_TOOLS_DATA) {
+                const sorted = [...window.POPULAR_TOOLS_DATA]
+                    .sort((a, b) => (toolCounts[b.id] || 0) - (toolCounts[a.id] || 0));
                 
-                sortedCards.forEach((c, index) => {
-                    if (index < 3) {
-                        c.style.display = 'block';
-                        popularContainer.appendChild(c);
-                    } else {
-                        c.style.display = 'none';
-                    }
-                });
+                popularContainer.innerHTML = '';
+                const count = Math.min(sorted.length, 3);
+                for (let i = 0; i < count; i++) {
+                    const t = sorted[i];
+                    const card = document.createElement('a');
+                    card.href = `tools/${t.id}/`;
+                    card.className = `tool-card ${t.color}`;
+                    card.setAttribute('data-category', t.category);
+                    card.innerHTML = `
+                        <span class="tool-card-icon"><i class="fa-solid ${t.icon}"></i></span>
+                        <div class="tool-card-title">${t.name}</div>
+                        <div class="tool-card-desc">${t.desc}</div>
+                        <div class="card-footer">
+                            <span class="category-badge">${t.category}</span>
+                        </div>
+                    `;
+                    popularContainer.appendChild(card);
+                }
             }
         } catch (err) {
             console.warn('Stats fetch failed');

@@ -175,33 +175,7 @@
         <a href="tools/" class="view-all">View All Tools <i class="fa-solid fa-arrow-right"></i></a>
     </div>
 
-    <div class="tools-grid" id="popular-tools-container">
-        <a href="tools/invite-lookup/" class="tool-card card-invite" data-category="Invite">
-            <span class="tool-card-icon"><i class="fa-solid fa-link"></i></span>
-            <div class="tool-card-title">Invite Lookup</div>
-            <div class="tool-card-desc">Inspect any invite link &mdash; guild info, member count, inviter & expiry.</div>
-            <div class="card-footer">
-                <span class="category-badge">Invite</span>
-            </div>
-        </a>
-        <a href="tools/server-lookup/" class="tool-card card-server" data-category="Server">
-            <span class="tool-card-icon"><i class="fa-solid fa-server"></i></span>
-            <div class="tool-card-title">Server Lookup</div>
-            <div class="tool-card-desc">Fetch public server info via Discord's Widget API. Members, channels & invites.
-            </div>
-            <div class="card-footer">
-                <span class="category-badge">Server</span>
-            </div>
-        </a>
-        <a href="tools/webhook-manager/" class="tool-card card-bot" data-category="Admin">
-            <span class="tool-card-icon"><i class="fa-solid fa-robot"></i></span>
-            <div class="tool-card-title">Webhook Manager</div>
-            <div class="tool-card-desc">Send messages, override names or delete webhooks without a bot.</div>
-            <div class="card-footer">
-                <span class="category-badge">Admin</span>
-            </div>
-        </a>
-    </div>
+    <div class="tools-grid" id="popular-tools-container"></div>
 
     <div class="section-header mt-40">
         <div class="section-title">
@@ -283,6 +257,21 @@
     </footer>
 
 
+    <script>
+        var POPULAR_TOOLS_DATA = [
+            { id: 'invite-lookup', name: 'Invite Lookup', desc: 'Inspect any invite link \u2014 guild info, member count, inviter & expiry.', icon: 'fa-link', category: 'Invite', color: 'card-invite' },
+            { id: 'server-lookup', name: 'Server Lookup', desc: "Fetch public server info via Discord's Widget API. Members, channels & invites.", icon: 'fa-server', category: 'Server', color: 'card-server' },
+            { id: 'webhook-manager', name: 'Webhook Manager', desc: 'Send messages, override names or delete webhooks without a bot.', icon: 'fa-robot', category: 'Admin', color: 'card-bot' },
+            { id: 'emoji-stealer', name: 'Emoji Stealer', desc: 'Get direct high-quality links for any Discord emoji or sticker.', icon: 'fa-face-grin-stars', category: 'User', color: 'card-image' },
+            { id: 'markdown-generator', name: 'Markdown Gen', desc: 'Easily format your Discord messages with live preview and quick-copy.', icon: 'fa-pen-nib', category: 'User', color: 'card-user' },
+            { id: 'snowflake-decoder', name: 'Snowflake Decoder', desc: 'Decode any Discord Snowflake into timestamp, worker, process & increment.', icon: 'fa-snowflake', category: 'Developer', color: 'card-dev' },
+            { id: 'avatar-cdn', name: 'Avatar CDN', desc: 'Generate direct CDN links for any user avatar in all sizes & formats.', icon: 'fa-image', category: 'User', color: 'card-image' },
+            { id: 'embed-builder', name: 'Embed Builder', desc: 'Visual Discord embed builder with live preview and JSON export.', icon: 'fa-code', category: 'Developer', color: 'card-dev' },
+            { id: 'timestamp-generator', name: 'Timestamp Generator', desc: 'Generate Discord timestamps in all formats for any date and timezone.', icon: 'fa-calendar-day', category: 'Developer', color: 'card-dev' },
+            { id: 'color-picker', name: 'Color Picker', desc: 'Discord role colors as HEX, RGB, HSL and Integer values.', icon: 'fa-palette', category: 'Developer', color: 'card-dev' },
+            { id: 'nitro-checker', name: 'Nitro Gift Checker', desc: 'Check the validity and status of Nitro gift links without claiming.', icon: 'fa-gift', category: 'Invite', color: 'card-invite' },
+        ];
+    </script>
     <script src="js/main.js" defer></script>
 </body>
 
