@@ -175,7 +175,96 @@
         <a href="tools/" class="view-all">View All Tools <i class="fa-solid fa-arrow-right"></i></a>
     </div>
 
-    <div class="tools-grid" id="popular-tools-container"></div>
+    <div class="tools-grid" id="popular-tools-container">
+        <a href="tools/invite-lookup/" class="tool-card card-invite" data-category="Invite" style="display:none">
+            <span class="tool-card-icon"><i class="fa-solid fa-link"></i></span>
+            <div class="tool-card-title">Invite Lookup</div>
+            <div class="tool-card-desc">Inspect any invite link &mdash; guild info, member count, inviter & expiry.</div>
+            <div class="card-footer">
+                <span class="category-badge">Invite</span>
+            </div>
+        </a>
+        <a href="tools/server-lookup/" class="tool-card card-server" data-category="Server" style="display:none">
+            <span class="tool-card-icon"><i class="fa-solid fa-server"></i></span>
+            <div class="tool-card-title">Server Lookup</div>
+            <div class="tool-card-desc">Fetch public server info via Discord's Widget API. Members, channels & invites.</div>
+            <div class="card-footer">
+                <span class="category-badge">Server</span>
+            </div>
+        </a>
+        <a href="tools/webhook-manager/" class="tool-card card-bot" data-category="Admin" style="display:none">
+            <span class="tool-card-icon"><i class="fa-solid fa-robot"></i></span>
+            <div class="tool-card-title">Webhook Manager</div>
+            <div class="tool-card-desc">Send messages, override names or delete webhooks without a bot.</div>
+            <div class="card-footer">
+                <span class="category-badge">Admin</span>
+            </div>
+        </a>
+        <a href="tools/emoji-stealer/" class="tool-card card-image" data-category="User" style="display:none">
+            <span class="tool-card-icon"><i class="fa-solid fa-face-grin-stars"></i></span>
+            <div class="tool-card-title">Emoji Stealer</div>
+            <div class="tool-card-desc">Get direct high-quality links for any Discord emoji or sticker.</div>
+            <div class="card-footer">
+                <span class="category-badge">User</span>
+            </div>
+        </a>
+        <a href="tools/markdown-generator/" class="tool-card card-user" data-category="User" style="display:none">
+            <span class="tool-card-icon"><i class="fa-solid fa-pen-nib"></i></span>
+            <div class="tool-card-title">Markdown Gen</div>
+            <div class="tool-card-desc">Easily format your Discord messages with live preview and quick-copy.</div>
+            <div class="card-footer">
+                <span class="category-badge">User</span>
+            </div>
+        </a>
+        <a href="tools/snowflake-decoder/" class="tool-card card-dev" data-category="Developer" style="display:none">
+            <span class="tool-card-icon"><i class="fa-solid fa-snowflake"></i></span>
+            <div class="tool-card-title">Snowflake Decoder</div>
+            <div class="tool-card-desc">Decode any Discord Snowflake into timestamp, worker, process & increment.</div>
+            <div class="card-footer">
+                <span class="category-badge">Developer</span>
+            </div>
+        </a>
+        <a href="tools/avatar-cdn/" class="tool-card card-image" data-category="User" style="display:none">
+            <span class="tool-card-icon"><i class="fa-solid fa-image"></i></span>
+            <div class="tool-card-title">Avatar CDN</div>
+            <div class="tool-card-desc">Generate direct CDN links for any user avatar in all sizes & formats.</div>
+            <div class="card-footer">
+                <span class="category-badge">User</span>
+            </div>
+        </a>
+        <a href="tools/embed-builder/" class="tool-card card-dev" data-category="Developer" style="display:none">
+            <span class="tool-card-icon"><i class="fa-solid fa-code"></i></span>
+            <div class="tool-card-title">Embed Builder</div>
+            <div class="tool-card-desc">Visual Discord embed builder with live preview and JSON export.</div>
+            <div class="card-footer">
+                <span class="category-badge">Developer</span>
+            </div>
+        </a>
+        <a href="tools/timestamp-generator/" class="tool-card card-dev" data-category="Developer" style="display:none">
+            <span class="tool-card-icon"><i class="fa-solid fa-calendar-day"></i></span>
+            <div class="tool-card-title">Timestamp Generator</div>
+            <div class="tool-card-desc">Generate Discord timestamps in all formats for any date and timezone.</div>
+            <div class="card-footer">
+                <span class="category-badge">Developer</span>
+            </div>
+        </a>
+        <a href="tools/color-picker/" class="tool-card card-dev" data-category="Developer" style="display:none">
+            <span class="tool-card-icon"><i class="fa-solid fa-palette"></i></span>
+            <div class="tool-card-title">Color Picker</div>
+            <div class="tool-card-desc">Discord role colors as HEX, RGB, HSL and Integer values.</div>
+            <div class="card-footer">
+                <span class="category-badge">Developer</span>
+            </div>
+        </a>
+        <a href="tools/nitro-checker/" class="tool-card card-invite" data-category="Invite" style="display:none">
+            <span class="tool-card-icon"><i class="fa-solid fa-gift"></i></span>
+            <div class="tool-card-title">Nitro Gift Checker</div>
+            <div class="tool-card-desc">Check the validity and status of Nitro gift links without claiming.</div>
+            <div class="card-footer">
+                <span class="category-badge">Invite</span>
+            </div>
+        </a>
+    </div>
 
     <div class="section-header mt-40">
         <div class="section-title">
@@ -257,21 +346,6 @@
     </footer>
 
 
-    <script>
-        var POPULAR_TOOLS_DATA = [
-            { id: 'invite-lookup', name: 'Invite Lookup', desc: 'Inspect any invite link \u2014 guild info, member count, inviter & expiry.', icon: 'fa-link', category: 'Invite', color: 'card-invite' },
-            { id: 'server-lookup', name: 'Server Lookup', desc: "Fetch public server info via Discord's Widget API. Members, channels & invites.", icon: 'fa-server', category: 'Server', color: 'card-server' },
-            { id: 'webhook-manager', name: 'Webhook Manager', desc: 'Send messages, override names or delete webhooks without a bot.', icon: 'fa-robot', category: 'Admin', color: 'card-bot' },
-            { id: 'emoji-stealer', name: 'Emoji Stealer', desc: 'Get direct high-quality links for any Discord emoji or sticker.', icon: 'fa-face-grin-stars', category: 'User', color: 'card-image' },
-            { id: 'markdown-generator', name: 'Markdown Gen', desc: 'Easily format your Discord messages with live preview and quick-copy.', icon: 'fa-pen-nib', category: 'User', color: 'card-user' },
-            { id: 'snowflake-decoder', name: 'Snowflake Decoder', desc: 'Decode any Discord Snowflake into timestamp, worker, process & increment.', icon: 'fa-snowflake', category: 'Developer', color: 'card-dev' },
-            { id: 'avatar-cdn', name: 'Avatar CDN', desc: 'Generate direct CDN links for any user avatar in all sizes & formats.', icon: 'fa-image', category: 'User', color: 'card-image' },
-            { id: 'embed-builder', name: 'Embed Builder', desc: 'Visual Discord embed builder with live preview and JSON export.', icon: 'fa-code', category: 'Developer', color: 'card-dev' },
-            { id: 'timestamp-generator', name: 'Timestamp Generator', desc: 'Generate Discord timestamps in all formats for any date and timezone.', icon: 'fa-calendar-day', category: 'Developer', color: 'card-dev' },
-            { id: 'color-picker', name: 'Color Picker', desc: 'Discord role colors as HEX, RGB, HSL and Integer values.', icon: 'fa-palette', category: 'Developer', color: 'card-dev' },
-            { id: 'nitro-checker', name: 'Nitro Gift Checker', desc: 'Check the validity and status of Nitro gift links without claiming.', icon: 'fa-gift', category: 'Invite', color: 'card-invite' },
-        ];
-    </script>
     <script src="js/main.js" defer></script>
 </body>
 
