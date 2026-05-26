@@ -358,6 +358,16 @@
 
     <script src="/js/umami-tracking.js"></script>
     <script>
+        function escapeHtml(str) {
+            if (str === null || str === undefined) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
         const slug = window.location.pathname.replace('/partner/', '').replace(/\/$/, '');
 
         async function loadPartners() {
@@ -375,22 +385,30 @@
                 }
 
                 container.innerHTML = partners.map(partner => `
-                    <div class="partner-card" onclick="window.location='/partner/${partner.slug}'">
+                    <div class="partner-card" data-slug="${escapeHtml(partner.slug)}">
                         <div style="display: flex; gap: 15px; align-items: flex-start;">
                             <div class="partner-logo">
-                                ${partner.logo ? `<img src="${partner.logo}" alt="${partner.name}">` : '<i class="fa-solid fa-building"></i>'}
+                                ${partner.logo ? `<img src="${escapeHtml(partner.logo)}" alt="${escapeHtml(partner.name)}">` : '<i class="fa-solid fa-building"></i>'}
                             </div>
                             <div class="partner-info">
-                                <h3>${partner.name}</h3>
+                                <h3>${escapeHtml(partner.name)}</h3>
                             </div>
                         </div>
-                        <p>${partner.description || ''}</p>
-                        <div class="partner-actions" onclick="event.stopPropagation()">
-                            ${partner.website ? `<a href="${partner.website}" target="_blank" class="partner-link"><i class="fa-solid fa-globe"></i> Website</a>` : ''}
-                            ${partner.discordServer ? `<a href="${partner.discordServer}" target="_blank" class="partner-link"><i class="fa-brands fa-discord"></i> Discord</a>` : ''}
+                        <p>${escapeHtml(partner.description || '')}</p>
+                        <div class="partner-actions">
+                            ${partner.website ? `<a href="${escapeHtml(partner.website)}" target="_blank" rel="noopener noreferrer" class="partner-link"><i class="fa-solid fa-globe"></i> Website</a>` : ''}
+                            ${partner.discordServer ? `<a href="${escapeHtml(partner.discordServer)}" target="_blank" rel="noopener noreferrer" class="partner-link"><i class="fa-brands fa-discord"></i> Discord</a>` : ''}
                         </div>
                     </div>
                 `).join('');
+
+                container.querySelectorAll('.partner-card').forEach(card => {
+                    card.addEventListener('click', function(e) {
+                        if (e.target.closest('.partner-actions')) return;
+                        const slug = this.getAttribute('data-slug');
+                        if (slug) window.location = '/partner/' + slug;
+                    });
+                });
 
                 trackEvent('page_view', { page: 'partners' });
             } catch (error) {
@@ -415,13 +433,13 @@
 
                 document.getElementById('partnerDetailCard').innerHTML = `
                     <div class="partner-detail-logo">
-                        ${partner.logo ? `<img src="${partner.logo}" alt="${partner.name}">` : '<i class="fa-solid fa-building"></i>'}
+                        ${partner.logo ? `<img src="${escapeHtml(partner.logo)}" alt="${escapeHtml(partner.name)}">` : '<i class="fa-solid fa-building"></i>'}
                     </div>
-                    <h1>${partner.name}</h1>
-                    <p>${partner.description || ''}</p>
+                    <h1>${escapeHtml(partner.name)}</h1>
+                    <p>${escapeHtml(partner.description || '')}</p>
                     <div class="partner-detail-actions">
-                        ${partner.website ? `<a href="${partner.website}" target="_blank" class="partner-link"><i class="fa-solid fa-globe"></i> Website</a>` : ''}
-                        ${partner.discordServer ? `<a href="${partner.discordServer}" target="_blank" class="partner-link"><i class="fa-brands fa-discord"></i> Discord</a>` : ''}
+                        ${partner.website ? `<a href="${escapeHtml(partner.website)}" target="_blank" rel="noopener noreferrer" class="partner-link"><i class="fa-solid fa-globe"></i> Website</a>` : ''}
+                        ${partner.discordServer ? `<a href="${escapeHtml(partner.discordServer)}" target="_blank" rel="noopener noreferrer" class="partner-link"><i class="fa-brands fa-discord"></i> Discord</a>` : ''}
                     </div>
                 `;
 

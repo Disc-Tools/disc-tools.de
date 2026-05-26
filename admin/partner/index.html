@@ -165,6 +165,16 @@
     </div>
 
     <script>
+        function escapeHtml(str) {
+            if (str === null || str === undefined) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
         async function checkAuth() {
             try {
                 const res = await fetch('/api/admin/check');
@@ -206,26 +216,33 @@
                         <td>
                             <div class="partner-name">
                                 <div class="partner-logo">
-                                    ${p.logo ? `<img src="${p.logo}" alt="${p.name}">` : '<i class="fa-solid fa-building"></i>'}
+                                    ${p.logo ? `<img src="${escapeHtml(p.logo)}" alt="${escapeHtml(p.name)}">` : '<i class="fa-solid fa-building"></i>'}
                                 </div>
-                                <strong>${p.name}</strong>
+                                <strong>${escapeHtml(p.name)}</strong>
                             </div>
                         </td>
-                        <td>${p.description.substring(0, 50)}...</td>
+                        <td>${escapeHtml(p.description.substring(0, 50))}...</td>
                         <td>
                             <div style="display: flex; gap: 5px;">
-                                ${p.website ? `<a href="${p.website}" target="_blank" class="btn-sm"><i class="fa-solid fa-globe"></i></a>` : ''}
-                                ${p.discordServer ? `<a href="${p.discordServer}" target="_blank" class="btn-sm"><i class="fa-brands fa-discord"></i></a>` : ''}
+                                ${p.website ? `<a href="${escapeHtml(p.website)}" target="_blank" rel="noopener noreferrer" class="btn-sm"><i class="fa-solid fa-globe"></i></a>` : ''}
+                                ${p.discordServer ? `<a href="${escapeHtml(p.discordServer)}" target="_blank" rel="noopener noreferrer" class="btn-sm"><i class="fa-brands fa-discord"></i></a>` : ''}
                             </div>
                         </td>
                         <td><span style="color: #2ecc71;">Active</span></td>
                         <td>
-                            <button class="btn-sm btn-danger" onclick="deletePartner('${p.id}')">
+                            <button class="btn-sm btn-danger delete-partner-btn" data-partner-id="${escapeHtml(p.id)}">
                                 <i class="fa-solid fa-trash"></i> Delete
                             </button>
                         </td>
                     </tr>
                 `).join('');
+
+                tbody.querySelectorAll('.delete-partner-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const id = this.getAttribute('data-partner-id');
+                        deletePartner(id);
+                    });
+                });
             } catch (err) {
                 console.error('Failed to load partners:', err);
                 alert('Failed to load partners');

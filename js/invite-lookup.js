@@ -1,3 +1,13 @@
+function escapeHtml(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
 let cachedGuilds = [];
 
 const FEATURE_INFO = {
@@ -66,11 +76,17 @@ function renderGuilds(guilds) {
     if (!grid) return;
 
     grid.innerHTML = guilds.map(guild => `
-        <div class="server-item" onclick="lookupGuild('${guild.id}')">
-            ${guild.icon ? `<img src="https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png?size=64">` : `<div class="guild-icon" style="width:40px; height:40px; display:flex; align-items:center; justify-content:center; background:var(--surface2); border-radius:10px; font-weight:800; font-size:14px;">${guild.name.charAt(0)}</div>`}
-            <span>${guild.name}</span>
+        <div class="server-item" data-guild-id="${escapeHtml(guild.id)}">
+            ${guild.icon ? `<img src="https://cdn.discordapp.com/icons/${escapeHtml(guild.id)}/${escapeHtml(guild.icon)}.png?size=64">` : `<div class="guild-icon" style="width:40px; height:40px; display:flex; align-items:center; justify-content:center; background:var(--surface2); border-radius:10px; font-weight:800; font-size:14px;">${escapeHtml(guild.name.charAt(0))}</div>`}
+            <span>${escapeHtml(guild.name)}</span>
         </div>
     `).join('');
+
+    grid.querySelectorAll('.server-item').forEach(item => {
+        item.addEventListener('click', function() {
+            lookupGuild(this.getAttribute('data-guild-id'));
+        });
+    });
     
     if (container) container.style.display = 'block';
 }
@@ -198,28 +214,28 @@ function displayInvite(data) {
 
     let html = `
         <div class="invite-data">
-            ${bannerUrl ? `<div class="server-banner-container" style="height: 240px;"><img src="${bannerUrl}" class="server-banner" alt="Banner"></div>` : ''}
+            ${bannerUrl ? `<div class="server-banner-container" style="height: 240px;"><img src="${escapeHtml(bannerUrl)}" class="server-banner" alt="Banner"></div>` : ''}
             
             <div class="guild-header" style="${bannerUrl ? 'margin-top: -40px; position: relative; z-index: 2;' : 'margin-top: 20px;'}">
-                ${iconUrl ? `<img src="${iconUrl}" class="guild-icon" alt="Guild Icon" style="${bannerUrl ? 'border: 4px solid var(--surface);' : ''}">` : `<div class="guild-icon" style="display: flex; align-items: center; justify-content: center; background: var(--surface2); font-size: 32px; font-weight: 800; font-family: var(--sans); ${bannerUrl ? 'border: 4px solid var(--surface);' : ''}">${guild ? guild.name.charAt(0) : '?'}</div>`}
+                ${iconUrl ? `<img src="${escapeHtml(iconUrl)}" class="guild-icon" alt="Guild Icon" style="${bannerUrl ? 'border: 4px solid var(--surface);' : ''}">` : `<div class="guild-icon" style="display: flex; align-items: center; justify-content: center; background: var(--surface2); font-size: 32px; font-weight: 800; font-family: var(--sans); ${bannerUrl ? 'border: 4px solid var(--surface);' : ''}">${guild ? escapeHtml(guild.name.charAt(0)) : '?'}</div>`}
                 <div class="guild-info">
                     <h2 style="display: flex; align-items: center; gap: 10px;">
-                        ${guild ? guild.name : 'Unknown Guild'}
+                        ${guild ? escapeHtml(guild.name) : 'Unknown Guild'}
                         ${guild && guild.features?.includes('VERIFIED') ? '<i class="fa-solid fa-circle-check" style="color: #43b581; font-size: 18px;" title="Verified"></i>' : ''}
                         ${guild && guild.features?.includes('PARTNERED') ? '<i class="fa-solid fa-handshake" style="color: #5865f2; font-size: 18px;" title="Partnered"></i>' : ''}
                     </h2>
-                    <div class="id"><i class="fa-solid fa-fingerprint"></i> ${guild ? guild.id : 'No ID'}</div>
+                    <div class="id"><i class="fa-solid fa-fingerprint"></i> ${guild ? escapeHtml(guild.id) : 'No ID'}</div>
                 </div>
             </div>
 
             <div class="stats-grid">
                 <div class="stat-item">
                     <div class="stat-label">Total Members</div>
-                    <div class="stat-value">${data.approximate_member_count?.toLocaleString() || 'Unknown'}</div>
+                    <div class="stat-value">${escapeHtml(data.approximate_member_count?.toLocaleString() || 'Unknown')}</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-label">Online Members</div>
-                    <div class="stat-value"><span class="online-dot"></span>${data.approximate_presence_count?.toLocaleString() || 'Unknown'}</div>
+                    <div class="stat-value"><span class="online-dot"></span>${escapeHtml(data.approximate_presence_count?.toLocaleString() || 'Unknown')}</div>
                 </div>
             </div>
 
@@ -229,21 +245,21 @@ function displayInvite(data) {
                     ${channel ? `
                     <div class="data-row">
                         <div class="data-label">Channel</div>
-                        <div class="data-value">#${channel.name}</div>
+                        <div class="data-value">#${escapeHtml(channel.name)}</div>
                     </div>
                     ` : ''}
                     <div class="data-row">
                         <div class="data-label">Verification</div>
-                        <div class="data-value">${getVerificationLevel(guild?.verification_level)}</div>
+                        <div class="data-value">${escapeHtml(getVerificationLevel(guild?.verification_level))}</div>
                     </div>
                     <div class="data-row">
                         <div class="data-label">NSFW Level</div>
-                        <div class="data-value">${getNSFWLevel(guild?.nsfw_level)}</div>
+                        <div class="data-value">${escapeHtml(getNSFWLevel(guild?.nsfw_level))}</div>
                     </div>
                     ${data.expires_at ? `
                     <div class="data-row">
                         <div class="data-label">Expires</div>
-                        <div class="data-value">${new Date(data.expires_at).toLocaleDateString()}</div>
+                        <div class="data-value">${escapeHtml(new Date(data.expires_at).toLocaleDateString())}</div>
                     </div>
                     ` : ''}
                 </div>
@@ -252,16 +268,16 @@ function displayInvite(data) {
                     <div class="data-section-title"><i class="fa-solid fa-rocket"></i> Boost Status</div>
                     <div class="data-row">
                         <div class="data-label">Premium Tier</div>
-                        <div class="data-value" style="color: #ff73fa; font-weight: 700;">Level ${guild?.premium_tier || 0}</div>
+                        <div class="data-value" style="color: #ff73fa; font-weight: 700;">Level ${escapeHtml(guild?.premium_tier || 0)}</div>
                     </div>
                     <div class="data-row">
                         <div class="data-label">Boost Count</div>
-                        <div class="data-value">${guild?.premium_subscription_count || 0} Boosts</div>
+                        <div class="data-value">${escapeHtml(guild?.premium_subscription_count || 0)} Boosts</div>
                     </div>
                     ${guild?.vanity_url_code ? `
                     <div class="data-row">
                         <div class="data-label">Vanity URL</div>
-                        <div class="data-value" style="color: var(--accent); font-weight: 600;">.gg/${guild.vanity_url_code}</div>
+                        <div class="data-value" style="color: var(--accent); font-weight: 600;">.gg/${escapeHtml(guild.vanity_url_code)}</div>
                     </div>
                     ` : ''}
                 </div>
@@ -270,14 +286,14 @@ function displayInvite(data) {
             ${guild?.description ? `
             <div class="data-section">
                 <div class="data-section-title"><i class="fa-solid fa-quote-left"></i> Server Description</div>
-                <div style="color: var(--text); font-size: 13px; line-height: 1.5; padding: 5px 0;">${guild.description}</div>
+                <div style="color: var(--text); font-size: 13px; line-height: 1.5; padding: 5px 0;">${escapeHtml(guild.description)}</div>
             </div>
             ` : ''}
 
             ${splashUrl ? `
             <div class="data-section">
                 <div class="data-section-title"><i class="fa-solid fa-image"></i> Invite Splash Preview</div>
-                <img src="${splashUrl}" style="width: 100%; border-radius: 12px; border: 1px solid var(--border); margin-top: 10px;">
+                <img src="${escapeHtml(splashUrl)}" style="width: 100%; border-radius: 12px; border: 1px solid var(--border); margin-top: 10px;">
             </div>
             ` : ''}
 
@@ -292,9 +308,9 @@ function displayInvite(data) {
                             desc: 'No description available.' 
                         };
                         return `
-                            <div class="feature-tag" style="--feat-color: ${info.color}" title="${info.desc}">
+                            <div class="feature-tag" style="--feat-color: ${info.color}" title="${escapeHtml(info.desc)}">
                                 <span class="feat-dot"></span>
-                                <span class="feat-label">${info.label}</span>
+                                <span class="feat-label">${escapeHtml(info.label)}</span>
                             </div>
                         `;
                     }).join('')}
@@ -302,7 +318,7 @@ function displayInvite(data) {
             </div>
             ` : ''}
             
-            <a href="https://discord.gg/${data.code || guild.id}" target="_blank" class="join-server-btn">
+            <a href="https://discord.gg/${escapeHtml(data.code || guild.id)}" target="_blank" rel="noopener noreferrer" class="join-server-btn">
                 <i class="fa-brands fa-discord"></i> Join this Server
             </a>
         </div>

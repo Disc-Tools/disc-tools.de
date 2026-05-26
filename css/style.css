@@ -2930,11 +2930,28 @@ footer {
     font-size: 13px;
     color: var(--muted);
     text-decoration: none;
-    transition: color 0.2s;
+    transition: color 0.2s, padding 0.25s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding-left: 0;
+}
+
+.footer-links a::before {
+    content: '';
+    width: 0;
+    height: 1px;
+    background: var(--accent2);
+    transition: width 0.25s ease;
 }
 
 .footer-links a:hover {
-    color: var(--accent2);
+    color: #fff;
+    padding-left: 4px;
+}
+
+.footer-links a:hover::before {
+    width: 12px;
 }
 
 .footer-legal-btns {

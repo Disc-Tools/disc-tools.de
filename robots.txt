@@ -1,7 +1,5 @@
 User-agent: *
 Allow: /
 Disallow: /api/
-Disallow: /blocked/
-Disallow: /profile/
 
 Sitemap: https://disc-tools.de/sitemap.xml

@@ -126,6 +126,16 @@
     </div>
 
     <script>
+        function escapeHtml(str) {
+            if (str === null || str === undefined) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
         let currentRejectId = null;
 
         async function checkAuth() {
@@ -162,33 +172,33 @@
                     <div class="request-card">
                         <div class="request-header">
                             <div class="request-title">
-                                <div class="user-avatar">${req.username.charAt(0).toUpperCase()}</div>
+                                <div class="user-avatar">${escapeHtml(req.username.charAt(0).toUpperCase())}</div>
                                 <div>
-                                    <div class="request-name">${req.name}</div>
-                                    <div class="request-user">by ${req.username}</div>
+                                    <div class="request-name">${escapeHtml(req.name)}</div>
+                                    <div class="request-user">by ${escapeHtml(req.username)}</div>
                                 </div>
                             </div>
                         </div>
 
                         <div class="request-field">
                             <div class="request-label">Description</div>
-                            <div class="request-value">${req.description}</div>
+                            <div class="request-value">${escapeHtml(req.description)}</div>
                         </div>
 
                         <div class="request-field">
                             <div class="request-label">What They Offer</div>
-                            <div class="request-value">${req.offer}</div>
+                            <div class="request-value">${escapeHtml(req.offer)}</div>
                         </div>
 
                         <div class="request-field">
                             <div class="request-label">Member Count</div>
-                            <div class="request-value">${req.memberCount.toLocaleString()} members</div>
+                            <div class="request-value">${escapeHtml(req.memberCount.toLocaleString())} members</div>
                         </div>
 
                         <div class="request-field">
                             <div class="request-label">Discord Server</div>
                             <div class="request-value">
-                                <a href="${req.discordServer}" target="_blank" style="color: var(--accent); text-decoration: none;">
+                                <a href="${escapeHtml(req.discordServer)}" target="_blank" rel="noopener noreferrer" style="color: var(--accent); text-decoration: none;">
                                     <i class="fa-brands fa-discord"></i> Join Server
                                 </a>
                             </div>
@@ -198,27 +208,38 @@
                             <div class="request-field">
                                 <div class="request-label">Website</div>
                                 <div class="request-value">
-                                    <a href="${req.website}" target="_blank" style="color: var(--accent); text-decoration: none;">
-                                        <i class="fa-solid fa-globe"></i> ${req.website}
+                                    <a href="${escapeHtml(req.website)}" target="_blank" rel="noopener noreferrer" style="color: var(--accent); text-decoration: none;">
+                                        <i class="fa-solid fa-globe"></i> ${escapeHtml(req.website)}
                                     </a>
                                 </div>
                             </div>
                         ` : ''}
 
                         <div class="request-field" style="font-size: 12px; color: var(--muted);">
-                            Submitted: ${new Date(req.createdAt).toLocaleDateString()}
+                            Submitted: ${escapeHtml(new Date(req.createdAt).toLocaleDateString())}
                         </div>
 
                         <div class="request-actions">
-                            <button class="btn-approve" onclick="approveRequest('${req.id}')">
+                            <button class="btn-approve approve-request-btn" data-request-id="${escapeHtml(req.id)}">
                                 <i class="fa-solid fa-check"></i> Approve
                             </button>
-                            <button class="btn-reject" onclick="openRejectModal('${req.id}')">
+                            <button class="btn-reject reject-request-btn" data-request-id="${escapeHtml(req.id)}">
                                 <i class="fa-solid fa-times"></i> Reject
                             </button>
                         </div>
                     </div>
                 `).join('');
+
+                grid.querySelectorAll('.approve-request-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        approveRequest(this.getAttribute('data-request-id'));
+                    });
+                });
+                grid.querySelectorAll('.reject-request-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        openRejectModal(this.getAttribute('data-request-id'));
+                    });
+                });
             } catch (err) {
                 console.error('Failed to load requests:', err);
             }

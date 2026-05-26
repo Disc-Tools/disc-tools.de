@@ -427,7 +427,7 @@
             showToast('Please enter a webhook URL');
             return;
         }
-        if (!url.startsWith('https://discord.com/api/webhooks/') && !url.startsWith('https://discordapp.com/api/webhooks/')) {
+        if (!/^https:\/\/(discord\.com|discordapp\.com)\/api\/webhooks\//i.test(url)) {
             showToast('Invalid webhook URL');
             return;
         }

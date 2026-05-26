@@ -1,3 +1,13 @@
+function escapeHtml(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
 // Global Assets and Loader Logic
 (function() {
     const savedTheme = localStorage.getItem('theme') || 'dark';
@@ -35,7 +45,7 @@ let toastTimer;
 function showToast(msg) {
     const t = document.getElementById('toast');
     if (!t) return;
-    t.innerHTML = msg;
+    t.innerHTML = escapeHtml(msg);
     clearTimeout(toastTimer);
     t.classList.add('show');
     toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
@@ -117,7 +127,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         authorHtml = `
                             <div style="display:flex; align-items:center; gap:6px; margin-top:8px;">
                                 <img src="${avatarUrl}" style="width:16px; height:16px; border-radius:50%;">
-                                <span style="font-size:11px; color:var(--muted);">${a.author.username}</span>
+                                <span style="font-size:11px; color:var(--muted);">${escapeHtml(a.author.username)}</span>
                             </div>
                         `;
                     }
@@ -127,8 +137,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                             <div style="display:flex; gap:10px; align-items:flex-start;">
                                 <i class="fa-solid ${icon}" style="color:${color}; margin-top:2px;"></i>
                                 <div style="flex:1;">
-                                    <div style="font-weight:600; font-size:13px; color:#fff;">${a.title}</div>
-                                    <div style="font-size:12px; color:var(--muted); margin-top:3px; line-height:1.4;">${a.text}</div>
+                                    <div style="font-weight:600; font-size:13px; color:#fff;">${escapeHtml(a.title)}</div>
+                                    <div style="font-size:12px; color:var(--muted); margin-top:3px; line-height:1.4;">${escapeHtml(a.text)}</div>
                                     ${authorHtml}
                                 </div>
                             </div>
@@ -353,8 +363,8 @@ function updateUIForAuth(user) {
         loginBadge.innerHTML = `
             <div class="user-dropdown-container">
                 <button class="user-badge-mini" id="user-menu-trigger">
-                    <img src="${avatarUrl}" alt="${user.username}" loading="lazy">
-                    <span class="user-nav-name">${user.username}</span>
+                    <img src="${avatarUrl}" alt="${escapeHtml(user.username)}" loading="lazy">
+                    <span class="user-nav-name">${escapeHtml(user.username)}</span>
                     <i class="fa-solid fa-chevron-down"></i>
                 </button>
                 <div class="user-dropdown-menu" id="user-dropdown">
@@ -394,11 +404,6 @@ function updateUIForAuth(user) {
                     adminLink.href = '/admin/overview/';
                     adminLink.innerHTML = '<i class="fa-solid fa-shield-halved" style="color: #e74c3c;"></i> Admin';
                     menu.insertBefore(adminLink, divider);
-
-                    const partnerMgmt = document.createElement('a');
-                    partnerMgmt.href = '/admin/partner/';
-                    partnerMgmt.innerHTML = '<i class="fa-solid fa-handshake" style="color: #2ecc71;"></i> Partner Management';
-                    menu.insertBefore(partnerMgmt, adminLink);
                 }
             })
             .catch(() => {});
@@ -615,7 +620,7 @@ function initGlobalSearch() {
             results.innerHTML = `
                 <div class="search-no-results">
                     <i class="fa-solid fa-magnifying-glass"></i>
-                    <p>No tools or guides found for "<span>${query}</span>"</p>
+                    <p>No tools or guides found for "<span>${escapeHtml(query)}</span>"</p>
                     <small>Try a different keyword or check your spelling.</small>
                 </div>
             `;

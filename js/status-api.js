@@ -1,3 +1,13 @@
+function escapeHtml(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
 let highestPing = 0;
 const API_COMPONENT_ID = 'tkv66gt95jkp'; // Official ID for Discord API component
 
@@ -56,12 +66,12 @@ async function fetchApiIncidents() {
             incidentContainer.innerHTML = apiIncidents.map(inc => `
                 <div class="incident-item">
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
-                        <h3 style="font-family: var(--sans); color: #fff; font-size: 18px;">${inc.name}</h3>
-                        <span class="category-badge" style="background: rgba(240, 71, 71, 0.1); color: #f04747; border-color: #f04747;">${inc.status.toUpperCase()}</span>
+                        <h3 style="font-family: var(--sans); color: #fff; font-size: 18px;">${escapeHtml(inc.name)}</h3>
+                        <span class="category-badge" style="background: rgba(240, 71, 71, 0.1); color: #f04747; border-color: #f04747;">${escapeHtml(inc.status.toUpperCase())}</span>
                     </div>
                     <div style="border-left: 2px solid var(--accent); padding-left: 20px;">
-                        <div style="font-family: var(--mono); font-size: 11px; color: var(--muted); margin-bottom: 5px;">Latest Update: ${new Date(inc.updated_at).toLocaleString()}</div>
-                        <p style="font-size: 14px; line-height: 1.6; color: var(--text);">${inc.incident_updates[0].body}</p>
+                        <div style="font-family: var(--mono); font-size: 11px; color: var(--muted); margin-bottom: 5px;">Latest Update: ${escapeHtml(new Date(inc.updated_at).toLocaleString())}</div>
+                        <p style="font-size: 14px; line-height: 1.6; color: var(--text);">${escapeHtml(inc.incident_updates[0].body)}</p>
                     </div>
                 </div>
             `).join('');

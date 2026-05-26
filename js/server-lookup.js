@@ -1,3 +1,13 @@
+function escapeHtml(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
 async function lookupServer() {
     const input = document.getElementById('server-input');
     const resultArea = document.getElementById('server-result');
@@ -50,21 +60,21 @@ function displayServer(data) {
         <div class="lookup-layout">
             <div class="invite-data">
                 <div class="guild-header" style="margin-top: 30px;">
-                    <div class="guild-icon" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--accent), var(--accent2)); font-size: 36px; font-weight: 800; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">${data.name.charAt(0)}</div>
+                    <div class="guild-icon" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--accent), var(--accent2)); font-size: 36px; font-weight: 800; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">${escapeHtml(data.name.charAt(0))}</div>
                     <div class="guild-info">
-                        <h2>${data.name}</h2>
-                        <div class="id"><i class="fa-solid fa-hashtag"></i> ${data.id}</div>
+                        <h2>${escapeHtml(data.name)}</h2>
+                        <div class="id"><i class="fa-solid fa-hashtag"></i> ${escapeHtml(data.id)}</div>
                     </div>
                 </div>
 
                 <div class="stats-grid">
                     <div class="stat-item">
                         <div class="stat-label">Online Presence</div>
-                        <div class="stat-value"><span class="online-dot"></span>${data.presence_count?.toLocaleString() || '0'}</div>
+                        <div class="stat-value"><span class="online-dot"></span>${escapeHtml(data.presence_count?.toLocaleString() || '0')}</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-label">Public Channels</div>
-                        <div class="stat-value"><i class="fa-solid fa-hashtag" style="font-size: 14px; color: var(--muted); margin-right: 5px;"></i>${data.channels?.length || '0'}</div>
+                        <div class="stat-value"><i class="fa-solid fa-hashtag" style="font-size: 14px; color: var(--muted); margin-right: 5px;"></i>${escapeHtml(data.channels?.length || '0')}</div>
                     </div>
                 </div>
 
@@ -73,7 +83,7 @@ function displayServer(data) {
                     <div class="data-row">
                         <div class="data-label">Instant Invite</div>
                         <div class="data-value">
-                            ${data.instant_invite ? `<a href="${data.instant_invite}" target="_blank" class="join-link">Join Server <i class="fa-solid fa-arrow-up-right-from-square"></i></a>` : '<span style="color: var(--muted); opacity: 0.6;">Disabled</span>'}
+                            ${data.instant_invite ? `<a href="${escapeHtml(data.instant_invite)}" target="_blank" rel="noopener noreferrer" class="join-link">Join Server <i class="fa-solid fa-arrow-up-right-from-square"></i></a>` : '<span style="color: var(--muted); opacity: 0.6;">Disabled</span>'}
                         </div>
                     </div>
                 </div>
@@ -85,7 +95,7 @@ function displayServer(data) {
                         ${data.channels.map(c => `
                             <div class="channel-item">
                                 <i class="fa-solid fa-headset"></i>
-                                <span>${c.name}</span>
+                                <span>${escapeHtml(c.name)}</span>
                             </div>
                         `).join('')}
                     </div>
@@ -94,17 +104,17 @@ function displayServer(data) {
             </div>
 
             <div class="members-sidebar">
-                <div class="data-section-title" style="margin-bottom: 20px;"><i class="fa-solid fa-users"></i> Online Members (${data.presence_count})</div>
+                <div class="data-section-title" style="margin-bottom: 20px;"><i class="fa-solid fa-users"></i> Online Members (${escapeHtml(data.presence_count)})</div>
                 <div class="members-list">
                     ${data.members && data.members.length > 0 ? data.members.map(m => `
                         <div class="member-row">
                             <div class="member-avatar-wrapper">
-                                <img src="${m.avatar_url}" class="member-avatar" onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'">
-                                <span class="status-indicator ${m.status}"></span>
+                                <img src="${escapeHtml(m.avatar_url)}" class="member-avatar" onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'">
+                                <span class="status-indicator ${escapeHtml(m.status)}"></span>
                             </div>
                             <div class="member-info">
-                                <span class="member-name">${m.username}</span>
-                                ${m.game ? `<span class="member-username">Playing ${m.game.name}</span>` : ''}
+                                <span class="member-name">${escapeHtml(m.username)}</span>
+                                ${m.game ? `<span class="member-username">Playing ${escapeHtml(m.game.name)}</span>` : ''}
                             </div>
                         </div>
                     `).join('') : '<div class="empty-state" style="padding: 20px; font-size: 12px;">No members visible.</div>'}
