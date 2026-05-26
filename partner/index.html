@@ -43,19 +43,6 @@
         .partners-page .partner-detail-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
         .partners-page .partner-detail-actions a { padding: 10px 22px; font-size: 13px; flex: 0 1 auto; }
 
-        .partners-page .nav-link.active {
-            color: var(--accent);
-            text-shadow: 0 0 12px var(--accent);
-        }
-        .partners-page .nav-link.active::after {
-            background: var(--accent);
-            box-shadow: 0 0 8px var(--accent);
-        }
-        .partners-page .breadcrumbs .current {
-            color: var(--accent);
-            text-shadow: 0 0 10px var(--accent);
-        }
-
         @media (max-width: 600px) {
             .partners-page .partners-grid { grid-template-columns: 1fr; }
             .partners-page .partner-detail-card { padding: 24px 16px; }
@@ -85,7 +72,7 @@
         <span class="login-badge"></span>
     </header>
 
-    <nav class="breadcrumbs" id="breadcrumbs">
+    <nav class="breadcrumbs">
         <a href="/">Home</a>
         <span>/</span>
         <a href="/partner/" id="breadcrumb-partner" class="current">Partner</a>
