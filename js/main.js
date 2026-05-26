@@ -78,14 +78,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
-    // Mobile Check & Redirect
-    if (window.innerWidth < 768 && !currentPath.includes('/mobile/')) {
-        if (!document.referrer.includes('/mobile/')) {
-            window.location.href = '/mobile/';
-            return;
-        }
-    }
-
     // Desktop Header Scroll Effect
     const header = document.querySelector('header');
     window.addEventListener('scroll', () => {
@@ -95,6 +87,67 @@ document.addEventListener('DOMContentLoaded', async () => {
             header.classList.remove('scrolled');
         }
     });
+
+    // Mobile Menu Toggle
+    const menuToggle = document.querySelector('.menu-toggle');
+    const navLinks = document.querySelector('.nav-links');
+    if (menuToggle && navLinks) {
+        const closeMenu = () => {
+            menuToggle.classList.remove('open');
+            navLinks.classList.remove('open');
+            document.body.classList.remove('menu-open');
+        };
+
+        const updateMobileLogin = () => {
+            const isMobile = window.innerWidth <= 768;
+            let mobileItem = navLinks.querySelector('.mobile-auth');
+            
+            if (!isMobile) {
+                if (mobileItem) mobileItem.remove();
+                return;
+            }
+
+            if (!mobileItem) {
+                mobileItem = document.createElement('div');
+                mobileItem.className = 'mobile-auth';
+                navLinks.appendChild(mobileItem);
+            }
+
+            const loggedIn = document.querySelector('.login-badge.logged-in');
+            if (loggedIn) {
+                mobileItem.innerHTML = `
+                    <a href="/profile/" class="nav-link">Profile</a>
+                    <a href="/api/auth/logout" class="nav-link" style="color:var(--muted);">Logout</a>
+                `;
+            } else {
+                mobileItem.innerHTML = `<a href="/api/auth/login" class="login-btn"><i class="fa-brands fa-discord"></i> Login</a>`;
+            }
+
+            mobileItem.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+        };
+
+        menuToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            menuToggle.classList.toggle('open');
+            navLinks.classList.toggle('open');
+            document.body.classList.toggle('menu-open');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!navLinks.classList.contains('open')) return;
+            if (navLinks.contains(e.target) || menuToggle.contains(e.target)) return;
+            closeMenu();
+        });
+
+        navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+        updateMobileLogin();
+
+        const authObserver = new MutationObserver(() => updateMobileLogin());
+        const badge = document.querySelector('.login-badge');
+        if (badge) authObserver.observe(badge, { childList: true, subtree: true, attributes: true });
+
+        window.addEventListener('resize', updateMobileLogin);
+    }
 
     // Global Announcements Bell
     try {

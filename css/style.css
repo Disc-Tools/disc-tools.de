@@ -580,6 +580,164 @@ header.scrolled {
     border-radius: 2px;
 }
 
+/* Menu Toggle (Hamburger) */
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 36px;
+    height: 36px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    gap: 5px;
+    padding: 0;
+    z-index: 1002;
+    position: relative;
+}
+
+.menu-toggle span {
+    display: block;
+    width: 20px;
+    height: 2px;
+    background: var(--muted);
+    border-radius: 2px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: center;
+}
+
+.menu-toggle.open span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+    background: #fff;
+}
+
+.menu-toggle.open span:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+}
+
+.menu-toggle.open span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+    background: #fff;
+}
+
+@media (max-width: 768px) {
+    header {
+        justify-content: normal;
+    }
+
+    .menu-toggle {
+        display: flex;
+        margin-left: auto;
+    }
+
+    .nav-links {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: min(82vw, 380px);
+        height: 100vh;
+        height: 100dvh;
+        background: rgba(5, 5, 10, 0.97);
+        backdrop-filter: blur(24px);
+        flex-direction: column;
+        justify-content: center;
+        align-items: stretch;
+        gap: 2px;
+        padding: 0 24px;
+        z-index: 1001;
+        transform: translateX(100%);
+        transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        box-sizing: border-box;
+        box-shadow: -10px 0 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .nav-links.open {
+        transform: translateX(0);
+    }
+
+    .nav-links .nav-link {
+        font-size: 16px;
+        padding: 12px 32px;
+        color: rgba(255, 255, 255, 0.5);
+        width: 100%;
+        text-align: left;
+        box-sizing: border-box;
+    }
+
+    .nav-links .nav-link:hover {
+        color: #fff;
+    }
+
+    .nav-links .nav-link.active::after {
+        display: none;
+    }
+
+    .nav-links #theme-toggle {
+        width: 100%;
+        justify-content: flex-start;
+        padding: 12px 32px;
+        gap: 10px;
+        border-radius: 0;
+        background: none;
+        border: none;
+        color: rgba(255,255,255,0.5);
+        font-size: 16px;
+    }
+
+    .nav-links #theme-toggle:hover {
+        background: none;
+        color: #fff;
+        transform: none;
+    }
+
+    body.menu-open {
+        overflow: hidden;
+    }
+
+    #global-search-container {
+        display: none;
+    }
+
+    .login-badge {
+        display: none !important;
+    }
+
+    .mobile-auth {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+        margin-top: 24px;
+        padding: 20px 32px 0;
+        border-top: 1px solid rgba(255,255,255,0.06);
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .mobile-auth .login-btn {
+        padding: 10px 24px;
+        border-radius: 8px;
+        font-size: 13px;
+    }
+
+    .mobile-auth .nav-link {
+        font-size: 14px;
+        padding: 8px 0;
+        color: rgba(255,255,255,0.4);
+        display: block;
+    }
+
+    .mobile-auth .nav-link:hover {
+        color: #fff;
+    }
+
+    .mobile-auth .nav-link + .nav-link {
+        margin-top: 2px;
+    }
+}
+
 .badge {
     font-family: var(--mono);
     font-size: 11px;
@@ -3034,13 +3192,25 @@ footer {
         grid-template-columns: 1fr;
     }
 
-    header, .hero {
-        padding-left: 20px;
-        padding-right: 20px;
+    header {
+        padding: 12px 16px;
     }
 
-    .nav-links {
-        display: none;
+    header.scrolled {
+        padding: 10px 16px;
+    }
+
+    header .logo {
+        font-size: 17px;
+    }
+
+    header .main-logo {
+        height: 28px;
+    }
+
+    .hero {
+        padding-left: 20px;
+        padding-right: 20px;
     }
 
     .footer-content {
@@ -3084,6 +3254,32 @@ footer {
     .legal-page .input-card table th,
     .legal-page .input-card table td {
         min-width: 120px;
+    }
+}
+
+@media (max-width: 480px) {
+    header {
+        padding: 10px 12px;
+    }
+
+    header .logo {
+        font-size: 15px;
+    }
+
+    header .main-logo {
+        height: 24px;
+    }
+
+    .hero h1 {
+        font-size: clamp(22px, 8vw, 28px);
+    }
+
+    .hero p {
+        font-size: 13px;
+    }
+
+    .hero-tag {
+        font-size: 10px;
     }
 }
 
