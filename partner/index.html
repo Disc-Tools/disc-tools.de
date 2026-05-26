@@ -51,6 +51,10 @@
             background: var(--accent);
             box-shadow: 0 0 8px var(--accent);
         }
+        .partners-page .breadcrumbs .current {
+            color: var(--accent);
+            text-shadow: 0 0 10px var(--accent);
+        }
 
         @media (max-width: 600px) {
             .partners-page .partners-grid { grid-template-columns: 1fr; }
@@ -84,7 +88,7 @@
     <nav class="breadcrumbs" id="breadcrumbs">
         <a href="/">Home</a>
         <span>/</span>
-        <a href="/partner/" id="breadcrumb-partner">Partner</a>
+        <a href="/partner/" id="breadcrumb-partner" class="current">Partner</a>
     </nav>
 
     <main class="tool-page">
