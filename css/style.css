@@ -567,6 +567,7 @@ header.scrolled {
 
 .nav-link.active {
     color: var(--accent2);
+    text-shadow: 0 0 12px var(--accent2);
 }
 
 .nav-link.active::after {
@@ -578,6 +579,7 @@ header.scrolled {
     height: 2px;
     background: var(--accent);
     border-radius: 2px;
+    box-shadow: 0 0 8px var(--accent);
 }
 
 /* Menu Toggle (Hamburger) */
