@@ -394,6 +394,32 @@ function updateUIForAuth(user) {
                     adminLink.href = '/admin/overview/';
                     adminLink.innerHTML = '<i class="fa-solid fa-shield-halved" style="color: #e74c3c;"></i> Admin';
                     menu.insertBefore(adminLink, divider);
+
+                    const partnerMgmt = document.createElement('a');
+                    partnerMgmt.href = '/admin/partner/';
+                    partnerMgmt.innerHTML = '<i class="fa-solid fa-handshake" style="color: #2ecc71;"></i> Partner Management';
+                    menu.insertBefore(partnerMgmt, adminLink);
+                }
+            })
+            .catch(() => {});
+
+        // Check Partner Status asynchronously
+        fetch('/api/user/partner', { cache: 'no-store' })
+            .then(res => res.json())
+            .then(data => {
+                if (data && data.slug && menu) {
+                    const partnerLink = document.createElement('a');
+                    partnerLink.href = `/partner/${data.slug}`;
+                    partnerLink.innerHTML = '<i class="fa-solid fa-handshake" style="color: #2ecc71;"></i> Partner';
+                    const adminLink = menu.querySelector('a[href^="/admin/"]');
+                    const divider = menu.querySelector('.dropdown-divider');
+                    if (adminLink) {
+                        menu.insertBefore(partnerLink, adminLink);
+                    } else if (divider) {
+                        menu.insertBefore(partnerLink, divider);
+                    } else {
+                        menu.appendChild(partnerLink);
+                    }
                 }
             })
             .catch(() => {});

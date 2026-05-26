@@ -109,7 +109,7 @@
 
             <div id="addPartnerForm" class="add-partner-form">
                 <h3 style="margin-top: 0;">Add New Partner</h3>
-                <form onsubmit="submitAddPartner(event)">
+                <form id="addPartnerFormElement">
                     <div class="form-grid">
                         <div class="form-group">
                             <label>Partner Name *</label>
@@ -120,16 +120,20 @@
                             <input type="url" name="logo" placeholder="https://...">
                         </div>
                         <div class="form-group">
-                            <label>Website</label>
+                            <label>Website <span class="optional">(Website or Discord required)</span></label>
                             <input type="url" name="website" placeholder="https://...">
                         </div>
                         <div class="form-group">
-                            <label>Discord Server Link</label>
+                            <label>Discord Server Link <span class="optional">(Website or Discord required)</span></label>
                             <input type="url" name="discordServer" placeholder="https://discord.gg/...">
                         </div>
+                        <div class="form-group">
+                            <label>User ID (for edit access) *</label>
+                            <input type="text" name="user_id" required placeholder="Discord User ID">
+                        </div>
                         <div class="form-group full">
-                            <label>Description *</label>
-                            <textarea name="description" required style="min-height: 80px;"></textarea>
+                            <label>Description</label>
+                            <textarea name="description" style="min-height: 80px;"></textarea>
                         </div>
                         <div class="form-actions">
                             <button type="submit" class="btn-submit"><i class="fa-solid fa-check"></i> Add Partner</button>
@@ -230,20 +234,27 @@
 
         function toggleAddForm() {
             const form = document.getElementById('addPartnerForm');
-            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+            const isHidden = getComputedStyle(form).display === 'none';
+            form.style.display = isHidden ? 'block' : 'none';
         }
 
         async function submitAddPartner(e) {
             e.preventDefault();
-            const formData = new FormData(e.target);
+            const data = Object.fromEntries(new FormData(e.target));
             const btn = e.target.querySelector('button[type="submit"]');
+
+            if (!data.website && !data.discordServer) {
+                alert('You must provide either a Website or a Discord Server link.');
+                return;
+            }
+
             btn.disabled = true;
 
             try {
                 const res = await fetch('/api/admin/partners/add', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(Object.fromEntries(formData))
+                    body: JSON.stringify(data)
                 });
 
                 if (res.ok) {
@@ -275,8 +286,9 @@
             }
         }
 
+        document.getElementById('addPartnerFormElement').addEventListener('submit', submitAddPartner);
         loadPartners();
-        setInterval(loadPartners, 30000); // Refresh every 30s
+        setInterval(loadPartners, 30000);
     </script>
 </body>
 </html>

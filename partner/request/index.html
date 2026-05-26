@@ -190,28 +190,18 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Discord Server Link *</label>
-                    <input type="url" name="discordServer" required placeholder="https://discord.gg/...">
-                </div>
-
-                <div class="form-group">
-                    <label>Description *</label>
-                    <textarea name="description" required placeholder="Tell us about your project..."></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label>What do you offer? *</label>
-                    <textarea name="offer" required placeholder="What services or features do you provide?"></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label>Member Count / Active Users *</label>
-                    <input type="number" name="memberCount" required min="1" placeholder="e.g., 5000">
-                </div>
-
-                <div class="form-group">
-                    <label>Website <span class="optional">(Optional)</span></label>
+                    <label>Website <span class="optional">(Website or Discord required)</span></label>
                     <input type="url" name="website" placeholder="https://yoursite.com">
+                </div>
+
+                <div class="form-group">
+                    <label>Discord Server Link <span class="optional">(Website or Discord required)</span></label>
+                    <input type="url" name="discordServer" placeholder="https://discord.gg/...">
+                </div>
+
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea name="description" placeholder="Tell us about your project..."></textarea>
                 </div>
 
                 <button type="submit" class="btn-submit">
@@ -308,16 +298,22 @@
 
         document.getElementById('partnerForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+            const data = Object.fromEntries(new FormData(e.target));
             const btn = e.target.querySelector('button[type="submit"]');
+
+            if (!data.website && !data.discordServer) {
+                alert('You must provide either a Website or a Discord Server link.');
+                return;
+            }
+
             btn.disabled = true;
             btn.innerHTML = '<i class="fa-solid fa-circle-notch loading"></i> Submitting...';
 
             try {
-                const formData = new FormData(e.target);
                 const res = await fetch('/api/partners/request', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(Object.fromEntries(formData))
+                    body: JSON.stringify(data)
                 });
 
                 if (res.ok) {

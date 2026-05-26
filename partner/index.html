@@ -58,6 +58,7 @@
             display: flex;
             flex-direction: column;
             gap: 15px;
+            cursor: pointer;
         }
         .partner-card:hover {
             transform: translateY(-5px);
@@ -74,6 +75,7 @@
             justify-content: center;
             font-size: 24px;
             border: 1px solid var(--border);
+            flex-shrink: 0;
         }
         .partner-logo img {
             width: 100%;
@@ -127,9 +129,159 @@
             color: var(--muted);
             margin-bottom: 15px;
         }
+
+        .partner-detail {
+            max-width: 700px;
+            margin: 40px auto;
+        }
+        .partner-detail-card {
+            background: rgba(21, 25, 33, 0.6);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 50px;
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+        .partner-detail-logo {
+            width: 120px;
+            height: 120px;
+            background: var(--surface);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            border: 1px solid var(--border);
+            margin: 0 auto 25px;
+            overflow: hidden;
+        }
+        .partner-detail-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .partner-detail-card h1 {
+            font-size: 32px;
+            margin: 0 0 15px;
+        }
+        .partner-detail-card p {
+            color: var(--muted);
+            line-height: 1.7;
+            font-size: 15px;
+            margin: 0 0 30px;
+        }
+        .partner-detail-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .partner-detail-actions .partner-link {
+            font-size: 14px;
+            padding: 12px 25px;
+            flex: 0 1 auto;
+        }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 20px;
+            transition: color 0.2s;
+        }
+        .back-link:hover {
+            color: white;
+        }
+
+        .partner-edit-section {
+            max-width: 600px;
+            margin: 40px auto;
+            display: none;
+        }
+        .partner-edit-section.visible {
+            display: block;
+        }
+        .edit-card {
+            background: rgba(21, 25, 33, 0.6);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 35px;
+            backdrop-filter: blur(10px);
+        }
+        .edit-card h2 {
+            margin: 0 0 25px;
+            font-size: 22px;
+            text-align: center;
+        }
+        .edit-card .form-group {
+            margin-bottom: 20px;
+        }
+        .edit-card .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            font-size: 13px;
+        }
+        .edit-card .form-group input,
+        .edit-card .form-group textarea {
+            width: 100%;
+            padding: 10px 12px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+            font-family: var(--sans);
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+        .edit-card .form-group input:focus,
+        .edit-card .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        .edit-card .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        .btn-save {
+            width: 100%;
+            padding: 12px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(88, 101, 242, 0.3);
+        }
+        .btn-save:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .save-feedback {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+            font-weight: 600;
+            display: none;
+        }
+        .save-feedback.success { color: #2ecc71; }
+        .save-feedback.error { color: #e74c3c; }
+
         @media (max-width: 768px) {
             .partners-header h1 { font-size: 36px; }
             .partners-grid { grid-template-columns: 1fr; }
+            .partner-detail-card { padding: 30px 20px; }
+            .partner-detail-card h1 { font-size: 24px; }
         }
     </style>
 </head>
@@ -149,30 +301,65 @@
         <span class="login-badge"></span>
     </header>
 
-    <nav class="breadcrumbs">
+    <nav class="breadcrumbs" id="breadcrumbs">
         <a href="/">Home</a>
         <span>/</span>
-        <a href="./" class="current">Partner</a>
+        <a href="/partner/" id="breadcrumb-partner">Partner</a>
     </nav>
 
     <main class="tool-page container" style="margin-top: 0;">
-        <div class="partners-header">
-            <h1>Our Partners</h1>
-            <p>Join a network of innovative projects and services working together to enhance the Discord ecosystem</p>
-            <a href="/partner/request/" class="partners-cta"><i class="fa-solid fa-handshake"></i> Become a Partner</a>
+        <div id="listingView">
+            <div class="partners-header">
+                <h1>Our Partners</h1>
+                <p>Join a network of innovative projects and services working together to enhance the Discord ecosystem</p>
+                <a href="/partner/request/" class="partners-cta"><i class="fa-solid fa-handshake"></i> Become a Partner</a>
+            </div>
+            <div id="partnersContainer" class="partners-grid"></div>
+            <div id="emptyState" class="empty-state" style="display: none;">
+                <div class="empty-icon"><i class="fa-solid fa-star"></i></div>
+                <h3>No Active Partners Yet</h3>
+                <p style="color: var(--muted); margin-top: 10px;">Be the first to join our partnership program!</p>
+            </div>
         </div>
 
-        <div id="partnersContainer" class="partners-grid"></div>
+        <div id="detailView" style="display: none;">
+            <a href="/partner/" class="back-link" id="backToList"><i class="fa-solid fa-arrow-left"></i> All Partners</a>
+            <div class="partner-detail">
+                <div class="partner-detail-card" id="partnerDetailCard"></div>
+            </div>
+        </div>
 
-        <div id="emptyState" class="empty-state" style="display: none;">
-            <div class="empty-icon"><i class="fa-solid fa-star"></i></div>
-            <h3>No Active Partners Yet</h3>
-            <p style="color: var(--muted); margin-top: 10px;">Be the first to join our partnership program!</p>
+        <div id="editView" class="partner-edit-section">
+            <div class="edit-card">
+                <h2><i class="fa-solid fa-pen-to-square"></i> Edit Your Partner Page</h2>
+                <form id="partnerEditForm">
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea name="description" id="edit-description" placeholder="Tell visitors about your project..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Website URL</label>
+                        <input type="url" name="website" id="edit-website" placeholder="https://yoursite.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Discord Invite</label>
+                        <input type="url" name="discord_server" id="edit-discord" placeholder="https://discord.gg/...">
+                    </div>
+                    <div class="form-group">
+                        <label>Logo URL</label>
+                        <input type="url" name="logo" id="edit-logo" placeholder="https://example.com/logo.png">
+                    </div>
+                    <button type="submit" class="btn-save"><i class="fa-solid fa-floppy-disk"></i> Save Changes</button>
+                    <div class="save-feedback" id="saveFeedback"></div>
+                </form>
+            </div>
         </div>
     </main>
 
     <script src="/js/umami-tracking.js"></script>
     <script>
+        const slug = window.location.pathname.replace('/partner/', '').replace(/\/$/, '');
+
         async function loadPartners() {
             try {
                 const response = await fetch('/api/partners');
@@ -188,7 +375,7 @@
                 }
 
                 container.innerHTML = partners.map(partner => `
-                    <div class="partner-card">
+                    <div class="partner-card" onclick="window.location='/partner/${partner.slug}'">
                         <div style="display: flex; gap: 15px; align-items: flex-start;">
                             <div class="partner-logo">
                                 ${partner.logo ? `<img src="${partner.logo}" alt="${partner.name}">` : '<i class="fa-solid fa-building"></i>'}
@@ -197,8 +384,8 @@
                                 <h3>${partner.name}</h3>
                             </div>
                         </div>
-                        <p>${partner.description}</p>
-                        <div class="partner-actions">
+                        <p>${partner.description || ''}</p>
+                        <div class="partner-actions" onclick="event.stopPropagation()">
                             ${partner.website ? `<a href="${partner.website}" target="_blank" class="partner-link"><i class="fa-solid fa-globe"></i> Website</a>` : ''}
                             ${partner.discordServer ? `<a href="${partner.discordServer}" target="_blank" class="partner-link"><i class="fa-brands fa-discord"></i> Discord</a>` : ''}
                         </div>
@@ -211,7 +398,147 @@
             }
         }
 
-        loadPartners();
+        async function loadPartnerDetail(slug) {
+            try {
+                const response = await fetch(`/api/partner/${slug}`);
+                if (!response.ok) {
+                    document.getElementById('listingView').style.display = 'block';
+                    return;
+                }
+                const partner = await response.json();
+
+                document.getElementById('listingView').style.display = 'none';
+                document.getElementById('detailView').style.display = 'block';
+
+                document.getElementById('breadcrumb-partner').textContent = partner.name;
+                document.getElementById('breadcrumb-partner').href = `/partner/${partner.slug}`;
+
+                document.getElementById('partnerDetailCard').innerHTML = `
+                    <div class="partner-detail-logo">
+                        ${partner.logo ? `<img src="${partner.logo}" alt="${partner.name}">` : '<i class="fa-solid fa-building"></i>'}
+                    </div>
+                    <h1>${partner.name}</h1>
+                    <p>${partner.description || ''}</p>
+                    <div class="partner-detail-actions">
+                        ${partner.website ? `<a href="${partner.website}" target="_blank" class="partner-link"><i class="fa-solid fa-globe"></i> Website</a>` : ''}
+                        ${partner.discordServer ? `<a href="${partner.discordServer}" target="_blank" class="partner-link"><i class="fa-brands fa-discord"></i> Discord</a>` : ''}
+                    </div>
+                `;
+
+                document.title = `${partner.name} | Disc-Tools Partners`;
+            } catch (error) {
+                console.error('Failed to load partner:', error);
+                document.getElementById('listingView').style.display = 'block';
+            }
+        }
+
+        if (slug && slug !== '') {
+            loadPartnerDetail(slug);
+            checkOwnPartner(slug);
+        } else {
+            loadPartners();
+        }
+
+        async function checkOwnPartner(slug) {
+            try {
+                const authRes = await fetch('/api/auth/me');
+                const auth = await authRes.json();
+                if (!auth.authenticated) return;
+
+                let partnerData = null;
+                let isAdmin = false;
+
+                try {
+                    const adminRes = await fetch('/api/admin/check');
+                    const adminData = await adminRes.json();
+                    isAdmin = adminData.isAdmin;
+                } catch (e) {}
+
+                if (isAdmin) {
+                    const allRes = await fetch('/api/admin/partners');
+                    const all = await allRes.json();
+                    partnerData = all.find(p => p.slug === slug);
+                }
+
+                if (!partnerData) {
+                    const partnerRes = await fetch('/api/user/partner');
+                    if (partnerRes.ok) {
+                        const myPartner = await partnerRes.json();
+                        if (myPartner.slug === slug) partnerData = myPartner;
+                    }
+                }
+
+                if (!partnerData) return;
+
+                document.getElementById('editView').classList.add('visible');
+                document.getElementById('edit-description').value = partnerData.description || '';
+                document.getElementById('edit-website').value = partnerData.website || '';
+                document.getElementById('edit-discord').value = partnerData.discord_server || '';
+                document.getElementById('edit-logo').value = partnerData.logo || '';
+            } catch (e) {}
+        }
+
+        async function savePartner(data) {
+            let isAdmin = false;
+            try {
+                const adminRes = await fetch('/api/admin/check');
+                isAdmin = (await adminRes.json()).isAdmin;
+            } catch (e) {}
+
+            if (isAdmin) {
+                const allRes = await fetch('/api/admin/partners');
+                const all = await allRes.json();
+                const p = all.find(x => x.slug === slug);
+                if (p) return await fetch(`/api/admin/partners/${p.id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+            }
+
+            return await fetch('/api/user/partner', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+        }
+
+        document.getElementById('partnerEditForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('.btn-save');
+            const feedback = document.getElementById('saveFeedback');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch loading"></i> Saving...';
+            feedback.style.display = 'none';
+
+            try {
+                const res = await savePartner({
+                    description: document.getElementById('edit-description').value || null,
+                    website: document.getElementById('edit-website').value || null,
+                    discord_server: document.getElementById('edit-discord').value || null,
+                    logo: document.getElementById('edit-logo').value || null
+                });
+
+                if (res.ok) {
+                    feedback.textContent = 'Changes saved successfully!';
+                    feedback.className = 'save-feedback success';
+                    feedback.style.display = 'block';
+                    loadPartnerDetail(slug);
+                } else {
+                    const errData = await res.json().catch(() => ({}));
+                    feedback.textContent = errData.error || 'Failed to save changes.';
+                    feedback.className = 'save-feedback error';
+                    feedback.style.display = 'block';
+                }
+            } catch (err) {
+                feedback.textContent = 'Failed to save changes.';
+                feedback.className = 'save-feedback error';
+                feedback.style.display = 'block';
+            }
+
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save Changes';
+        });
     </script>
 </body>
 </html>
