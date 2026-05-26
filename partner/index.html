@@ -72,6 +72,12 @@
         <span class="login-badge"></span>
     </header>
 
+    <nav class="breadcrumbs" id="breadcrumbs">
+        <a href="/">Home</a>
+        <span>/</span>
+        <a href="/partner/" id="breadcrumb-partner">Partner</a>
+    </nav>
+
     <main class="tool-page">
         <div id="listingView">
             <div class="partners-header">
@@ -247,6 +253,8 @@
                     </div>
                 `;
 
+                document.getElementById('breadcrumb-partner').textContent = partner.name;
+                document.getElementById('breadcrumb-partner').href = `/partner/${partner.slug}`;
                 document.title = `${partner.name} | Disc-Tools Partners`;
             } catch (error) {
                 console.error('Failed to load partner:', error);
