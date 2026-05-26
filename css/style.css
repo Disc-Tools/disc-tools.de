@@ -447,6 +447,11 @@ p { font-size: 16px; line-height: 1.6; color: var(--text); }
 .mb-40 { margin-bottom: 40px; }
 .mb-50 { margin-bottom: 50px; }
 
+html {
+    overflow-y: scroll;
+    scrollbar-gutter: stable;
+}
+
 body {
     background: var(--bg);
     color: var(--text);
