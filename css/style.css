@@ -936,7 +936,7 @@ header.scrolled {
     position: relative;
     z-index: 5;
     padding: 60px 40px 40px;
-    max-width: 1400px;
+    max-width: 1600px;
     margin: 0 auto;
     text-align: center;
 }
@@ -1179,13 +1179,13 @@ header.scrolled {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 24px;
-    max-width: 1400px;
+    max-width: 1600px;
     margin: 0 auto;
     padding: 0 40px 60px;
 }
 
 .section-header {
-    max-width: 1400px;
+    max-width: 1600px;
     margin: 0 auto 30px;
     padding: 0 40px;
     display: flex;
@@ -1387,7 +1387,7 @@ header.scrolled {
     position: relative;
     text-align: left;
     margin-bottom: 50px;
-    max-width: 1400px;
+    max-width: 1600px;
     margin-left: auto;
     margin-right: auto;
     padding: 0 40px;
@@ -3175,7 +3175,7 @@ footer {
 }
 
 .footer-content {
-    max-width: 1400px;
+    max-width: 1600px;
     margin: 0 auto;
     display: grid;
     grid-template-columns: 2fr 1fr 1fr 1.5fr;
@@ -3287,7 +3287,7 @@ footer {
 }
 
 .footer-bottom {
-    max-width: 1400px;
+    max-width: 1600px;
     margin: 0 auto;
     padding-top: 40px;
     border-top: 1px solid var(--border);
