@@ -11,8 +11,8 @@
     <link rel="icon" type="image/png" href="/assets/img/admin_logo.png">
     <link rel="stylesheet" href="/css/style.css?v=2">
     <style>
-        .admin-layout { display: flex; min-height: 100vh; background: var(--bg); }
-        .admin-sidebar { width: 260px; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 20px 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+        .admin-layout { display: flex; height: 100vh; background: var(--bg); }
+        .admin-sidebar { width: 260px; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 20px 0; flex-shrink: 0; overflow-y: auto; }
         .admin-logo { display: flex; align-items: center; gap: 10px; padding: 0 20px 20px; border-bottom: 1px solid var(--border); text-decoration: none; }
         .admin-logo img { height: 32px; }
         .admin-logo span { font-family: var(--sans); font-weight: 800; font-size: 18px; color: #fff; }
@@ -98,7 +98,10 @@
 <body>
     <div class="admin-layout">
         <aside class="admin-sidebar">
-            <a href="/" class="admin-logo"><img src="/assets/img/admin_logo.png" alt="Logo"><span>Disc<span>-</span>Tools</span></a>
+            <a href="/" class="admin-logo">
+                <img src="/assets/img/admin_logo.png" alt="Logo">
+                <span>Disc<span>-</span>Tools</span>
+            </a>
             <nav class="admin-nav">
                 <details open>
                     <summary><i class="fa-solid fa-layer-group"></i> General <span class="arrow">&#9654;</span></summary>
@@ -108,8 +111,13 @@
                     <a href="/admin/announcements/"><i class="fa-solid fa-bullhorn"></i> Announcements</a>
                 </details>
                 <details open>
+                    <summary><i class="fa-solid fa-chart-bar"></i> Analytics <span class="arrow">&#9654;</span></summary>
+                    <a href="/admin/umami/"><i class="fa-solid fa-chart-simple"></i> Umami Stats</a>
+                </details>
+                <details open>
                     <summary><i class="fa-solid fa-server"></i> System <span class="arrow">&#9654;</span></summary>
                     <a href="/admin/logs/"><i class="fa-solid fa-file-lines"></i> Logs</a>
+                    <a href="/admin/sessions/"><i class="fa-solid fa-key"></i> Sessions</a>
                     <a href="/admin/system/"><i class="fa-solid fa-server"></i> System</a>
                 </details>
                 <details open>

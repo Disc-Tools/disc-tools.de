@@ -8,8 +8,8 @@
     <link rel="icon" type="image/png" href="/assets/img/admin_logo.png">
     <link rel="stylesheet" href="/css/style.css?v=2">
     <style>
-        .admin-layout { display: flex; min-height: 100vh; background: var(--bg); }
-        .admin-sidebar { width: 260px; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 20px 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+        .admin-layout { display: flex; height: 100vh; background: var(--bg); }
+        .admin-sidebar { width: 260px; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 20px 0; flex-shrink: 0; overflow-y: auto; }
         .admin-logo { display: flex; align-items: center; gap: 10px; padding: 0 20px 20px; border-bottom: 1px solid var(--border); text-decoration: none; }
         .admin-logo img { height: 32px; }
         .admin-logo span { font-family: var(--sans); font-weight: 800; font-size: 18px; color: #fff; }
@@ -52,9 +52,12 @@
         .page-row .path { font-family: var(--mono); font-size: 12px; color: var(--text); word-break: break-all; }
         .page-row .cnt { font-family: var(--mono); font-weight: 700; font-size: 13px; color: #e74c3c; }
 
-        .badge-list { display: flex; flex-wrap: wrap; gap: 6px; }
-        .badge-item { display: flex; align-items: center; gap: 6px; padding: 6px 12px; background: rgba(255,255,255,0.05); border-radius: 100px; font-size: 13px; }
-        .badge-item .cnt { font-weight: 700; color: #e74c3c; }
+        .stat-list { display: flex; flex-direction: column; gap: 8px; }
+        .stat-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+        .stat-row:last-child { border-bottom: none; }
+        .stat-row .label { display: flex; align-items: center; gap: 10px; color: var(--text); }
+        .stat-row .label i { width: 18px; text-align: center; font-size: 14px; color: #e74c3c; }
+        .stat-row .cnt { font-family: var(--mono); font-weight: 700; font-size: 13px; color: #e74c3c; }
 
         .loading { color: var(--muted); text-align: center; padding: 60px; }
     </style>
@@ -62,11 +65,15 @@
 <body>
     <div class="admin-layout">
         <aside class="admin-sidebar">
-            <a href="/" class="admin-logo"><img src="/assets/img/admin_logo.png" alt="Admin"><span>Disc<span>-</span>Tools</span></a>
+            <a href="/" class="admin-logo">
+                <img src="/assets/img/admin_logo.png" alt="Logo">
+                <span>Disc<span>-</span>Tools</span>
+            </a>
             <nav class="admin-nav">
                 <details open>
                     <summary><i class="fa-solid fa-layer-group"></i> General <span class="arrow">&#9654;</span></summary>
                     <a href="/admin/overview/"><i class="fa-solid fa-house"></i> Overview</a>
+                    <a href="/admin/linktree/"><i class="fa-solid fa-link"></i> Linktree Profile</a>
                     <a href="/admin/members/"><i class="fa-solid fa-users"></i> Members</a>
                     <a href="/admin/announcements/"><i class="fa-solid fa-bullhorn"></i> Announcements</a>
                 </details>
@@ -114,20 +121,20 @@
                     <div class="page-list" id="top-pages"><div class="loading">Loading...</div></div>
                 </div>
                 <div class="panel">
-                    <h3><i class="fa-solid fa-globe"></i> Browsers (7d)</h3>
-                    <div class="badge-list" id="browsers"><div class="loading">Loading...</div></div>
+                    <h3><i class="fa-brands fa-chrome"></i> Browsers (7d)</h3>
+                    <div class="stat-list" id="browsers"><div class="loading">Loading...</div></div>
                 </div>
                 <div class="panel">
                     <h3><i class="fa-solid fa-laptop"></i> Devices (7d)</h3>
-                    <div class="badge-list" id="devices"><div class="loading">Loading...</div></div>
+                    <div class="stat-list" id="devices"><div class="loading">Loading...</div></div>
                 </div>
                 <div class="panel">
                     <h3><i class="fa-solid fa-microchip"></i> Operating Systems (7d)</h3>
-                    <div class="badge-list" id="os-list"><div class="loading">Loading...</div></div>
+                    <div class="stat-list" id="os-list"><div class="loading">Loading...</div></div>
                 </div>
                 <div class="panel" style="grid-column: 1 / -1;">
-                    <h3><i class="fa-solid fa-map-pin"></i> Countries (7d)</h3>
-                    <div class="badge-list" id="countries"><div class="loading">Loading...</div></div>
+                    <h3><i class="fa-solid fa-flag"></i> Countries (7d)</h3>
+                    <div class="stat-list" id="countries"><div class="loading">Loading...</div></div>
                 </div>
             </div>
         </main>
@@ -158,21 +165,45 @@
                     '<div class="page-row"><span class="path">' + p.url_path + '</span><span class="cnt">' + p.cnt + '</span></div>'
                 ).join('') || '<div class="page-row" style="color: var(--muted);">No data</div>';
 
-                const renderBadges = (items, id) => {
-                    document.getElementById(id).innerHTML = items.map(i => {
-                        const label = Object.values(i)[0] || 'Unknown';
-                        const count = Object.values(i)[1];
-                        return '<span class="badge-item"><span class="cnt">' + count + '</span> ' + label + '</span>';
-                    }).join('') || '<span style="color: var(--muted);">No data</span>';
+                const iconMap = {
+                    browsers: {
+                        chrome: 'fa-brands fa-chrome', firefox: 'fa-brands fa-firefox-browser',
+                        safari: 'fa-brands fa-safari', edge: 'fa-brands fa-edge',
+                        opera: 'fa-brands fa-opera', brave: 'fa-solid fa-shield-halved',
+                        'samsung internet': 'fa-solid fa-mobile', 'uc browser': 'fa-solid fa-globe',
+                        yandex: 'fa-solid fa-globe', 'internet explorer': 'fa-brands fa-internet-explorer'
+                    },
+                    devices: { desktop: 'fa-solid fa-desktop', mobile: 'fa-solid fa-mobile-screen', tablet: 'fa-solid fa-tablet', laptop: 'fa-solid fa-laptop' },
+                    os: {
+                        windows: 'fa-brands fa-windows', macos: 'fa-brands fa-apple', 'mac os': 'fa-brands fa-apple',
+                        linux: 'fa-brands fa-linux', android: 'fa-brands fa-android', ios: 'fa-brands fa-apple',
+                        'chrome os': 'fa-brands fa-chrome', ubuntu: 'fa-brands fa-linux', debian: 'fa-brands fa-linux',
+                        fedora: 'fa-brands fa-linux', arch: 'fa-brands fa-linux'
+                    },
+                    countries: 'fa-solid fa-flag'
                 };
 
-                renderBadges(data.browsers, 'browsers');
-                renderBadges(data.devices, 'devices');
-                renderBadges(data.os, 'os-list');
-                renderBadges(data.countries, 'countries');
+                const iconFallback = { browser: 'fa-solid fa-globe', device: 'fa-solid fa-laptop', os: 'fa-solid fa-microchip', country: 'fa-solid fa-flag' };
+
+                const renderList = (items, field, iconSet, id) => {
+                    document.getElementById(id).innerHTML = items.map(i => {
+                        const label = i[field] || 'Unknown';
+                        const count = i.cnt;
+                        const lookup = label.toLowerCase();
+                        let icon;
+                        if (typeof iconSet === 'string') icon = iconSet;
+                        else icon = iconSet[lookup] || iconFallback[field];
+                        return '<div class="stat-row"><span class="label"><i class="' + icon + '"></i> ' + label + '</span><span class="cnt">' + count + '</span></div>';
+                    }).join('') || '<div class="stat-row" style="color: var(--muted);">No data</div>';
+                };
+
+                renderList(data.browsers, 'browser', iconMap.browsers, 'browsers');
+                renderList(data.devices, 'device', iconMap.devices, 'devices');
+                renderList(data.os, 'os', iconMap.os, 'os-list');
+                renderList(data.countries, 'country', iconMap.countries, 'countries');
             } catch (e) {
                 ['top-pages', 'browsers', 'devices', 'os-list', 'countries'].forEach(id => {
-                    document.getElementById(id).innerHTML = '<span style="color: var(--muted);">Failed to load</span>';
+                    document.getElementById(id).innerHTML = '<div class="stat-row" style="color: var(--muted);">Failed to load</div>';
                 });
                 console.error('[Analytics]', e);
             }

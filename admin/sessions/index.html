@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sessions | Admin Dashboard | Disc-Tools</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="/assets/img/admin_logo.png">
+    <link rel="stylesheet" href="/css/style.css?v=2">
+    <style>
+        .admin-layout { display: flex; height: 100vh; background: var(--bg); }
+        .admin-sidebar { width: 260px; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 20px 0; flex-shrink: 0; overflow-y: auto; }
+        .admin-logo { display: flex; align-items: center; gap: 10px; padding: 0 20px 20px; border-bottom: 1px solid var(--border); text-decoration: none; }
+        .admin-logo img { height: 32px; }
+        .admin-logo span { font-family: var(--sans); font-weight: 800; font-size: 18px; color: #fff; }
+        .admin-logo span span { color: #e74c3c; }
+        .admin-nav { display: flex; flex-direction: column; gap: 2px; padding: 15px 10px; flex: 1; }
+        .admin-nav details { display: flex; flex-direction: column; }
+        .admin-nav details summary { display: flex; align-items: center; gap: 10px; padding: 10px 15px; color: var(--muted); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; cursor: pointer; border-radius: 10px; user-select: none; list-style: none; transition: color 0.2s; }
+        .admin-nav details summary::-webkit-details-marker { display: none; }
+        .admin-nav details summary::marker { display: none; }
+        .admin-nav details summary i { font-size: 12px; width: 20px; text-align: center; }
+        .admin-nav details summary .arrow { margin-left: auto; font-size: 10px; transition: transform 0.2s; }
+        .admin-nav details[open] summary .arrow { transform: rotate(90deg); }
+        .admin-nav details summary:hover { color: #e74c3c; }
+        .admin-nav details a { display: flex; align-items: center; gap: 12px; padding: 10px 15px 10px 47px; color: var(--muted); text-decoration: none; border-radius: 8px; font-weight: 500; font-size: 14px; transition: all 0.2s; }
+        .admin-nav details a:hover, .admin-nav details a.active { background: rgba(231, 76, 60, 0.1); color: #e74c3c; }
+        .admin-nav details a i { width: 16px; text-align: center; font-size: 14px; }
+        .admin-nav > a:last-child:hover { color: #e74c3c !important; text-shadow: 0 0 20px rgba(231, 76, 60, 0.5); }
+
+        .admin-content { flex: 1; padding: 40px; overflow-y: auto; }
+        .admin-header { margin-bottom: 30px; }
+        .admin-header h1 { font-family: var(--sans); font-size: 28px; margin: 0; }
+        .admin-subtitle { color: var(--muted); margin-top: 5px; }
+
+        .stat-row { display: flex; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
+        .stat-chip { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 22px; display: flex; align-items: center; gap: 14px; font-size: 14px; }
+        .stat-chip .num { font-weight: 800; font-size: 22px; font-family: var(--mono); color: #e74c3c; }
+
+        .table-wrapper { border-radius: 12px; border: 1px solid var(--border); overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; background: var(--surface); }
+        th { padding: 14px 18px; text-align: left; font-size: 11px; text-transform: uppercase; color: var(--muted); font-weight: 600; letter-spacing: 0.05em; background: rgba(0,0,0,0.2); border-bottom: 1px solid var(--border); }
+        td { padding: 12px 18px; border-bottom: 1px solid var(--border); vertical-align: middle; font-size: 14px; }
+        tr:last-child td { border-bottom: none; }
+
+        .user-cell { display: flex; align-items: center; gap: 12px; }
+        .user-cell img { width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0; }
+        .user-cell .name { font-weight: 600; color: #fff; font-size: 14px; }
+        .user-cell .uid { font-size: 11px; color: var(--muted); font-family: var(--mono); margin-top: 2px; }
+
+        .status-badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 100px; font-size: 11px; font-weight: 700; }
+        .status-badge.on { background: rgba(46,204,113,0.15); color: #2ecc71; }
+        .status-badge.off { background: rgba(231,76,60,0.15); color: #e74c3c; }
+        .status-badge.block { background: rgba(155,89,182,0.15); color: #9b59b6; }
+
+        .action-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--muted); padding: 6px 12px; cursor: pointer; font-size: 12px; font-weight: 500; border-radius: 8px; transition: all 0.2s; }
+        .action-btn:hover { background: #e74c3c; color: #fff; border-color: #e74c3c; }
+        .action-btn.danger:hover { background: #e74c3c; color: #fff; border-color: #e74c3c; }
+        .action-btn.warning:hover { background: #f39c12; color: #fff; border-color: #f39c12; }
+        .action-btn.success:hover { background: #2ecc71; color: #fff; border-color: #2ecc71; }
+        .action-btn.purple:hover { background: #9b59b6; color: #fff; border-color: #9b59b6; }
+        .action-cell { display: flex; gap: 6px; flex-wrap: wrap; }
+
+        .meta { font-size: 12px; color: var(--muted); }
+        .meta-ua { font-size: 11px; color: var(--muted); max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: block; }
+
+        .loading { color: var(--muted); text-align: center; padding: 60px; font-size: 14px; }
+
+        .toast { position: fixed; bottom: 30px; right: 30px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 22px; font-size: 14px; box-shadow: 0 8px 32px rgba(0,0,0,0.5); z-index: 9999; display: none; align-items: center; gap: 10px; }
+        .toast.show { display: flex; }
+    </style>
+</head>
+<body>
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <a href="/" class="admin-logo">
+                <img src="/assets/img/admin_logo.png" alt="Logo">
+                <span>Disc<span>-</span>Tools</span>
+            </a>
+            <nav class="admin-nav">
+                <details open>
+                    <summary><i class="fa-solid fa-layer-group"></i> General <span class="arrow">&#9654;</span></summary>
+                    <a href="/admin/overview/"><i class="fa-solid fa-house"></i> Overview</a>
+                    <a href="/admin/linktree/"><i class="fa-solid fa-link"></i> Linktree Profile</a>
+                    <a href="/admin/members/"><i class="fa-solid fa-users"></i> Members</a>
+                    <a href="/admin/announcements/"><i class="fa-solid fa-bullhorn"></i> Announcements</a>
+                </details>
+                <details open>
+                    <summary><i class="fa-solid fa-chart-bar"></i> Analytics <span class="arrow">&#9654;</span></summary>
+                    <a href="/admin/umami/"><i class="fa-solid fa-chart-simple"></i> Umami Stats</a>
+                </details>
+                <details open>
+                    <summary><i class="fa-solid fa-server"></i> System <span class="arrow">&#9654;</span></summary>
+                    <a href="/admin/sessions/" class="active"><i class="fa-solid fa-key"></i> Sessions</a>
+                    <a href="/admin/logs/"><i class="fa-solid fa-file-lines"></i> Logs</a>
+                    <a href="/admin/system/"><i class="fa-solid fa-server"></i> System</a>
+                </details>
+                <details open>
+                    <summary><i class="fa-solid fa-handshake"></i> Partnerships <span class="arrow">&#9654;</span></summary>
+                    <a href="/admin/partner/"><i class="fa-solid fa-handshake"></i> Manage Partners</a>
+                    <a href="/admin/partner/requests/"><i class="fa-solid fa-inbox"></i> Partnership Requests</a>
+                </details>
+                <details open>
+                    <summary><i class="fa-solid fa-cube"></i> Other Services <span class="arrow">&#9654;</span></summary>
+                    <a href="https://mail.disc-tools.de/mail/" target="_blank"><i class="fa-solid fa-envelope"></i> Mail</a>
+                    <a href="https://mail.disc-tools.de/iredadmin" target="_blank"><i class="fa-solid fa-user-shield"></i> Admin mail</a>
+                    <a href="https://umami.disc-tools.de" target="_blank"><i class="fa-solid fa-chart-line"></i> Umami</a>
+                    <a href="https://status.disc-tools.de/status/disc-tools" target="_blank"><i class="fa-solid fa-circle-check"></i> Status</a>
+                </details>
+                <a href="/" style="margin-top: auto; color: var(--muted); display: flex; align-items: center; gap: 12px; padding: 12px 15px; text-decoration: none; border-radius: 10px; font-weight: 500; font-size: 14px; transition: all 0.2s;"><i class="fa-solid fa-right-from-bracket"></i> Exit Admin</a>
+            </nav>
+        </aside>
+
+        <main class="admin-content">
+            <header class="admin-header">
+                <h1><i class="fa-solid fa-key" style="color: #e74c3c;"></i> Active Sessions</h1>
+                <p class="admin-subtitle">View and manage logged-in admin sessions</p>
+            </header>
+
+            <div class="stat-row" id="stat-bar"></div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width:26%">User</th>
+                            <th style="width:26%">User Agent</th>
+                            <th style="width:14%">Login</th>
+                            <th style="width:14%">Active</th>
+                            <th style="width:8%">Status</th>
+                            <th style="width:12%">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sessions-body">
+                        <tr><td colspan="6" class="loading">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        document.querySelectorAll('.admin-nav details').forEach(d => {
+            const key = 'nav-' + d.querySelector('summary').textContent.trim().toLowerCase().replace(/\s+/g, '-');
+            const saved = localStorage.getItem(key);
+            if (saved !== null) d.open = saved === 'true';
+            d.addEventListener('toggle', () => { localStorage.setItem(key, d.open); });
+        });
+
+        function toast(msg, err) {
+            const el = document.getElementById('toast');
+            el.innerHTML = (err ? '<i class="fa-solid fa-circle-exclamation" style="color:#e74c3c"></i>' : '<i class="fa-solid fa-check-circle" style="color:#2ecc71"></i>') + ' ' + msg;
+            el.classList.add('show');
+            clearTimeout(el._t);
+            el._t = setTimeout(() => el.classList.remove('show'), 3000);
+        }
+
+        function ago(d) {
+            const m = Math.floor((Date.now() - new Date(d).getTime()) / 60000);
+            if (m < 1) return 'now';
+            if (m < 60) return m + 'm';
+            const h = Math.floor(m / 60);
+            if (h < 24) return h + 'h';
+            return Math.floor(h / 24) + 'd';
+        }
+
+        async function load() {
+            try {
+                const r = await fetch('/api/admin/sessions');
+                if (!r.ok) throw new Error(String(r.status));
+                const list = await r.json();
+                const active = list.filter(s => !s.revoked && !s.blocked);
+                const revoked = list.filter(s => s.revoked && !s.blocked);
+                const blocked = list.filter(s => s.blocked);
+
+                document.getElementById('stat-bar').innerHTML =
+                    '<div class="stat-chip"><span class="num">' + list.length + '</span> Total</div>' +
+                    '<div class="stat-chip"><span class="num" style="color:#2ecc71">' + active.length + '</span> Active</div>' +
+                    '<div class="stat-chip"><span class="num" style="color:#e74c3c">' + revoked.length + '</span> Logged Out</div>' +
+                    '<div class="stat-chip"><span class="num" style="color:#9b59b6">' + blocked.length + '</span> Blocked</div>';
+
+                document.getElementById('sessions-body').innerHTML = list.length === 0
+                    ? '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:40px;">No sessions yet</td></tr>'
+                    : list.map(s => {
+                        const st = s.blocked ? 'block' : s.revoked ? 'off' : 'on';
+                        const lbl = st === 'on' ? 'Active' : st === 'off' ? 'Logged Out' : 'Blocked';
+                        const ic = st === 'on' ? 'fa-solid fa-play' : st === 'off' ? 'fa-solid fa-ban' : 'fa-solid fa-lock';
+
+                        const av = s.avatar
+                            ? 'https://cdn.discordapp.com/avatars/' + s.user_id + '/' + s.avatar + '.png?size=64'
+                            : 'https://cdn.discordapp.com/embed/avatars/' + (parseInt(s.user_id) >> 22) % 6 + '.png';
+
+                        const dn = s.global_name || s.username || '?';
+
+                        let acts = '';
+                        if (st === 'on') {
+                            acts = '<div class="action-cell">' +
+                                '<button class="action-btn" onclick="revoke(\'' + s.user_id + '\')"><i class="fa-solid fa-ban"></i> Logout</button>' +
+                                '<button class="action-btn purple" onclick="blockUser(\'' + s.user_id + '\',\'' + s.username.replace(/'/g, "\\'") + '\')"><i class="fa-solid fa-lock"></i> Block</button>' +
+                                '</div>';
+                        } else if (st === 'off' || st === 'block') {
+                            acts = '<div class="action-cell">' +
+                                '<button class="action-btn success" onclick="unblockUser(\'' + s.user_id + '\')"><i class="fa-solid fa-unlock"></i> Unblock</button>' +
+                                '</div>';
+                        }
+
+                        return '<tr><td><div class="user-cell"><img src="' + av + '"><div><div class="name">' + dn + '</div><div class="uid">' + s.user_id + '</div></div></div></td>' +
+                            '<td><span class="meta-ua" title="' + (s.user_agent || '').replace(/"/g, '&quot;') + '">' + (s.user_agent ? s.user_agent.slice(0,55) + (s.user_agent.length > 55 ? '…' : '') : '—') + '</span></td>' +
+                            '<td><span class="meta">' + ago(s.created_at) + '</span></td>' +
+                            '<td><span class="meta">' + ago(s.last_active) + '</span></td>' +
+                            '<td><span class="status-badge ' + st + '"><i class="' + ic + '"></i> ' + lbl + '</span></td>' +
+                            '<td>' + acts + '</td></tr>';
+                    }).join('');
+            } catch (e) {
+                document.getElementById('sessions-body').innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:40px;">Failed to load</td></tr>';
+                console.error(e);
+            }
+        }
+
+        async function revoke(userId) {
+            if (!confirm('Logout this user? All their sessions will be terminated.')) return;
+            try {
+                const r = await fetch('/api/admin/sessions/logout/' + encodeURIComponent(userId), { method: 'POST' });
+                const data = await r.json();
+                if (!r.ok) throw new Error();
+                if (data.self) { window.location.href = '/'; return; }
+                toast('User logged out');
+                load();
+            } catch (e) { toast('Failed', true); }
+        }
+
+        async function blockUser(uid, un) {
+            if (!confirm('Block this user from the admin panel? All their sessions will be revoked.')) return;
+            try {
+                const r = await fetch('/api/admin/sessions/block/' + uid, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: un })
+                });
+                if (!r.ok) throw new Error();
+                toast('User blocked');
+                load();
+            } catch (e) { toast('Failed', true); }
+        }
+
+        async function unblockUser(uid) {
+            if (!confirm('Unblock this user?')) return;
+            try {
+                const r = await fetch('/api/admin/sessions/unblock/' + uid, { method: 'POST' });
+                if (!r.ok) throw new Error();
+                toast('User unblocked');
+                load();
+            } catch (e) { toast('Failed', true); }
+        }
+
+        load();
+        setInterval(load, 15000);
+    </script>
+</body>
+</html>

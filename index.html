@@ -116,7 +116,14 @@
         </a>
         <nav class="nav-links">
             <a href="/tools/" class="nav-link">Tools</a>
-            <a href="/guides/" class="nav-link">Guides</a>
+            <div class="nav-dropdown">
+                <button class="nav-link dropdown-toggle" aria-haspopup="true" aria-expanded="false">Learn <i class="fa-solid fa-chevron-down"></i></button>
+                <div class="dropdown-menu">
+                    <a href="/guides/">Guides</a>
+                    <a href="/tips/formatting/">Formatting</a>
+                    <a href="/tips/shortcuts/">Shortcuts</a>
+                </div>
+            </div>
             <a href="https://status.disc-tools.de/status/disc-tools" class="nav-link">Status</a>
             <a href="/partner/" class="nav-link">Partner</a>
             <a href="/about/" class="nav-link">About</a>
@@ -303,6 +310,41 @@
             <div class="tool-card-desc">Generate direct CDN links for any user's avatar in all sizes & formats.</div>
             <div class="card-footer">
                 <span class="category-badge">User</span>
+            </div>
+        </a>
+    </div>
+
+    <div class="section-header mt-40">
+        <div class="section-title">
+            <span>tips</span>
+            Discord Shortcuts
+        </div>
+        <a href="tips/formatting/" class="view-all">All Formatting Tips <i class="fa-solid fa-arrow-right"></i></a>
+    </div>
+
+    <div class="tools-grid">
+        <a href="tips/formatting/bold/" class="tool-card" style="--card-accent:#2ecc71">
+            <span class="tool-card-icon"><i class="fa-solid fa-bold"></i></span>
+            <div class="tool-card-title">Bold</div>
+            <div class="tool-card-desc">Make text stand out with <code>**double asterisks**</code>. The most used formatting shortcut on Discord.</div>
+            <div class="card-footer">
+                <span class="category-badge">Formatting</span>
+            </div>
+        </a>
+        <a href="tips/formatting/spoiler/" class="tool-card" style="--card-accent:#9b59b6">
+            <span class="tool-card-icon"><i class="fa-solid fa-eye-slash"></i></span>
+            <div class="tool-card-title">Spoiler</div>
+            <div class="tool-card-desc">Hide content behind <code>||double pipes||</code> — click to reveal. Perfect for spoilers and sensitive info.</div>
+            <div class="card-footer">
+                <span class="category-badge">Formatting</span>
+            </div>
+        </a>
+        <a href="tips/formatting/code-block/" class="tool-card" style="--card-accent:#e74c3c">
+            <span class="tool-card-icon"><i class="fa-solid fa-terminal"></i></span>
+            <div class="tool-card-title">Code Block</div>
+            <div class="tool-card-desc">Multi-line code with syntax highlighting using <code>```triple backticks```</code>. Supports JS, Python, JSON & more.</div>
+            <div class="card-footer">
+                <span class="category-badge">Formatting</span>
             </div>
         </a>
     </div>

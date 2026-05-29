@@ -11,8 +11,8 @@
     <script defer src="https://umami.disc-tools.de/script.js" data-website-id="0cf82497-80c8-42a2-b6e4-8a8ae179d1fe"></script>
     
     <style>
-        .admin-layout { display: flex; min-height: 100vh; background: var(--bg); }
-        .admin-sidebar { width: 260px; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 20px 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+        .admin-layout { display: flex; height: 100vh; background: var(--bg); }
+        .admin-sidebar { width: 260px; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 20px 0; flex-shrink: 0; overflow-y: auto; }
         .admin-logo { display: flex; align-items: center; gap: 10px; padding: 0 20px 20px; border-bottom: 1px solid var(--border); text-decoration: none; }
         .admin-logo img { height: 32px; }
         .admin-logo span { font-family: var(--sans); font-weight: 800; font-size: 18px; color: #fff; }
@@ -480,8 +480,13 @@
                     <a href="/admin/announcements/"><i class="fa-solid fa-bullhorn"></i> Announcements</a>
                 </details>
                 <details open>
+                    <summary><i class="fa-solid fa-chart-bar"></i> Analytics <span class="arrow">&#9654;</span></summary>
+                    <a href="/admin/umami/"><i class="fa-solid fa-chart-simple"></i> Umami Stats</a>
+                </details>
+                <details open>
                     <summary><i class="fa-solid fa-server"></i> System <span class="arrow">&#9654;</span></summary>
                     <a href="/admin/logs/"><i class="fa-solid fa-file-lines"></i> Logs</a>
+                    <a href="/admin/sessions/"><i class="fa-solid fa-key"></i> Sessions</a>
                     <a href="/admin/system/"><i class="fa-solid fa-server"></i> System</a>
                 </details>
                 <details open>

@@ -17,7 +17,17 @@
   <div class="glow"></div>
   <header>
     <a href="/" class="logo-container"><img src="/assets/img/logo.png" alt="Disc-Tools Logo" class="main-logo"><div class="logo">Disc<span>-</span>Tools</div></a>
-    <nav class="nav-links"><a href="/tools/" class="nav-link">Tools</a><a href="/guides/" class="nav-link">Guides</a><a href="/about/" class="nav-link">About</a></nav>
+    <nav class="nav-links">
+            <a href="/tools/" class="nav-link">Tools</a>
+            <div class="nav-dropdown">
+                <button class="nav-link dropdown-toggle" aria-haspopup="true" aria-expanded="false">Learn <i class="fa-solid fa-chevron-down"></i></button>
+                <div class="dropdown-menu">
+                    <a href="/guides/">Guides</a>
+                    <a href="/tips/shortcuts/">Shortcuts</a>
+                </div>
+            </div>
+            <a href="/about/" class="nav-link">About</a>
+        </nav>
   </header>
   <main class="legal-shell">
     <section class="tool-hero">
