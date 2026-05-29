@@ -90,7 +90,13 @@
             display: flex;
             flex-shrink: 0;
             gap: 0;
-            animation: marquee 30s linear infinite;
+        }
+        .marquee-left {
+            animation: marquee 50s linear infinite;
+        }
+        .marquee-right {
+            animation: marquee 50s linear infinite;
+            animation-direction: reverse;
         }
         .marquee-wrapper:hover .marquee-group {
             animation-play-state: paused;
@@ -225,30 +231,73 @@
 
     <div class="marquee-wrapper">
         <div class="marquee-track">
-            <div class="marquee-group">
-                <span><i class="fa-brands fa-react"></i> React</span>
-                <span><i class="fa-brands fa-js"></i> JavaScript</span>
-                <span><i class="fa-brands fa-node"></i> Node.js</span>
-                <span><i class="fa-brands fa-python"></i> Python</span>
-                <span><i class="fa-brands fa-docker"></i> Docker</span>
-                <span><i class="fa-solid fa-database"></i> PostgreSQL</span>
-                <span><i class="fa-brands fa-github"></i> GitHub</span>
-                <span><i class="fa-brands fa-discord"></i> Discord API</span>
+            <div class="marquee-group marquee-left">
+                <a href="/tools/invite-lookup/"><span><i class="fa-solid fa-link"></i> Invite Lookup</span></a>
+                <a href="/tools/server-lookup/"><span><i class="fa-solid fa-server"></i> Server Lookup</span></a>
+                <a href="/tips/formatting/bold/"><span><i class="fa-solid fa-bold"></i> Bold</span></a>
+                <a href="/tools/webhook-manager/"><span><i class="fa-solid fa-robot"></i> Webhook Manager</span></a>
+                <a href="/tips/formatting/spoiler/"><span><i class="fa-solid fa-eye-slash"></i> Spoiler</span></a>
+                <a href="/tools/emoji-stealer/"><span><i class="fa-solid fa-face-grin-stars"></i> Emoji Stealer</span></a>
+                <a href="/tips/formatting/code-block/"><span><i class="fa-solid fa-terminal"></i> Code Block</span></a>
+                <a href="/tools/avatar-cdn/"><span><i class="fa-solid fa-image"></i> Avatar CDN</span></a>
+                <a href="/tips/formatting/timestamp/"><span><i class="fa-solid fa-clock"></i> Timestamp</span></a>
+                <a href="/tools/snowflake-decoder/"><span><i class="fa-solid fa-snowflake"></i> Snowflake Decoder</span></a>
+                <a href="/tips/shortcuts/quick-switcher/"><span><i class="fa-solid fa-bolt"></i> Quick Switcher</span></a>
+                <a href="/tools/nitro-checker/"><span><i class="fa-solid fa-gift"></i> Nitro Checker</span></a>
             </div>
-            <div class="marquee-group">
-                <span><i class="fa-brands fa-react"></i> React</span>
-                <span><i class="fa-brands fa-js"></i> JavaScript</span>
-                <span><i class="fa-brands fa-node"></i> Node.js</span>
-                <span><i class="fa-brands fa-python"></i> Python</span>
-                <span><i class="fa-brands fa-docker"></i> Docker</span>
-                <span><i class="fa-solid fa-database"></i> PostgreSQL</span>
-                <span><i class="fa-brands fa-github"></i> GitHub</span>
-                <span><i class="fa-brands fa-discord"></i> Discord API</span>
+            <div class="marquee-group marquee-left">
+                <a href="/tools/invite-lookup/"><span><i class="fa-solid fa-link"></i> Invite Lookup</span></a>
+                <a href="/tools/server-lookup/"><span><i class="fa-solid fa-server"></i> Server Lookup</span></a>
+                <a href="/tips/formatting/bold/"><span><i class="fa-solid fa-bold"></i> Bold</span></a>
+                <a href="/tools/webhook-manager/"><span><i class="fa-solid fa-robot"></i> Webhook Manager</span></a>
+                <a href="/tips/formatting/spoiler/"><span><i class="fa-solid fa-eye-slash"></i> Spoiler</span></a>
+                <a href="/tools/emoji-stealer/"><span><i class="fa-solid fa-face-grin-stars"></i> Emoji Stealer</span></a>
+                <a href="/tips/formatting/code-block/"><span><i class="fa-solid fa-terminal"></i> Code Block</span></a>
+                <a href="/tools/avatar-cdn/"><span><i class="fa-solid fa-image"></i> Avatar CDN</span></a>
+                <a href="/tips/formatting/timestamp/"><span><i class="fa-solid fa-clock"></i> Timestamp</span></a>
+                <a href="/tools/snowflake-decoder/"><span><i class="fa-solid fa-snowflake"></i> Snowflake Decoder</span></a>
+                <a href="/tips/shortcuts/quick-switcher/"><span><i class="fa-solid fa-bolt"></i> Quick Switcher</span></a>
+                <a href="/tools/nitro-checker/"><span><i class="fa-solid fa-gift"></i> Nitro Checker</span></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="marquee-wrapper" style="margin-top:-10px">
+        <div class="marquee-track">
+            <div class="marquee-group marquee-right">
+                <a href="/tips/formatting/underline/"><span><i class="fa-solid fa-underline"></i> Underline</span></a>
+                <a href="/tools/markdown-generator/"><span><i class="fa-solid fa-pen-nib"></i> Markdown Gen</span></a>
+                <a href="/tips/shortcuts/emoji-picker/"><span><i class="fa-solid fa-face-smile"></i> Emoji Picker</span></a>
+                <a href="/tools/embed-builder/"><span><i class="fa-solid fa-code"></i> Embed Builder</span></a>
+                <a href="/tips/formatting/quote/"><span><i class="fa-solid fa-quote-left"></i> Quote</span></a>
+                <a href="/tools/color-picker/"><span><i class="fa-solid fa-palette"></i> Color Picker</span></a>
+                <a href="/tips/shortcuts/search/"><span><i class="fa-solid fa-magnifying-glass"></i> Search</span></a>
+                <a href="/tools/timestamp-generator/"><span><i class="fa-solid fa-calendar-day"></i> Timestamp Gen</span></a>
+                <a href="/tips/formatting/strikethrough/"><span><i class="fa-solid fa-strikethrough"></i> Strikethrough</span></a>
+                <a href="/tips/shortcuts/upload/"><span><i class="fa-solid fa-upload"></i> Upload</span></a>
+                <a href="/tips/formatting/channel-mention/"><span><i class="fa-solid fa-hashtag"></i> Channel Mention</span></a>
+                <a href="/tools/nitro-checker/"><span><i class="fa-solid fa-gift"></i> Nitro Checker</span></a>
+            </div>
+            <div class="marquee-group marquee-right">
+                <a href="/tips/formatting/underline/"><span><i class="fa-solid fa-underline"></i> Underline</span></a>
+                <a href="/tools/markdown-generator/"><span><i class="fa-solid fa-pen-nib"></i> Markdown Gen</span></a>
+                <a href="/tips/shortcuts/emoji-picker/"><span><i class="fa-solid fa-face-smile"></i> Emoji Picker</span></a>
+                <a href="/tools/embed-builder/"><span><i class="fa-solid fa-code"></i> Embed Builder</span></a>
+                <a href="/tips/formatting/quote/"><span><i class="fa-solid fa-quote-left"></i> Quote</span></a>
+                <a href="/tools/color-picker/"><span><i class="fa-solid fa-palette"></i> Color Picker</span></a>
+                <a href="/tips/shortcuts/search/"><span><i class="fa-solid fa-magnifying-glass"></i> Search</span></a>
+                <a href="/tools/timestamp-generator/"><span><i class="fa-solid fa-calendar-day"></i> Timestamp Gen</span></a>
+                <a href="/tips/formatting/strikethrough/"><span><i class="fa-solid fa-strikethrough"></i> Strikethrough</span></a>
+                <a href="/tips/shortcuts/upload/"><span><i class="fa-solid fa-upload"></i> Upload</span></a>
+                <a href="/tips/formatting/channel-mention/"><span><i class="fa-solid fa-hashtag"></i> Channel Mention</span></a>
+                <a href="/tools/nitro-checker/"><span><i class="fa-solid fa-gift"></i> Nitro Checker</span></a>
             </div>
         </div>
     </div>
 
     <style>
+        .marquee-wrapper + .marquee-wrapper { margin-top: -8px; }
+        .marquee-group a { text-decoration: none; }
         @media (max-width: 768px) {
             .marquee-group span { font-size: 12px; padding: 10px 18px; }
             .marquee-group span i { font-size: 14px; }
