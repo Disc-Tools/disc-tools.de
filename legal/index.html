@@ -13,22 +13,35 @@
     .legal-shell{width:min(960px,calc(100% - 32px));margin:0 auto 80px}.legal-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:30px}.legal-card{display:block;text-decoration:none;color:var(--text);padding:24px;border:1px solid var(--border);border-radius:16px;background:rgba(17,17,24,.72);backdrop-filter:blur(16px);transition:all 0.2s ease}.legal-card:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:0 10px 30px rgba(0,0,0,0.3)}.legal-card i{font-size:28px;color:var(--accent);margin-bottom:16px}.legal-card h2{color:#fff;margin:0 0 8px;font-size:22px}.legal-card p{color:var(--muted);line-height:1.6;margin:0;font-family:var(--mono);font-size:13px}.legal-card .updated{color:var(--muted);font-family:var(--mono);font-size:11px;margin-top:14px;opacity:0.6}@media(max-width:760px){.legal-grid{grid-template-columns:1fr}}
   </style>
     <script defer src="https://umami.disc-tools.de/script.js" data-website-id="0cf82497-80c8-42a2-b6e4-8a8ae179d1fe"></script>
+    <meta property="og:image" content="https://disc-tools.de/assets/img/logo.png">
+    <meta property="og:image:width" content="64">
+    <meta property="og:image:height" content="64">
+    <meta name="twitter:image" content="https://disc-tools.de/assets/img/logo.png">
 </head>
 <body class="legal-page">
   <div class="glow"></div>
   <header>
-    <a href="/" class="logo-container"><img src="/assets/img/logo.png" alt="Disc-Tools Logo" class="main-logo"><div class="logo">Disc<span>-</span>Tools</div></a>
+    <a href="/" class="logo-container"><img loading="lazy" src="/assets/img/logo.png" alt="Disc-Tools Logo" class="main-logo" onerror="this.style.display='none'"><div class="logo">Disc<span>-</span>Tools</div></a>
     <nav class="nav-links">
             <a href="/tools/" class="nav-link">Tools</a>
             <div class="nav-dropdown">
                 <button class="nav-link dropdown-toggle" aria-haspopup="true" aria-expanded="false">Learn <i class="fa-solid fa-chevron-down"></i></button>
                 <div class="dropdown-menu">
                     <a href="/guides/">Guides</a>
+                    <a href="/tips/formatting/">Formatting</a>
                     <a href="/tips/shortcuts/">Shortcuts</a>
                 </div>
             </div>
+            <a href="https://status.disc-tools.de/status/disc-tools" class="nav-link">Status</a>
+            <a href="/partner/" class="nav-link">Partner</a>
             <a href="/about/" class="nav-link">About</a>
         </nav>
+        <button class="menu-toggle" aria-label="Menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <span class="login-badge"><a href="/api/auth/login" class="login-btn"><i class="fa-brands fa-discord"></i> Login</a></span>
   </header>
   <main class="legal-shell">
     <section class="tool-hero">

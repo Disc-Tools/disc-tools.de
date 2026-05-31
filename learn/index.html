@@ -1,20 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta name="description" content="Jump between channels, DMs, and servers instantly without touching your mouse.">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quick Switcher | Discord Shortcuts | Disc-Tools</title>
+    <title>Learn | Discord Guides, Tips & Security | Disc-Tools</title>
+    <meta name="description" content="Learn how to use Discord tools, format messages, use keyboard shortcuts, and protect your account from token grabbers and scams.">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="icon" type="image/png" href="/assets/img/logo.png">
     <link rel="stylesheet" href="/css/style.css?v=2">
+    <link rel="canonical" href="https://disc-tools.de/learn/">
     <script defer src="https://umami.disc-tools.de/script.js" data-website-id="0cf82497-80c8-42a2-b6e4-8a8ae179d1fe"></script>
-    <link rel="canonical" href="https://disc-tools.de/tips/shortcuts/quick-switcher/">
+
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://disc-tools.de/tips/shortcuts/quick-switcher/">
-    <meta property="og:title" content="Quick Switcher | Discord Shortcuts | Disc-Tools">
-    <meta property="og:description" content="Jump between channels, DMs, and servers instantly without touching your mouse.">
+    <meta property="og:url" content="https://disc-tools.de/learn/">
+    <meta property="og:title" content="Learn | Discord Guides, Tips & Security | Disc-Tools">
+    <meta property="og:description" content="Learn how to use Discord tools, format messages, use keyboard shortcuts, and protect your account.">
+
     <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://disc-tools.de/learn/">
+    <meta property="twitter:title" content="Learn | Discord Guides, Tips & Security | Disc-Tools">
+    <meta property="twitter:description" content="Learn how to use Discord tools, format messages, use keyboard shortcuts, and protect your account.">
     <meta property="og:image" content="https://disc-tools.de/assets/img/logo.png">
     <meta property="og:image:width" content="64">
     <meta property="og:image:height" content="64">
@@ -27,14 +32,15 @@
             <img loading="lazy" src="/assets/img/logo.png" alt="Disc-Tools Logo" class="main-logo" onerror="this.style.display='none'">
             <div class="logo">Disc<span>-</span>Tools</div>
         </a>
-                <nav class="nav-links">
+        <nav class="nav-links">
             <a href="/tools/" class="nav-link">Tools</a>
             <div class="nav-dropdown">
                 <button class="nav-link dropdown-toggle active" aria-haspopup="true" aria-expanded="false">Learn <i class="fa-solid fa-chevron-down"></i></button>
                 <div class="dropdown-menu">
                     <a href="/guides/">Guides</a>
                     <a href="/tips/formatting/">Formatting</a>
-                    <a href="/tips/shortcuts/" class="active">Shortcuts</a>
+                    <a href="/tips/shortcuts/">Shortcuts</a>
+                    <a href="/security-articles/">Security</a>
                 </div>
             </div>
             <a href="https://status.disc-tools.de/status/disc-tools" class="nav-link">Status</a>
@@ -44,39 +50,49 @@
         <button class="menu-toggle" aria-label="Menu">
             <span></span><span></span><span></span>
         </button>
-        <span class="login-badge"></span>
+        <span class="login-badge"><a href="/api/auth/login" class="login-btn"><i class="fa-brands fa-discord"></i> Login</a></span>
     </header>
 
     <nav class="breadcrumbs">
         <a href="/">Home</a>
         <span>/</span>
-        <a href="../">Shortcuts</a>
-        <span>/</span>
-        <a href="./" class="current">Quick Switcher</a>
+        <a href="/learn/" class="current">Learn</a>
     </nav>
 
-    <main class="guide-page">
-        <section class="guide-hero">
-            <h1><em>Quick Switcher</em></h1>
-            <p>Jump between channels, DMs, and servers instantly without touching your mouse.</p>
+    <main class="tool-page">
+        <section class="tool-hero">
+            <span class="hero-tag">// knowledge base</span>
+            <h1><em>Learn</em> Discord</h1>
+            <p>Guides, formatting tips, keyboard shortcuts, and security articles &mdash; everything you need to master Discord.</p>
         </section>
 
-        <div class="guide-content">
-            <h2>Syntax</h2>
-            <div class="guide-step-card">
-                <div class="step-number"><i class="fa-solid fa-bolt"></i></div>
-                <div class="step-text">
-                    <h3>How it works</h3>
-                    <p>Press Ctrl+K (Windows) or Cmd+K (Mac) to open the quick switcher</p>
-                    <pre><code><kbd>Ctrl+K</kbd> or <kbd>Cmd+K</kbd></code></pre>
-                </div>
-            </div>
+        <div class="guides-grid">
+            <a href="/guides/" class="guide-card">
+                <i class="fa-solid fa-book-open"></i>
+                <h3>Guides</h3>
+                <p>Step-by-step tutorials for all Disc-Tools utilities: webhooks, embeds, snowflakes, avatars, and more.</p>
+                <div class="read-more">Browse Guides <i class="fa-solid fa-arrow-right"></i></div>
+            </a>
 
-            <h2>Examples</h2>
-            <div class="guide-step-card"><div class="step-number"><i class="fa-solid fa-keyboard"></i></div><div class="step-text"><h3>How to use</h3><p>Press <kbd>Ctrl+K</kbd> (Windows/Linux) or <kbd>Cmd+K</kbd> (Mac) to open the quick switcher overlay. Start typing the name of a channel, DM, or server and press Enter to jump there.</p></div></div><div class="guide-step-card"><div class="step-number"><i class="fa-solid fa-lightbulb"></i></div><div class="step-text"><h3>Pro Tips</h3><ul><li>Type <code>!</code> to filter by server</li><li>Type <code>@</code> to find DMs</li><li>Use arrow keys to navigate results</li></ul></div></div>
+            <a href="/tips/formatting/" class="guide-card">
+                <i class="fa-solid fa-pen-fancy"></i>
+                <h3>Formatting</h3>
+                <p>Master Discord markdown: bold, italic, code blocks, spoilers, timestamps, mentions, and custom emoji.</p>
+                <div class="read-more">Learn Formatting <i class="fa-solid fa-arrow-right"></i></div>
+            </a>
 
-            <a href="../" class="back-to-tool">
-                <i class="fa-solid fa-arrow-left"></i> Back to all Shortcuts
+            <a href="/tips/shortcuts/" class="guide-card">
+                <i class="fa-solid fa-keyboard"></i>
+                <h3>Shortcuts</h3>
+                <p>Boost your productivity with Discord keyboard shortcuts for navigation, search, uploads, and more.</p>
+                <div class="read-more">View Shortcuts <i class="fa-solid fa-arrow-right"></i></div>
+            </a>
+
+            <a href="/security-articles/" class="guide-card">
+                <i class="fa-solid fa-shield-halved"></i>
+                <h3>Security Articles</h3>
+                <p>In-depth research on token grabbers, phishing scams, and how to protect your Discord account.</p>
+                <div class="read-more">Read Articles <i class="fa-solid fa-arrow-right"></i></div>
             </a>
         </div>
     </main>
@@ -124,6 +140,7 @@
             <div class="footer-sass">// screw them anyways</div>
         </div>
     </footer>
+
     <script src="/js/main.js?v=2" defer></script>
 </body>
 </html>

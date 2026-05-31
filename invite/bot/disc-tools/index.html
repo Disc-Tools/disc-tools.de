@@ -12,7 +12,6 @@
     <meta property="og:url" content="https://disc-tools.de/invite/bot/disc-tools">
     <meta property="og:title" content="Invite Disc-Tools Bot | Professional Discord Utilities">
     <meta property="og:description" content="Add the official Public Disc-Tools Bot to your server. Supercharge your community with secure webhooks, server verification, and advanced developer utilities.">
-    <meta property="og:image" content="https://disc-tools.de/assets/img/logo.png">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="icon" type="image/png" href="/assets/img/logo.png">
@@ -170,6 +169,10 @@
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
     <script defer src="https://umami.disc-tools.de/script.js" data-website-id="0cf82497-80c8-42a2-b6e4-8a8ae179d1fe"></script>
+    <meta property="og:image" content="https://disc-tools.de/assets/img/logo.png">
+    <meta property="og:image:width" content="64">
+    <meta property="og:image:height" content="64">
+    <meta name="twitter:image" content="https://disc-tools.de/assets/img/logo.png">
 </head>
 
 <body class="invite-page">
@@ -181,11 +184,18 @@
         <div class="logo">Disc<span>-</span>Tools</div>
     </a>
     <nav class="nav-links">
-        <a href="/tools/">Tools</a>
-        <a href="/guides/">Guides</a>
-        <a href="https://status.disc-tools.de/status/disc-tools">Status</a>
-        <a href="/partner/">Partner</a>
-        <a href="/about/">About</a>
+        <a href="/tools/" class="nav-link">Tools</a>
+        <div class="nav-dropdown">
+            <button class="nav-link dropdown-toggle" aria-haspopup="true" aria-expanded="false">Learn <i class="fa-solid fa-chevron-down"></i></button>
+            <div class="dropdown-menu">
+                <a href="/guides/">Guides</a>
+                <a href="/tips/formatting/">Formatting</a>
+                <a href="/tips/shortcuts/">Shortcuts</a>
+            </div>
+        </div>
+        <a href="https://status.disc-tools.de/status/disc-tools" class="nav-link">Status</a>
+        <a href="/partner/" class="nav-link">Partner</a>
+        <a href="/about/" class="nav-link">About</a>
     </nav>
     <button class="menu-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
     <span class="login-badge"><a href="/api/auth/login" class="login-btn"><i class="fa-brands fa-discord"></i> Login</a></span>

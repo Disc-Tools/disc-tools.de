@@ -584,6 +584,22 @@ function initNavigation() {
             navLinks.appendChild(teamLink);
         }
     }
+
+    // Add Security link to Learn dropdown if not exists
+    const dropdownMenu = document.querySelector('.nav-dropdown .dropdown-menu');
+    if (dropdownMenu && !dropdownMenu.querySelector('a[href="/security-articles/"]')) {
+        const securityLink = document.createElement('a');
+        securityLink.href = '/security-articles/';
+        securityLink.textContent = 'Security';
+        
+        // Match current page active state
+        const path = window.location.pathname;
+        if (path === '/security-articles/' || path === '/security-articles/index.html' || path.startsWith('/security-articles/')) {
+            securityLink.classList.add('active');
+        }
+        
+        dropdownMenu.appendChild(securityLink);
+    }
 }
 
 function initStatusRedirect() {
@@ -653,7 +669,10 @@ function initGlobalSearch() {
             { name: 'Color Picker', url: '/tools/color-picker/', type: 'tool' },
             { name: 'Nitro Gift Checker', url: '/tools/nitro-checker/', type: 'tool' },
             { name: 'Our Team', url: '/team/', type: 'info' },
-            { name: 'About Us', url: '/about/', type: 'info' }
+            { name: 'About Us', url: '/about/', type: 'info' },
+            { name: 'Token Grabber Guide', url: '/security-articles/token-grabber/', type: 'guide' },
+            { name: 'Security Articles', url: '/security-articles/', type: 'guide' },
+            { name: 'Learn Hub', url: '/learn/', type: 'guide' }
         ];
 
         // Advanced sorting by relevance
