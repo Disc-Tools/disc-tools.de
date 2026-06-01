@@ -516,6 +516,12 @@ async function checkSecurity() {
         const data = await response.json();
         clearTimeout(timeoutId);
         
+        if (data.isBanned) {
+            console.warn('[SECURITY] IP is banned');
+            window.location.href = '/blocked/banned/';
+            return;
+        }
+
         if (data.isVpn && ['VPN', 'Proxy', 'Hosting'].includes(data.type)) {
             console.warn(`[SECURITY] VPN/Proxy Detected: ${data.type} (${data.provider})`);
             const url = new URL('/blocked/vpn/', window.location.origin);
