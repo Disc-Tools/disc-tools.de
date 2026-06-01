@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sessions | Admin Dashboard | Disc-Tools</title>
+    <script>document.documentElement.style.display='none';fetch('/api/admin/check').then(r=>{if(!r.ok)window.location.href='/';else document.documentElement.style.display=''}).catch(()=>{window.location.href='/'})</script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="icon" type="image/png" href="/assets/img/admin_logo.png">
     <link rel="stylesheet" href="/css/style.css?v=2">
@@ -150,6 +151,12 @@
     <div class="toast" id="toast"></div>
 
     <script>
+        async function checkAuth() {
+            try { const r = await fetch('/api/admin/check'); if (!r.ok) window.location.href = '/';
+            } catch (e) { window.location.href = '/'; }
+        }
+        checkAuth();
+
         document.querySelectorAll('.admin-nav details').forEach(d => {
             const key = 'nav-' + d.querySelector('summary').textContent.trim().toLowerCase().replace(/\s+/g, '-');
             const saved = localStorage.getItem(key);

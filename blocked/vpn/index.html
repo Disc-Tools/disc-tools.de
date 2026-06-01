@@ -1,213 +1,166 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta name="description" content="Secure and fast utilities for Discord developers and users.">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Disc-Tools | Professional Discord Utilities</title>
+    <title>Access Restricted | Disc-Tools</title>
     <link rel="icon" type="image/png" href="/assets/img/logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="/css/style.css?v=2">
     <style>
-        body.blocked-page {
+        body {
             height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
             background: var(--bg);
-        }
-        .blocked-container {
-            width: 100%;
-            max-width: 500px;
+            margin: 0;
             padding: 20px;
-            z-index: 10;
         }
-        .blocked-card {
+        .vpn-container {
+            width: 100%;
+            max-width: 440px;
+            animation: slideUp 0.3s ease forwards;
+        }
+        .vpn-card {
             background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 40px;
+            border-radius: 20px;
+            padding: 48px 36px 36px;
             text-align: center;
-            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6);
         }
-        .blocked-logo {
-            width: 80px;
-            height: 80px;
-            margin-bottom: 24px;
-            filter: drop-shadow(0 0 15px rgba(88, 101, 242, 0.4));
-        }
-        .blocked-card h1 {
-            font-family: var(--sans);
-            font-size: 32px;
-            font-weight: 800;
-            margin-bottom: 16px;
-            color: #fff;
-        }
-        .blocked-card p {
-            color: var(--muted);
-            line-height: 1.6;
-            margin-bottom: 30px;
-            font-family: var(--mono);
-            font-size: 14px;
-        }
-        .details-box {
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 30px;
-            text-align: left;
-        }
-        .detail-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            font-size: 13px;
-        }
-        .detail-row:last-child { border-bottom: none; }
-        .detail-row span:first-child { color: var(--muted); font-weight: 600; }
-        .detail-row .value { color: var(--accent2); font-family: var(--mono); font-weight: 700; }
-        .primary-btn {
-            background: var(--accent);
-            color: #fff;
-            border: none;
-            padding: 14px 28px;
-            border-radius: 12px;
-            font-weight: 700;
-            font-family: var(--sans);
-            cursor: pointer;
-            transition: all 0.2s;
-            width: 100%;
-            text-decoration: none;
-            display: block;
-        }
-        .primary-btn:hover { background: var(--accent2); transform: translateY(-2px); }
-        .divider {
-            display: flex;
-            align-items: center;
-            text-align: center;
-            margin: 20px 0;
-            color: var(--muted);
-            font-size: 12px;
-            font-weight: 700;
-        }
-        .divider::before, .divider::after {
-            content: '';
-            flex: 1;
-            border-bottom: 1px solid var(--border);
-        }
-        .divider:not(:empty)::before { margin-right: .5em; }
-        .divider:not(:empty)::after { margin-left: .5em; }
-        .login-btn-blocked {
+        .vpn-icon {
+            width: 72px;
+            height: 72px;
+            background: rgba(231, 76, 60, 0.1);
+            color: #e74c3c;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            background: #5865F2;
+            font-size: 28px;
+            margin: 0 auto 24px;
+        }
+        .vpn-card h1 {
+            font-family: var(--sans);
+            font-size: 22px;
+            font-weight: 800;
+            margin: 0 0 12px;
             color: #fff;
-            text-decoration: none;
-            padding: 14px;
+        }
+        .vpn-card p {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.6;
+            margin: 0 0 28px;
+        }
+        .vpn-details {
+            background: rgba(0, 0, 0, 0.2);
             border-radius: 12px;
+            padding: 4px 0;
+            margin-bottom: 28px;
+            font-size: 13px;
+        }
+        .vpn-details .row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
+        .vpn-details .row:last-child { border-bottom: none; }
+        .vpn-details .label { color: var(--muted); }
+        .vpn-details .value { color: #e74c3c; font-family: var(--mono); font-weight: 700; }
+        .vpn-btn {
+            display: block;
+            width: 100%;
+            padding: 13px;
+            border-radius: 10px;
             font-weight: 700;
             font-family: var(--sans);
+            font-size: 15px;
+            cursor: pointer;
             transition: all 0.2s;
+            text-decoration: none;
+            border: none;
         }
-        .login-btn-blocked:hover { background: #4752c4; transform: translateY(-2px); }
+        .vpn-btn-primary {
+            background: #e74c3c;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+        .vpn-btn-primary:hover {
+            background: #c0392b;
+            transform: translateY(-1px);
+        }
+        .vpn-btn-discord {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: #5865F2;
+            color: #fff;
+        }
+        .vpn-btn-discord:hover {
+            background: #4752c4;
+            transform: translateY(-1px);
+        }
+        .vpn-divider {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin: 16px 0;
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .vpn-divider::before,
+        .vpn-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+        .vpn-note {
+            font-size: 12px;
+            color: var(--muted);
+            margin: 16px 0 0;
+        }
     </style>
-    <script defer src="https://umami.disc-tools.de/script.js" data-website-id="0cf82497-80c8-42a2-b6e4-8a8ae179d1fe"></script>
     <link rel="canonical" href="https://disc-tools.de">
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://disc-tools.de">
-    <meta property="og:title" content="Disc-Tools | Professional Discord Utilities">
-    <meta property="og:description" content="Secure and fast utilities for Discord developers and users.">
-
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://disc-tools.de">
-    <meta property="twitter:title" content="Disc-Tools | Professional Discord Utilities">
-    <meta property="twitter:description" content="Secure and fast utilities for Discord developers and users.">
+    <meta property="og:title" content="Access Restricted | Disc-Tools">
+    <meta property="og:description" content="VPN/Proxy access restricted.">
     <meta property="og:image" content="https://disc-tools.de/assets/img/logo.png">
-    <meta property="og:image:width" content="64">
-    <meta property="og:image:height" content="64">
-    <meta name="twitter:image" content="https://disc-tools.de/assets/img/logo.png">
 </head>
-<body class="blocked-page">
+<body>
     <div class="glow"></div>
-    <main class="blocked-container">
-        <div class="blocked-card">
-            <img src="/assets/img/logo.png" alt="Disc-Tools Logo" class="blocked-logo">
-            <h1>Access Denied</h1>
-            <p>Our security system has detected a VPN, Proxy, or Hosting provider. Access to our tools is restricted for these connection types.</p>
-            
-            <div class="details-box">
-                <div class="detail-row"><span>IP Address:</span> <span id="ip-addr" class="value">...</span></div>
-                <div class="detail-row"><span>Type:</span> <span id="conn-type" class="value">...</span></div>
-                <div class="detail-row"><span>Provider:</span> <span id="provider" class="value">...</span></div>
-                <div class="detail-row"><span>ASN:</span> <span id="asn" class="value">...</span></div>
+    <div class="vpn-container">
+        <div class="vpn-card">
+            <div class="vpn-icon"><i class="fa-solid fa-shield-halved"></i></div>
+            <h1>Access Restricted</h1>
+            <p>Our security system detected a VPN, Proxy, or Hosting connection. Access is restricted for these connection types.</p>
+
+            <div class="vpn-details">
+                <div class="row"><span class="label">IP Address</span><span class="value" id="ip-addr">—</span></div>
+                <div class="row"><span class="label">Type</span><span class="value" id="conn-type">—</span></div>
+                <div class="row"><span class="label">Provider</span><span class="value" id="provider">—</span></div>
+                <div class="row"><span class="label">ASN</span><span class="value" id="asn">—</span></div>
             </div>
 
-            <button onclick="window.location.href='/'" class="primary-btn" style="margin-bottom: 15px;">Retry Connection</button>
-            
-            <div class="divider"><span>OR</span></div>
-            
-            <p style="font-size: 12px; margin-bottom: 15px;">Logged-in users are exempt from this security check.</p>
-            <a href="/api/auth/login" class="login-btn-blocked"><i class="fa-brands fa-discord"></i> Login with Discord</a>
+            <button onclick="window.location.href='/'" class="vpn-btn vpn-btn-primary">Retry Connection</button>
+
+            <div class="vpn-divider">or</div>
+
+            <a href="/api/auth/login" class="vpn-btn vpn-btn-discord"><i class="fa-brands fa-discord"></i> Login with Discord</a>
+            <p class="vpn-note">Logged-in users are exempt from this check.</p>
         </div>
-    </main>
+    </div>
 
     <script>
-        const params = new URLSearchParams(window.location.search);
-        document.getElementById('ip-addr').innerText = params.get('ip') || 'Unknown';
-        document.getElementById('conn-type').innerText = params.get('type') || 'Unknown';
-        document.getElementById('provider').innerText = params.get('provider') || 'Unknown';
-        document.getElementById('asn').innerText = params.get('asn') || 'Unknown';
+        const p = new URLSearchParams(window.location.search);
+        for (const [id, key] of [['ip-addr','ip'],['conn-type','type'],['provider','provider'],['asn','asn']]) {
+            document.getElementById(id).textContent = p.get(key) || '—';
+        }
     </script>
-        <footer>
-        <div class="footer-content">
-            <div class="footer-brand">
-                <a href="/" class="logo-container">
-                    <img loading="lazy" src="/assets/img/logo.png" alt="Disc-Tools Logo" class="main-logo" onerror="this.style.display='none'">
-                    <div class="logo">Disc<span>-</span>Tools</div>
-                </a>
-                <p>The ultimate collection of Discord utilities. Secure, fast, and privacy-focused.</p>
-                <a href="https://discord.gg/rtRs8rhj5u" target="_blank" rel="noopener" class="footer-github" aria-label="Discord Server"><i class="fa-brands fa-discord"></i></a>
-                <a href="https://github.com/mistr-kebab/Disc-Tools" target="_blank" rel="noopener" class="footer-github" style="margin-left:12px;" aria-label="GitHub Repository"><i class="fa-brands fa-github"></i></a>
-                <a href="https://tiktok.com/@disc.tools" target="_blank" rel="noopener" class="footer-github" style="margin-left:12px;" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
-                <a href="https://instagram.com/disc.tools" target="_blank" rel="noopener" class="footer-github" style="margin-left:12px;" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-            </div>
-            <div class="footer-section">
-                <h3 class="footer-section-title">Explore</h3>
-                <ul class="footer-links">
-                    <li><a href="/">Home</a></li>
-                    <li><a href="/tools/">All Tools</a></li>
-                    <li><a href="https://status.disc-tools.de/status/disc-tools">System Status</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h3 class="footer-section-title">Support</h3>
-                <ul class="footer-links">
-                    <li><a href="/about/">About Us</a></li>
-                    <li><a href="/guides/">Quick Start Guides</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h3 class="footer-section-title">Legal</h3>
-                <ul class="footer-links">
-                    <li><a href="/legal/privacy-policy/">Privacy Policy</a></li>
-                    <li><a href="/legal/terms-of-service/">Terms of Service</a></li>
-                    <li><a href="/legal/imprint/">Imprint</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2026 Disc-Tools &mdash; not affiliated with <a href="https://discord.com" target="_blank">Discord Inc.</a> &mdash; <a href="https://github.com/mistr-kebab/Disc-Tools" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i> GitHub</a></p>
-            <div class="footer-sass">// screw them anyways</div>
-        </div>
-    </footer>
-
-    <script src="/js/main.js?v=2" defer></script>
 </body>
 </html>
