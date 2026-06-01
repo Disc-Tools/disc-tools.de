@@ -15,6 +15,8 @@ Disc-Tools is a comprehensive web application providing free tools, guides, and 
 
 **Live at:** [disc-tools.de](https://disc-tools.de)
 
+> **Note:** The frontend was developed with AI assistance, while the backend is entirely custom-built.
+
 ## Features
 
 ### Tools (11)
