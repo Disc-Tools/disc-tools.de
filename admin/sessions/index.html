@@ -53,6 +53,7 @@
         .status-badge.on { background: rgba(46,204,113,0.15); color: #2ecc71; }
         .status-badge.off { background: rgba(231,76,60,0.15); color: #e74c3c; }
         .status-badge.block { background: rgba(155,89,182,0.15); color: #9b59b6; }
+        .status-badge.ipblock { background: rgba(231,76,60,0.2); color: #e74c3c; }
 
         .action-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--muted); padding: 6px 12px; cursor: pointer; font-size: 12px; font-weight: 500; border-radius: 8px; transition: all 0.2s; }
         .action-btn:hover { background: #e74c3c; color: #fff; border-color: #e74c3c; }
@@ -189,19 +190,21 @@
                 const active = list.filter(s => !s.revoked && !s.blocked);
                 const revoked = list.filter(s => s.revoked && !s.blocked);
                 const blocked = list.filter(s => s.blocked);
+                const ipBanned = list.filter(s => s.ip_blocked);
 
                 document.getElementById('stat-bar').innerHTML =
                     '<div class="stat-chip"><span class="num">' + list.length + '</span> Total</div>' +
                     '<div class="stat-chip"><span class="num" style="color:#2ecc71">' + active.length + '</span> Active</div>' +
                     '<div class="stat-chip"><span class="num" style="color:#e74c3c">' + revoked.length + '</span> Logged Out</div>' +
-                    '<div class="stat-chip"><span class="num" style="color:#9b59b6">' + blocked.length + '</span> Blocked</div>';
+                    '<div class="stat-chip"><span class="num" style="color:#9b59b6">' + blocked.length + '</span> Blocked</div>' +
+                    '<div class="stat-chip"><span class="num" style="color:#e67e22">' + ipBanned.length + '</span> IP Banned</div>';
 
                 document.getElementById('sessions-body').innerHTML = list.length === 0
                     ? '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:40px;">No sessions yet</td></tr>'
                     : list.map(s => {
-                        const st = s.blocked ? 'block' : s.revoked ? 'off' : 'on';
-                        const lbl = st === 'on' ? 'Active' : st === 'off' ? 'Logged Out' : 'Blocked';
-                        const ic = st === 'on' ? 'fa-solid fa-play' : st === 'off' ? 'fa-solid fa-ban' : 'fa-solid fa-lock';
+                        const st = s.ip_blocked ? 'ipblock' : s.blocked ? 'block' : s.revoked ? 'off' : 'on';
+                        const lbl = st === 'on' ? 'Active' : st === 'off' ? 'Logged Out' : st === 'ipblock' ? 'IP Banned' : 'Blocked';
+                        const ic = st === 'on' ? 'fa-solid fa-play' : st === 'off' ? 'fa-solid fa-ban' : st === 'ipblock' ? 'fa-solid fa-earth-europe' : 'fa-solid fa-lock';
 
                         const av = s.avatar
                             ? 'https://cdn.discordapp.com/avatars/' + s.user_id + '/' + s.avatar + '.png?size=64'
@@ -215,7 +218,7 @@
                                 '<button class="action-btn" onclick="revoke(\'' + s.user_id + '\')"><i class="fa-solid fa-ban"></i> Logout</button>' +
                                 '<button class="action-btn purple" onclick="blockUser(\'' + s.user_id + '\',\'' + s.username.replace(/'/g, "\\'") + '\')"><i class="fa-solid fa-lock"></i> Block</button>' +
                                 '</div>';
-                        } else if (st === 'off' || st === 'block') {
+                        } else if (st === 'off' || st === 'block' || st === 'ipblock') {
                             acts = '<div class="action-cell">' +
                                 '<button class="action-btn success" onclick="unblockUser(\'' + s.user_id + '\')"><i class="fa-solid fa-unlock"></i> Unblock</button>' +
                                 '</div>';
