@@ -19,7 +19,7 @@ async function fetchStatus() {
     if (refreshIcon) refreshIcon.classList.add('spinning');
 
     try {
-        const response = await fetch('https://discordstatus.com/api/v2/summary.json');
+        const response = await fetch('/api/proxy/discord-status');
         const data = await response.json();
         currentData = data;
 

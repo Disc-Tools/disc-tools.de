@@ -30,7 +30,7 @@ async function lookupServer() {
     `;
 
     try {
-        const response = await fetch(`https://discord.com/api/v10/guilds/${guildId}/widget.json`);
+        const response = await fetch(`/api/proxy/guild-widget/${guildId}`);
         const data = await response.json();
 
         if (!response.ok) {

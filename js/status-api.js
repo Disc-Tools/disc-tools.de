@@ -22,7 +22,7 @@ async function measurePing() {
         // We use a non-existent endpoint or a small one with CORS allowed if possible.
         // Since we can't easily ping discord.com/api due to CORS, we try to fetch a public asset or just the domain.
         // Actually, fetching 'https://discord.com/api/v9/gateway' often works for simple GET if not blocked.
-        const response = await fetch('https://discord.com/api/v9/gateway', { mode: 'no-cors', cache: 'no-cache' });
+        const response = await fetch('/api/proxy/discord-gateway', { cache: 'no-cache' });
         const latency = Date.now() - start;
 
         pingDisplay.textContent = `${latency} ms`;
@@ -55,7 +55,7 @@ async function fetchApiIncidents() {
     const incidentContainer = document.getElementById('api-incidents');
     
     try {
-        const response = await fetch('https://discordstatus.com/api/v2/summary.json');
+        const response = await fetch('/api/proxy/discord-status');
         const data = await response.json();
 
         const apiIncidents = data.incidents.filter(inc => 

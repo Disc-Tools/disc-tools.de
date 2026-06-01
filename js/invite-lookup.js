@@ -182,7 +182,7 @@ async function lookupInvite() {
     `;
 
     try {
-        const response = await fetch(`https://discord.com/api/v10/invites/${code}?with_counts=true&with_expiration=true`);
+        const response = await fetch(`/api/proxy/invite/${code}`);
         const data = await response.json();
 
         if (!response.ok) {
