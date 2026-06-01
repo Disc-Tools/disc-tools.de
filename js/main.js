@@ -509,19 +509,24 @@ function resetUIForAuth() {
 
 async function checkSecurity() {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 5000); // 5s timeout
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+    // Check ban status first (separate endpoint)
+    try {
+        const banRes = await fetch('/api/security/ban-check', { signal: controller.signal });
+        const banData = await banRes.json();
+        if (banData.isBanned) {
+            console.warn('[SECURITY] IP is banned');
+            window.location.href = '/blocked/banned/';
+            return;
+        }
+    } catch (e) {}
 
     try {
         const response = await fetch('/api/security/vpn-check', { signal: controller.signal });
         const data = await response.json();
         clearTimeout(timeoutId);
         
-        if (data.isBanned) {
-            console.warn('[SECURITY] IP is banned');
-            window.location.href = '/blocked/banned/';
-            return;
-        }
-
         if (data.isVpn && ['VPN', 'Proxy', 'Hosting'].includes(data.type)) {
             console.warn(`[SECURITY] VPN/Proxy Detected: ${data.type} (${data.provider})`);
             const url = new URL('/blocked/vpn/', window.location.origin);
