@@ -4,23 +4,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Discord Invite Lookup | Inspect Guild Invites | Disc-Tools</title>
+    <title>GIFs | Upload & Share | Disc-Tools</title>
     
     <!-- Meta Tags for Discord/Social Media Embeds -->
-    <meta name="description" content="Inspect any Discord invite link for guild info, member count, and inviter details.">
+    <meta name="description" content="Upload and share GIFs with ease on Disc-Tools. Coming soon!">
     <meta name="theme-color" content="#5865F2">
-    <meta property="og:title" content="Invite Lookup - Disc-Tools">
-    <meta property="og:description" content="Deep-dive into Discord invite links. See member counts, guild info, and expiry.">
+    <meta property="og:title" content="GIFs - Disc-Tools">
+    <meta property="og:description" content="Upload and share GIFs with ease. Coming soon!">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Disc-Tools">
     <meta name="twitter:card" content="summary">
     <link rel="stylesheet" href="/assets/fontawesome/css/all.min.css">
     <link rel="icon" type="image/png" href="/assets/img/logo.png">
     <link rel="stylesheet" href="/css/style.css?v=2">
-    <link rel="stylesheet" href="/css/style.css?v=2">
 <script defer src="https://umami.disc-tools.de/script.js" data-website-id="0cf82497-80c8-42a2-b6e4-8a8ae179d1fe"></script>
     <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://disc-tools.de/tools/invite-lookup/">
+    <link rel="canonical" href="https://disc-tools.de/gifs/">
     <meta property="og:image" content="https://disc-tools.de/assets/img/logo.png">
     <meta property="og:image:width" content="64">
     <meta property="og:image:height" content="64">
@@ -34,9 +33,9 @@
             <img loading="lazy" src="/assets/img/logo.png" alt="Disc-Tools Logo" class="main-logo" onerror="this.style.display='none'">
             <div class="logo">Disc<span>-</span>Tools</div>
         </a>
-                <nav class="nav-links">
-            <a href="/tools/" class="nav-link active">Tools</a>
-            <a href="/gifs/" class="nav-link">GIFs</a>
+        <nav class="nav-links">
+            <a href="/tools/" class="nav-link">Tools</a>
+            <a href="/gifs/" class="nav-link active">GIFs</a>
             <div class="nav-dropdown">
                 <button class="nav-link dropdown-toggle" aria-haspopup="true" aria-expanded="false">Learn <i class="fa-solid fa-chevron-down"></i></button>
                 <div class="dropdown-menu">
@@ -60,51 +59,30 @@
     <nav class="breadcrumbs">
         <a href="/">Home</a>
         <span>/</span>
-        <a href="/tools/">Tools</a>
-        <span>/</span>
-        <a href="./" class="current">Invite Lookup</a>
+        <a href="./" class="current">GIFs</a>
     </nav>
 
     <main class="tool-page">
         <div class="tool-layout-single">
             <div class="tool-container">
                 <section class="tool-hero" style="position: relative;">
-                    <span class="hero-tag">// server / inspect</span>
-                    <h1>Invite <em>Lookup</em></h1>
-                    <p>Get detailed information about any Discord invite link before you join.</p>
-                    <a href="/guides/invite-lookup/" class="help-link">
-                        <i class="fa-solid fa-circle-question"></i> How to?
-                    </a>
+                    <span class="hero-tag">// upload / share</span>
+                    <h1>GIF <em>Uploads</em></h1>
+                    <p>Upload and share your favorite GIFs with the community.</p>
                 </section>
 
-                <div class="input-card">
-                    <div class="input-group">
-                        <input type="text" id="inviteInput" placeholder="discord.gg/code or just the code...">
-                        <button onclick="lookupInvite()">Lookup</button>
-                    </div>
-                </div>
-
-                <div id="result" class="result-area">
-                    <div class="empty-state">
-                        <i class="fa-solid fa-link"></i>
-                        <p>Enter an invite code or link to see guild details and stats.</p>
-                    </div>
-                </div>
-
-                <!-- Servers You're On -->
-                <div id="user-guilds" class="server-list-container">
-                    <div class="server-list-header">
-                        <i class="fa-solid fa-server"></i> Servers you're on
-                    </div>
-                    <div id="guild-grid" class="server-grid">
-                        <!-- Loaded via JS -->
-                    </div>
+                <div class="input-card" style="text-align: center; padding: 4rem 2rem;">
+                    <i class="fa-solid fa-images" style="font-size: 4rem; color: var(--accent); margin-bottom: 1.5rem; opacity: 0.6;"></i>
+                    <h2 style="font-size: 1.8rem; margin-bottom: 0.5rem;">Coming Soon</h2>
+                    <p style="color: var(--text-secondary); max-width: 400px; margin: 0 auto;">
+                        This page is currently in development. You'll soon be able to upload and share GIFs here.
+                    </p>
                 </div>
             </div>
         </div>
     </main>
 
-        <footer>
+    <footer>
         <div class="footer-content">
             <div class="footer-brand">
                 <a href="/" class="logo-container">
@@ -147,8 +125,6 @@
         </div>
     </footer>
 
-
-    <script src="/js/invite-lookup.js" defer></script>
     <script src="/js/main.js?v=2" defer></script>
 </body>
 

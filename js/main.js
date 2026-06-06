@@ -164,6 +164,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.addEventListener('resize', updateMobileLogin);
     }
 
+    // Always check Auth and Security, regardless of loader presence
+    const authData = await checkAuth();
+    const isAuthenticated = authData && authData.authenticated;
+
+    if (!isAuthenticated) {
+        checkSecurity();
+    }
+
     // Global Announcements Bell
     try {
         const res = await fetch('/api/announcements');
@@ -172,10 +180,100 @@ document.addEventListener('DOMContentLoaded', async () => {
         const header = document.querySelector('header');
         const loginBadge = document.querySelector('.login-badge');
         if (header && loginBadge) {
-            // Build bell HTML
+            // Read/Unread state: localStorage + server sync
+            let readIds = [];
+            try { readIds = JSON.parse(localStorage.getItem('announcements_read') || '[]'); } catch(e) {}
+
+            // If authenticated, merge server read state into localStorage
+            if (isAuthenticated) {
+                try {
+                    const syncRes = await fetch('/api/announcements/read');
+                    if (syncRes.ok) {
+                        const syncData = await syncRes.json();
+                        const serverIds = syncData.readIds || [];
+                        let changed = false;
+                        for (const sid of serverIds) {
+                            if (!readIds.includes(sid)) { readIds.push(sid); changed = true; }
+                        }
+                        if (changed) localStorage.setItem('announcements_read', JSON.stringify(readIds));
+                    }
+                } catch(e) {}
+            }
+
+            let _syncTimer;
+
+            function syncToServer() {
+                if (!isAuthenticated) return;
+                if (_syncTimer) clearTimeout(_syncTimer);
+                _syncTimer = setTimeout(() => {
+                    fetch('/api/announcements/read', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ ids: readIds })
+                    }).catch(() => {});
+                }, 400);
+            }
+
+            function updateBadge() {
+                const badge = document.getElementById('ann-badge');
+                const unread = anns.filter(a => !readIds.includes(a.id)).length;
+                if (badge) {
+                    if (unread > 0) {
+                        badge.textContent = unread;
+                        badge.style.display = 'flex';
+                    } else {
+                        badge.style.display = 'none';
+                    }
+                }
+            }
+
+            function toggleRead(id) {
+                const idx = readIds.indexOf(id);
+                if (idx > -1) { readIds.splice(idx, 1); }
+                else { readIds.push(id); }
+                localStorage.setItem('announcements_read', JSON.stringify(readIds));
+                updateBadge();
+                syncToServer();
+                const cb = document.querySelector(`#ann-dropdown .ann-checkbox[data-id="${id}"]`);
+                if (cb) {
+                    const isRead = readIds.includes(id);
+                    cb.classList.toggle('checked', isRead);
+                    cb.querySelector('i').className = isRead ? 'fa-solid fa-check-square' : 'fa-regular fa-square';
+                    cb.style.color = isRead ? '#2ecc71' : 'var(--muted)';
+                    const item = cb.closest('.ann-item');
+                    if (item) item.style.opacity = isRead ? '0.6' : '1';
+                }
+            }
+
+            function markAllRead() {
+                anns.forEach(a => { if (!readIds.includes(a.id)) readIds.push(a.id); });
+                localStorage.setItem('announcements_read', JSON.stringify(readIds));
+                updateBadge();
+                if (isAuthenticated) {
+                    fetch('/api/announcements/read', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ markAll: true })
+                    }).catch(() => {});
+                }
+                document.querySelectorAll('#ann-dropdown .ann-checkbox').forEach(cb => {
+                    const id = cb.dataset.id;
+                    if (id && readIds.includes(id)) {
+                        cb.classList.add('checked');
+                        cb.querySelector('i').className = 'fa-solid fa-check-square';
+                        cb.style.color = '#2ecc71';
+                    }
+                });
+                document.querySelectorAll('#ann-dropdown .ann-item').forEach(item => {
+                    item.style.opacity = '0.6';
+                });
+            }
+
+            // Build badge HTML
             let badgeHtml = '';
-            if (anns.length > 0) {
-                badgeHtml = `<span style="position:absolute; top:0; right:0; background:#e74c3c; color:#fff; font-size:10px; font-weight:bold; border-radius:50%; width:16px; height:16px; display:flex; align-items:center; justify-content:center; border:2px solid var(--surface);">${anns.length}</span>`;
+            const unreadCount = anns.filter(a => !readIds.includes(a.id)).length;
+            if (unreadCount > 0) {
+                badgeHtml = `<span id="ann-badge" style="position:absolute; top:0; right:0; background:#e74c3c; color:#fff; font-size:10px; font-weight:bold; border-radius:50%; width:16px; height:16px; display:flex; align-items:center; justify-content:center; border:2px solid var(--surface);">${unreadCount}</span>`;
             }
 
             let dropdownItems = '';
@@ -187,6 +285,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     let icon = 'fa-circle-info'; let color = '#3498db';
                     if (a.type === 'success') { icon = 'fa-check-circle'; color = '#2ecc71'; }
                     else if (a.type === 'warning') { icon = 'fa-triangle-exclamation'; color = '#f1c40f'; }
+
+                    const isRead = readIds.includes(a.id);
 
                     let authorHtml = '';
                     if (a.author) {
@@ -201,8 +301,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                     }
 
                     dropdownItems += `
-                        <div style="padding:12px; border-radius:8px; background:rgba(255,255,255,0.02); border-left:3px solid ${color};">
+                        <div class="ann-item" data-id="${a.id}" style="padding:12px; border-radius:8px; background:rgba(255,255,255,0.02); border-left:3px solid ${color};${isRead ? ' opacity:0.6;' : ''}">
                             <div style="display:flex; gap:10px; align-items:flex-start;">
+                                <div class="ann-checkbox ${isRead ? 'checked' : ''}" data-id="${a.id}" style="cursor:pointer; margin-top:2px; color:${isRead ? '#2ecc71' : 'var(--muted)'}; font-size:14px; width:16px; text-align:center; flex-shrink:0;">
+                                    <i class="${isRead ? 'fa-solid fa-check-square' : 'fa-regular fa-square'}"></i>
+                                </div>
                                 <i class="fa-solid ${icon}" style="color:${color}; margin-top:2px;"></i>
                                 <div style="flex:1;">
                                     <div style="font-weight:600; font-size:13px; color:#fff;">${escapeHtml(a.title)}</div>
@@ -214,14 +317,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                     `;
                 });
 
-                if (anns.length > 2) {
-                    const moreCount = anns.length - 2;
-                    dropdownItems += `
-                        <a href="/announcements/" style="display:block; text-align:center; padding:12px; background:rgba(255,255,255,0.03); border-radius:8px; border:1px solid var(--border); color:var(--muted); font-size:12px; font-weight:600; text-decoration:none; margin-top:5px; transition:0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.05)'; this.style.color='#fff';" onmouseout="this.style.background='rgba(255,255,255,0.03)'; this.style.color='var(--muted)';">
-                            Read ${moreCount} more announcement${moreCount > 1 ? 's' : ''} &rarr;
-                        </a>
-                    `;
-                }
+                // Bottom card: "View All" always, with "Read N more" if >2
+                const moreCount = anns.length - 2;
+                dropdownItems += `
+                    <a href="/announcements/" style="display:flex; align-items:center; justify-content:center; gap:4px; padding:12px; border-radius:8px; background:rgba(255,255,255,0.03); border:1px solid var(--border); color:var(--muted); font-size:12px; font-weight:600; text-decoration:none; margin-top:5px; transition:0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.05)'; this.style.color='#fff';" onmouseout="this.style.background='rgba(255,255,255,0.03)'; this.style.color='var(--muted)';">
+                        ${moreCount > 0 ? `Read ${moreCount} more announcement${moreCount > 1 ? 's' : ''} <span style="color:var(--border);">·</span> ` : ''}View All &rarr;
+                    </a>
+                `;
             }
 
             // Wrap bell + loginBadge together so they sit right next to each other
@@ -243,7 +345,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <div id="ann-dropdown" style="display:none; position:absolute; top:45px; right:0; width:340px; background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:10px; box-shadow:0 10px 40px rgba(0,0,0,0.6); z-index:1001; max-height:400px; overflow-y:auto;">
                         <div style="font-size:12px; font-weight:600; text-transform:uppercase; color:var(--muted); padding:5px 10px 10px 10px; margin-bottom:10px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
                             <span>Announcements</span>
-                            <a href="/announcements/" style="color:#3498db; text-decoration:none; text-transform:none; font-size:13px;">View All &rarr;</a>
+                            ${anns.length > 0 ? '<button id="ann-mark-read" style="background:none; border:none; color:#3498db; font-size:12px; font-weight:600; cursor:pointer; padding:0; text-transform:none; white-space:nowrap;">Mark all as read</button>' : ''}
                         </div>
                         <div style="display:flex; flex-direction:column; gap:10px;">${dropdownItems}</div>
                     </div>
@@ -256,17 +358,16 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (btn && dropdown) {
                 btn.onclick = (e) => { e.stopPropagation(); dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none'; };
                 document.addEventListener('click', () => { dropdown.style.display = 'none'; });
-                dropdown.onclick = (e) => e.stopPropagation();
+                dropdown.onclick = (e) => {
+                    e.stopPropagation();
+                    const checkbox = e.target.closest('.ann-checkbox');
+                    if (checkbox) { toggleRead(checkbox.dataset.id); return; }
+                    const markBtn = e.target.closest('#ann-mark-read');
+                    if (markBtn) { markAllRead(); return; }
+                };
             }
         }
     } catch(e) {}
-
-    // Always check Auth and Security, regardless of loader presence
-    const authData = await checkAuth();
-    
-    if (!authData || !authData.authenticated) {
-        checkSecurity();
-    }
     
     updateFooterLinks();
     const filterButtons = document.querySelectorAll('.sidebar-link[data-filter], .filter-pill[data-filter]');

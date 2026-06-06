@@ -27,6 +27,13 @@
         .ann-author-name { font-size: 13px; color: var(--muted); font-weight: 500; }
         .ann-author-name span { color: #fff; font-weight: 600; }
         .ann-date { font-family: var(--mono); font-size: 12px; color: var(--muted); margin-left: auto; }
+        .ann-card.read { opacity: 0.55; }
+        .ann-card .ann-checkbox { cursor:pointer; margin-top:3px; color:var(--muted); font-size:18px; width:20px; text-align:center; flex-shrink:0; transition:color 0.15s; }
+        .ann-card .ann-checkbox:hover { color:#fff; }
+        .ann-card .ann-checkbox.checked { color:#2ecc71; }
+        .ann-toolbar { display:flex; justify-content:flex-end; align-items:center; gap:12px; margin-bottom:16px; }
+        .ann-toolbar button { background:rgba(52,152,219,0.1); border:1px solid rgba(52,152,219,0.25); color:#3498db; padding:8px 16px; border-radius:8px; cursor:pointer; font-size:13px; font-weight:600; transition:0.2s; display:flex; align-items:center; gap:6px; }
+        .ann-toolbar button:hover { background:rgba(52,152,219,0.2); border-color:#3498db; }
     </style>
     <meta property="og:image" content="https://disc-tools.de/assets/img/logo.png">
     <meta property="og:image:width" content="64">
@@ -42,6 +49,7 @@
         </a>
                 <nav class="nav-links">
             <a href="/tools/" class="nav-link">Tools</a>
+            <a href="/gifs/" class="nav-link">GIFs</a>
             <div class="nav-dropdown">
                 <button class="nav-link dropdown-toggle" aria-haspopup="true" aria-expanded="false">Learn <i class="fa-solid fa-chevron-down"></i></button>
                 <div class="dropdown-menu">
@@ -128,6 +136,72 @@
                 const anns = await res.json();
                 const container = document.getElementById('ann-container');
                 container.innerHTML = '';
+
+                // Read/Unread state: localStorage + server sync
+                let readIds = [];
+                try { readIds = JSON.parse(localStorage.getItem('announcements_read') || '[]'); } catch(e) {}
+
+                try {
+                    const syncRes = await fetch('/api/announcements/read');
+                    if (syncRes.ok) {
+                        const syncData = await syncRes.json();
+                        const serverIds = syncData.readIds || [];
+                        let changed = false;
+                        for (const sid of serverIds) {
+                            if (!readIds.includes(sid)) { readIds.push(sid); changed = true; }
+                        }
+                        if (changed) localStorage.setItem('announcements_read', JSON.stringify(readIds));
+                    }
+                } catch(e) {}
+
+                let _syncTimer;
+
+                function syncToServer() {
+                    if (_syncTimer) clearTimeout(_syncTimer);
+                    _syncTimer = setTimeout(() => {
+                        fetch('/api/announcements/read', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ ids: readIds })
+                        }).catch(() => {});
+                    }, 400);
+                }
+
+                function toggleRead(id) {
+                    const idx = readIds.indexOf(id);
+                    if (idx > -1) { readIds.splice(idx, 1); }
+                    else { readIds.push(id); }
+                    localStorage.setItem('announcements_read', JSON.stringify(readIds));
+                    syncToServer();
+                    const card = document.querySelector(`.ann-card[data-id="${id}"]`);
+                    const cb = card && card.querySelector('.ann-checkbox');
+                    if (cb) {
+                        const isRead = readIds.includes(id);
+                        cb.classList.toggle('checked', isRead);
+                        cb.querySelector('i').className = isRead ? 'fa-solid fa-check-square' : 'fa-regular fa-square';
+                        if (card) card.classList.toggle('read', isRead);
+                    }
+                }
+
+                function markAllRead() {
+                    anns.forEach(a => { if (!readIds.includes(a.id)) readIds.push(a.id); });
+                    localStorage.setItem('announcements_read', JSON.stringify(readIds));
+                    fetch('/api/announcements/read', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ markAll: true })
+                    }).catch(() => {});
+                    document.querySelectorAll('.ann-card').forEach(card => {
+                        const id = card.dataset.id;
+                        const isRead = readIds.includes(id);
+                        card.classList.toggle('read', isRead);
+                        const cb = card.querySelector('.ann-checkbox');
+                        if (cb) {
+                            cb.classList.toggle('checked', isRead);
+                            cb.querySelector('i').className = isRead ? 'fa-solid fa-check-square' : 'fa-regular fa-square';
+                        }
+                    });
+                }
                 
                 if (anns.length === 0) {
                     container.innerHTML = `
@@ -140,10 +214,21 @@
                     return;
                 }
 
+                // Toolbar
+                const toolbar = document.createElement('div');
+                toolbar.className = 'ann-toolbar';
+                toolbar.innerHTML = `
+                    <span style="font-size:13px; color:var(--muted); margin-right:auto;">${anns.length} announcement${anns.length > 1 ? 's' : ''}</span>
+                    <button id="ann-mark-all-btn"><i class="fa-regular fa-circle-check"></i> Mark all as read</button>
+                `;
+                container.appendChild(toolbar);
+
                 anns.reverse().forEach(a => {
-                    let icon = 'fa-circle-info'; let color = '#3498db'; let glow = 'rgba(52, 152, 219, 0.1)';
-                    if (a.type === 'success') { icon = 'fa-check-circle'; color = '#2ecc71'; glow = 'rgba(46, 204, 113, 0.1)'; }
-                    else if (a.type === 'warning') { icon = 'fa-triangle-exclamation'; color = '#f1c40f'; glow = 'rgba(241, 196, 15, 0.1)'; }
+                    let icon = 'fa-circle-info'; let color = '#3498db';
+                    if (a.type === 'success') { icon = 'fa-check-circle'; color = '#2ecc71'; }
+                    else if (a.type === 'warning') { icon = 'fa-triangle-exclamation'; color = '#f1c40f'; }
+
+                    const isRead = readIds.includes(a.id);
 
                     let authorHtml = '';
                     if (a.author) {
@@ -153,7 +238,6 @@
                             avatarUrl = `https://cdn.discordapp.com/avatars/${a.author.id}/${a.author.avatar}.${ext}?size=64`;
                         }
                         
-                        // Parse timestamp if id is a timestamp
                         let dateStr = 'Recently';
                         if (!isNaN(parseInt(a.id))) {
                             const d = new Date(parseInt(a.id));
@@ -169,16 +253,30 @@
                         `;
                     }
 
-                    container.innerHTML += `
-                        <div class="ann-card" style="border-left: 4px solid ${color};">
-                            <div class="ann-icon" style="color: ${color};"><i class="fa-solid ${icon}"></i></div>
-                            <div class="ann-content">
-                                <div class="ann-title">${a.title}</div>
-                                <div class="ann-text">${a.text}</div>
-                                ${authorHtml}
-                            </div>
+                    const card = document.createElement('div');
+                    card.className = `ann-card${isRead ? ' read' : ''}`;
+                    card.dataset.id = a.id;
+                    card.style.borderLeft = `4px solid ${color}`;
+                    card.innerHTML = `
+                        <div class="ann-checkbox ${isRead ? 'checked' : ''}" data-id="${a.id}">
+                            <i class="${isRead ? 'fa-solid fa-check-square' : 'fa-regular fa-square'}"></i>
+                        </div>
+                        <div class="ann-icon" style="color: ${color};"><i class="fa-solid ${icon}"></i></div>
+                        <div class="ann-content">
+                            <div class="ann-title">${escapeHtml(a.title)}</div>
+                            <div class="ann-text">${escapeHtml(a.text)}</div>
+                            ${authorHtml}
                         </div>
                     `;
+                    container.appendChild(card);
+                });
+
+                // Event delegation
+                container.addEventListener('click', (e) => {
+                    const checkbox = e.target.closest('.ann-checkbox');
+                    if (checkbox) { toggleRead(checkbox.dataset.id); return; }
+                    const markBtn = e.target.closest('#ann-mark-all-btn');
+                    if (markBtn) { markAllRead(); return; }
                 });
             } catch (err) {
                 document.getElementById('ann-container').innerHTML = `<div style="color: #e74c3c; text-align: center;">Failed to load announcements.</div>`;
