@@ -115,8 +115,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const loggedIn = document.querySelector('.login-badge.logged-in');
             if (loggedIn) {
+                const username = loggedIn.dataset.username || '';
                 mobileItem.innerHTML = `
-                    <a href="/profile/" class="nav-link">Profile</a>
+                    <a href="/u/${encodeURIComponent(username)}" class="nav-link">Profile</a>
+                    <a href="/u/${encodeURIComponent(username)}/servers/" class="nav-link">Servers</a>
                     <a href="/api/auth/logout" class="nav-link" style="color:var(--muted);">Logout</a>
                 `;
             } else {
@@ -529,6 +531,7 @@ function updateUIForAuth(user) {
             avatarUrl = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${ext}?size=64`;
         }
             
+        loginBadge.dataset.username = user.username;
         loginBadge.innerHTML = `
             <div class="user-dropdown-container">
                 <button class="user-badge-mini" id="user-menu-trigger">
@@ -537,8 +540,8 @@ function updateUIForAuth(user) {
                     <i class="fa-solid fa-chevron-down"></i>
                 </button>
                 <div class="user-dropdown-menu" id="user-dropdown">
-                    <a href="/profile/"><i class="fa-solid fa-user"></i> Profile</a>
-                    <a href="/servers/"><i class="fa-solid fa-server"></i> Servers</a>
+                    <a href="/u/${encodeURIComponent(user.username)}"><i class="fa-solid fa-user"></i> Profile</a>
+                    <a href="/u/${encodeURIComponent(user.username)}/servers/"><i class="fa-solid fa-server"></i> Servers</a>
                     <div class="dropdown-divider"></div>
                     <a href="/api/auth/logout" class="logout-link"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
                 </div>

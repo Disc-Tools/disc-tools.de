@@ -513,7 +513,7 @@
         }
     </style>
     <script defer src="https://umami.disc-tools.de/script.js" data-website-id="0cf82497-80c8-42a2-b6e4-8a8ae179d1fe"></script>
-    <link rel="canonical" href="https://disc-tools.de/profile/">
+    <link rel="canonical" href="https://disc-tools.de/u/">
 </head>
 
 <body>
@@ -609,7 +609,7 @@
         </div>
     </footer>
 
-    <script src="/js/main.js?v=2" defer></script>
+    <script src="/js/main.js?v=3" defer></script>
     <script>
         const FLAGS = {
             STAFF: 1 << 0,
@@ -644,8 +644,18 @@
 
         document.addEventListener('DOMContentLoaded', initProfileDashboard);
 
+        function getUrlUsername() {
+            const path = window.location.pathname.replace(/\/+$/, '');
+            const parts = path.split('/');
+            if (parts.length >= 3 && parts[1] === 'u' && parts[2] && parts[2] !== 'servers') {
+                return parts[2];
+            }
+            return null;
+        }
+
         async function initProfileDashboard() {
             const container = document.getElementById('profile-container');
+            const urlUsername = getUrlUsername();
 
             try {
                 const response = await fetch('/api/auth/me');
@@ -657,6 +667,17 @@
                 }
 
                 const user = data.user;
+
+                if (!urlUsername) {
+                    window.location.replace('/u/' + encodeURIComponent(user.username));
+                    return;
+                }
+
+                if (urlUsername !== user.username && urlUsername !== (user.global_name || '').toLowerCase()) {
+                    window.location.replace('/u/' + encodeURIComponent(user.username));
+                    return;
+                }
+
                 displayProfile(user);
 
                 fetch('/api/auth/me/refresh').then(r => r.json()).then(fresh => {
@@ -892,7 +913,7 @@
                             ${badgesSection}
                             <div id="guild-tag-area"></div>
                             <div class="profile-actions">
-                                <a href="/profile/logout/" class="btn-secondary"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+                                <a href="/u/logout/" class="btn-secondary"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
                                 <a href="/tools/" class="btn-primary"><i class="fa-solid fa-arrow-left"></i> Back to Tools</a>
                             </div>
                         </section>

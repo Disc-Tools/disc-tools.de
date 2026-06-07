@@ -60,7 +60,7 @@
     <nav class="breadcrumbs">
         <a href="/">Home</a>
         <span>/</span>
-        <a href="../profile/">Profile</a>
+        <a href="/u/">Profile</a>
         <span>/</span>
         <a href="./" class="current">My Servers</a>
     </nav>
@@ -130,11 +130,44 @@
     </footer>
 
 
-    <script src="/js/main.js?v=2" defer></script>
+    <script src="/js/main.js?v=3" defer></script>
     <script>
         let allGuilds = [];
 
+        function getUrlUsernameServers() {
+            const path = window.location.pathname.replace(/\/+$/, '');
+            const parts = path.split('/');
+            if (parts.length >= 4 && parts[1] === 'u' && parts[2] && parts[2] !== 'servers' && parts[3] === 'servers') {
+                return parts[2];
+            }
+            return null;
+        }
+
         document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const res = await fetch('/api/auth/me');
+                const data = await res.json();
+                if (data.authenticated) {
+                    const username = data.user.username;
+                    const urlUsername = getUrlUsernameServers();
+
+                    if (!urlUsername) {
+                        window.location.replace('/u/' + encodeURIComponent(username) + '/servers/');
+                        return;
+                    }
+
+                    if (urlUsername !== username && urlUsername !== (data.user.global_name || '').toLowerCase()) {
+                        window.location.replace('/u/' + encodeURIComponent(username) + '/servers/');
+                        return;
+                    }
+
+                    const breadcrumbLink = document.querySelector('.breadcrumbs a[href="/u/"]');
+                    if (breadcrumbLink) {
+                        breadcrumbLink.href = '/u/' + encodeURIComponent(username);
+                    }
+                }
+            } catch (_) {}
+
             const container = document.getElementById('servers-container');
             const searchInput = document.getElementById('serverSearch');
             const countBadge = document.getElementById('server-count');
@@ -194,7 +227,7 @@
                     : null;
                 
                 return `
-                    <a href="../tools/invite-lookup/?guild=${guild.id}" class="server-card">
+                    <a href="/tools/invite-lookup/?guild=${guild.id}" class="server-card">
                         ${iconUrl ? `<img loading="lazy" src="${iconUrl}" class="server-icon" alt="Disc-Tools Logo">` : `<div class="server-icon" style="display:flex; align-items:center; justify-content:center; background:var(--surface2); font-weight:800; color:var(--accent2);">${guild.name.charAt(0)}</div>`}
                         <div class="server-info">
                             <div class="server-name">${guild.name}</div>
