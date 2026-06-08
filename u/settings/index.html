@@ -85,10 +85,10 @@
         <span class="login-badge"></span>
     </header>
 
-    <nav class="breadcrumbs">
+    <nav class="breadcrumbs" id="breadcrumbs">
         <a href="/">Home</a>
         <span>/</span>
-        <a href="/u/">My Profile</a>
+        <a href="/u/" id="breadProfile">My Profile</a>
         <span>/</span>
         <a href="./" class="current">Settings</a>
     </nav>
@@ -155,8 +155,19 @@
     <script>
         const API = '/api';
 
+        function getProfileUrl() {
+            const path = window.location.pathname.replace(/\/+$/, '');
+            const parts = path.split('/');
+            if (parts.length >= 4 && parts[1] === 'u' && parts[2] && parts[3] === 'settings') {
+                return '/u/' + encodeURIComponent(parts[2]) + '/';
+            }
+            return '/u/';
+        }
+
         async function init() {
             const app = document.getElementById('app');
+            const profileUrl = getProfileUrl();
+            document.getElementById('breadProfile').href = profileUrl;
 
             try {
                 const meRes = await fetch(`${API}/auth/me`);
@@ -169,7 +180,7 @@
                                 <div class="login-block">
                                     <h2>Settings</h2>
                                     <p>Log in to manage your preferences.</p>
-                                    <a href="/api/auth/login?redirect_to=/u/settings/" class="btn-primary"><i class="fa-brands fa-discord"></i> Login with Discord</a>
+                                    <a href="/api/auth/login?redirect_to=${encodeURIComponent(window.location.pathname)}" class="btn-primary"><i class="fa-brands fa-discord"></i> Login with Discord</a>
                                 </div>
                             </div>
                         </div>
@@ -186,7 +197,7 @@
                     <div class="settings-card">
                         <div class="settings-body">
                             <div class="settings-head">
-                                <a href="/u/" class="back-link"><i class="fa-solid fa-arrow-left"></i></a>
+                                <a href="${profileUrl}" class="back-link"><i class="fa-solid fa-arrow-left"></i></a>
                                 <h1>Settings</h1>
                             </div>
 

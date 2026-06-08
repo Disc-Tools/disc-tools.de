@@ -665,7 +665,7 @@
         function getUrlUsername() {
             const path = window.location.pathname.replace(/\/+$/, '');
             const parts = path.split('/');
-            if (parts.length >= 3 && parts[1] === 'u' && parts[2] && parts[2] !== 'servers') {
+            if (parts.length >= 3 && parts[1] === 'u' && parts[2] && parts[2] !== 'servers' && parts[2] !== 'settings') {
                 return parts[2];
             }
             return null;
@@ -925,7 +925,7 @@
                             </div>
                             <div class="profile-name-block">
                                 <h2>${escapeHtml(user.global_name || user.username)}</h2>
-                                <div class="username">@${escapeHtml(user.username)}${user.discriminator && user.discriminator !== '0' ? `#${escapeHtml(user.discriminator)}` : ''} <a href="/u/settings/" class="settings-icon" title="Settings"><i class="fa-solid fa-gear"></i></a></div>
+                                <div class="username">@${escapeHtml(user.username)}${user.discriminator && user.discriminator !== '0' ? `#${escapeHtml(user.discriminator)}` : ''} <a href="/u/${encodeURIComponent(user.username)}/settings/" class="settings-icon" title="Settings"><i class="fa-solid fa-gear"></i></a></div>
                             </div>
                             <div class="profile-status-chip"><i class="fa-solid fa-check"></i> Connected to Discord</div>
                             ${badgesSection}
