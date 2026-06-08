@@ -782,6 +782,7 @@ function initGlobalSearch() {
             { name: 'Emoji Stealer', url: '/tools/emoji-stealer/', type: 'tool' },
             { name: 'Snowflake Decoder', url: '/tools/snowflake-decoder/', type: 'tool' },
             { name: 'Color Picker', url: '/tools/color-picker/', type: 'tool' },
+            { name: 'Username History', url: '/tools/username-history/', type: 'tool' },
             { name: 'Nitro Gift Checker', url: '/tools/nitro-checker/', type: 'tool' },
             { name: 'Our Team', url: '/team/', type: 'info' },
             { name: 'About Us', url: '/about/', type: 'info' },
