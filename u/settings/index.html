@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Disc-Tools</title>
+    <meta name="theme-color" content="#5865F2">
+    <meta property="og:title" content="Settings - Disc-Tools">
+    <meta property="og:site_name" content="Disc-Tools">
+    <link rel="stylesheet" href="/assets/fontawesome/css/all.min.css">
+    <link rel="icon" type="image/png" href="/assets/img/logo.png">
+    <link rel="stylesheet" href="/css/style.css?v=2">
+    <style>
+        .settings-panel { max-width: 720px; margin: 0 auto; width: 100%; }
+        .settings-card { background: var(--surface); border: 1px solid var(--border); border-radius: 28px; overflow: hidden; box-shadow: 0 30px 90px rgba(0,0,0,0.16); }
+        .settings-card-body { padding: 32px; display: flex; flex-direction: column; gap: 24px; }
+        .settings-header { display: flex; align-items: center; gap: 16px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
+        .settings-header h1 { margin: 0; font-size: 24px; }
+        .settings-header .back-link { color: var(--muted); text-decoration: none; font-size: 14px; display: flex; align-items: center; gap: 6px; }
+        .settings-header .back-link:hover { color: var(--text); }
+        .setting-row { display: flex; align-items: center; justify-content: space-between; padding: 16px 0; border-bottom: 1px solid var(--border); }
+        .setting-row:last-child { border-bottom: none; }
+        .setting-info { flex: 1; }
+        .setting-info h3 { margin: 0 0 4px; font-size: 16px; }
+        .setting-info p { margin: 0; font-size: 13px; color: var(--muted); line-height: 1.5; }
+        .toggle-wrap { position: relative; flex-shrink: 0; }
+        .toggle-input { display: none; }
+        .toggle-label { display: block; width: 48px; height: 26px; background: var(--border); border-radius: 13px; cursor: pointer; transition: 0.2s; position: relative; }
+        .toggle-label::after { content: ''; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; background: #fff; border-radius: 50%; transition: 0.2s; }
+        .toggle-input:checked + .toggle-label { background: #2ecc71; }
+        .toggle-input:checked + .toggle-label::after { left: 25px; }
+        .toggle-loading .toggle-label { opacity: 0.5; pointer-events: none; }
+        .login-prompt { text-align: center; padding: 60px 20px; }
+        .login-prompt h2 { margin: 0 0 12px; }
+        .login-prompt p { color: var(--muted); margin: 0 0 24px; }
+        .login-prompt .btn-primary { display: inline-flex; align-items: center; gap: 8px; padding: 12px 32px; border-radius: 40px; background: #5865F2; color: #fff; text-decoration: none; font-weight: 600; }
+        .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 12px 24px; font-size: 14px; z-index: 9999; opacity: 0; transition: 0.3s; pointer-events: none; }
+        .toast.show { opacity: 1; }
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+    <div id="toast" class="toast"></div>
+
+    <script>
+        const API = '/api';
+
+        async function init() {
+            const app = document.getElementById('app');
+
+            try {
+                const meRes = await fetch(`${API}/auth/me`);
+                const meData = await meRes.json();
+
+                if (!meData.authenticated) {
+                    app.innerHTML = `
+                        <div class="settings-panel" style="margin-top:80px;">
+                            <div class="settings-card">
+                                <div class="settings-card-body">
+                                    <div class="login-prompt">
+                                        <h2>Settings</h2>
+                                        <p>Log in to manage your settings.</p>
+                                        <a href="/api/auth/login?redirect_to=/u/settings/" class="btn-primary"><i class="fa-brands fa-discord"></i> Login with Discord</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const user = meData.user;
+
+                const statusRes = await fetch(`${API}/username-history/optout/status`);
+                const statusData = await statusRes.json();
+
+                app.innerHTML = `
+                    <div class="settings-panel" style="margin-top:80px;padding:0 16px;">
+                        <div class="settings-card">
+                            <div class="settings-card-body">
+                                <div class="settings-header">
+                                    <a href="/u/" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Profile</a>
+                                    <h1>Settings</h1>
+                                </div>
+
+                                <div class="setting-row">
+                                    <div class="setting-info">
+                                        <h3>Username History</h3>
+                                        <p>When disabled, your username changes will no longer be shown on the <a href="/tools/username-history/">Username History</a> tool. Your data remains stored but is hidden from public view. You can re-enable this at any time.</p>
+                                    </div>
+                                    <div class="toggle-wrap" id="toggleWrap">
+                                        <input type="checkbox" class="toggle-input" id="historyToggle" ${statusData.optedOut ? '' : 'checked'}>
+                                        <label class="toggle-label" for="historyToggle"></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                document.getElementById('historyToggle').addEventListener('change', async () => {
+                    const wrap = document.getElementById('toggleWrap');
+                    wrap.classList.add('toggle-loading');
+                    try {
+                        const res = await fetch(`${API}/username-history/optout`, { method: 'POST' });
+                        const data = await res.json();
+                        showToast(data.optedOut ? 'Username history is now hidden.' : 'Username history is now visible.');
+                    } catch {
+                        showToast('Failed to update setting.');
+                        document.getElementById('historyToggle').checked = !document.getElementById('historyToggle').checked;
+                    } finally {
+                        wrap.classList.remove('toggle-loading');
+                    }
+                });
+
+            } catch {
+                app.innerHTML = '<div class="settings-panel" style="margin-top:80px;padding:0 16px;"><div class="settings-card"><div class="settings-card-body"><p style="color:var(--muted);">Something went wrong. Please try again later.</p></div></div></div>';
+            }
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 3000);
+        }
+
+        init();
+    </script>
+</body>
+</html>

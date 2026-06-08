@@ -62,8 +62,13 @@ async function lookupUsernameHistory() {
 
         userInfo.style.display = 'block';
 
-        if (!data.history || data.history.length === 0) {
+        if (data.optedOut) {
             noData.style.display = 'block';
+            noData.innerHTML = '<p style="color:var(--muted);">This user has opted out of username history tracking.</p>';
+            historyTable.style.display = 'none';
+        } else if (!data.history || data.history.length === 0) {
+            noData.style.display = 'block';
+            noData.innerHTML = '<p style="color:var(--muted);">No username history found for this user.</p>';
             historyTable.style.display = 'none';
         } else {
             noData.style.display = 'none';
