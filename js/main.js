@@ -783,7 +783,6 @@ function initGlobalSearch() {
             { name: 'Snowflake Decoder', url: '/tools/snowflake-decoder/', type: 'tool' },
             { name: 'Color Picker', url: '/tools/color-picker/', type: 'tool' },
             { name: 'Username History', url: '/tools/username-history/', type: 'tool' },
-            { name: 'Nitro Gift Checker', url: '/tools/nitro-checker/', type: 'tool' },
             { name: 'Our Team', url: '/team/', type: 'info' },
             { name: 'About Us', url: '/about/', type: 'info' },
             { name: 'Token Grabber Guide', url: '/security-articles/token-grabber/', type: 'guide' },
