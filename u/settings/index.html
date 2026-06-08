@@ -11,7 +11,31 @@
     <link rel="icon" type="image/png" href="/assets/img/logo.png">
     <link rel="stylesheet" href="/css/style.css?v=2">
     <style>
-        .settings-wrap { max-width: 680px; margin: 0 auto; width: 100%; }
+        .admin-layout { display: flex; gap: 30px; align-items: flex-start; }
+        .admin-sidebar { width: 260px; background: var(--surface); border: 1px solid var(--border); border-radius: 18px; display: flex; flex-direction: column; padding: 20px 0; flex-shrink: 0; position: sticky; top: 100px; overflow-y: auto; }
+        .admin-logo { display: flex; align-items: center; gap: 10px; padding: 0 20px 20px; border-bottom: 1px solid var(--border); text-decoration: none; }
+        .admin-logo img { height: 32px; border-radius: 0; }
+        .admin-logo span { font-family: var(--sans); font-weight: 800; font-size: 18px; color: #fff; }
+        .admin-logo span span { color: var(--accent); }
+        .admin-nav { display: flex; flex-direction: column; gap: 2px; padding: 15px 10px; flex: 1; }
+        .admin-nav details { display: flex; flex-direction: column; }
+        .admin-nav details summary { display: flex; align-items: center; gap: 10px; padding: 10px 15px; color: var(--muted); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; cursor: pointer; border-radius: 10px; user-select: none; list-style: none; transition: color 0.2s; }
+        .admin-nav details summary::-webkit-details-marker { display: none; }
+        .admin-nav details summary::marker { display: none; }
+        .admin-nav details summary i { font-size: 12px; width: 20px; text-align: center; }
+        .admin-nav details summary .arrow { margin-left: auto; font-size: 10px; transition: transform 0.2s; }
+        .admin-nav details[open] summary .arrow { transform: rotate(90deg); }
+        .admin-nav details summary:hover { color: var(--accent); }
+        .admin-nav details a { display: flex; align-items: center; gap: 12px; padding: 10px 15px 10px 47px; color: var(--muted); text-decoration: none; border-radius: 8px; font-weight: 500; font-size: 14px; transition: all 0.2s; }
+        .admin-nav details a:hover, .admin-nav details a.active { background: rgba(88, 101, 242, 0.12); color: var(--accent); }
+        .admin-nav details a i { width: 16px; text-align: center; font-size: 14px; }
+        .admin-content { flex: 1; min-width: 0; }
+
+        @media (max-width: 1100px) {
+            .admin-layout { flex-direction: column; }
+            .admin-sidebar { display: none; }
+        }
+
         .settings-card { background: var(--surface); border: 1px solid var(--border); border-radius: 28px; overflow: hidden; box-shadow: 0 30px 90px rgba(0,0,0,0.16); }
         .settings-body { padding: 32px; }
         .settings-head { display: flex; align-items: center; gap: 14px; padding-bottom: 28px; border-bottom: 1px solid var(--border); margin-bottom: 8px; }
@@ -193,25 +217,46 @@
                 const statusData = await statusRes.json();
                 const isVisible = !statusData.optedOut;
 
-                app.innerHTML = `
-                    <div class="settings-card">
-                        <div class="settings-body">
-                            <div class="settings-head">
-                                <a href="${profileUrl}" class="back-link"><i class="fa-solid fa-arrow-left"></i></a>
-                                <h1>Settings</h1>
-                            </div>
+                const encodedUsername = encodeURIComponent(user.username);
 
-                            <div class="setting-item">
-                                <div class="setting-info">
-                                    <div class="setting-label"><i class="fa-solid fa-clock-rotate-left"></i> Username History <span class="status-badge ${isVisible ? 'status-badge--on' : 'status-badge--off'}">${isVisible ? 'Visible' : 'Hidden'}</span></div>
-                                    <p class="setting-desc">When disabled, your past username changes won't appear on the <a href="/tools/username-history/">Username History</a> tool. Your data is kept but hidden from public view. You can toggle this at any time.</p>
-                                </div>
-                                <div class="toggle" id="toggleWrap">
-                                    <input type="checkbox" id="historyToggle" ${isVisible ? 'checked' : ''}>
-                                    <label for="historyToggle"></label>
+                app.innerHTML = `
+                    <div class="admin-layout">
+                        <aside class="admin-sidebar">
+                            <a href="/" class="admin-logo">
+                            <img src="/assets/img/logo.png" alt="Disc-Tools Logo">
+                            <span>Disc<span>-</span>Tools</span>
+                            </a>
+                            <nav class="admin-nav">
+                                <details open>
+                                    <summary><i class="fa-solid fa-user"></i> Account <span class="arrow">&#9654;</span></summary>
+                                    <a href="/u/${encodedUsername}/"><i class="fa-solid fa-id-card"></i> Profile</a>
+                                    <a href="/u/${encodedUsername}/servers/"><i class="fa-solid fa-server"></i> Servers</a>
+                                    <a href="/u/${encodedUsername}/settings/" class="active"><i class="fa-solid fa-gear"></i> Settings</a>
+                                </details>
+                                <a href="/u/logout/" style="margin-top: auto; color: var(--muted); display: flex; align-items: center; gap: 12px; padding: 12px 15px; text-decoration: none; border-radius: 10px; font-weight: 500; font-size: 14px; transition: all 0.2s;"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+                            </nav>
+                        </aside>
+                        <main class="admin-content">
+                            <div class="settings-card">
+                                <div class="settings-body">
+                                    <div class="settings-head">
+                                        <a href="${profileUrl}" class="back-link"><i class="fa-solid fa-arrow-left"></i></a>
+                                        <h1>Settings</h1>
+                                    </div>
+
+                                    <div class="setting-item">
+                                        <div class="setting-info">
+                                            <div class="setting-label"><i class="fa-solid fa-clock-rotate-left"></i> Username History <span class="status-badge ${isVisible ? 'status-badge--on' : 'status-badge--off'}">${isVisible ? 'Visible' : 'Hidden'}</span></div>
+                                            <p class="setting-desc">When disabled, your past username changes won't appear on the <a href="/tools/username-history/">Username History</a> tool. Your data is kept but hidden from public view. You can toggle this at any time.</p>
+                                        </div>
+                                        <div class="toggle" id="toggleWrap">
+                                            <input type="checkbox" id="historyToggle" ${isVisible ? 'checked' : ''}>
+                                            <label for="historyToggle"></label>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </main>
                     </div>
                 `;
 

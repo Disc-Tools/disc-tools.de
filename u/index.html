@@ -18,9 +18,34 @@
     <link rel="stylesheet" href="/css/style.css?v=2">
     <style>
         .profile-panel {
-            max-width: 1120px;
+            max-width: 1400px;
             margin: 0 auto;
             width: 100%;
+        }
+
+        .admin-layout { display: flex; gap: 30px; align-items: flex-start; }
+        .admin-sidebar { width: 260px; background: var(--surface); border: 1px solid var(--border); border-radius: 18px; display: flex; flex-direction: column; padding: 20px 0; flex-shrink: 0; position: sticky; top: 100px; overflow-y: auto; }
+        .admin-logo { display: flex; align-items: center; gap: 10px; padding: 0 20px 20px; border-bottom: 1px solid var(--border); text-decoration: none; }
+        .admin-logo img { height: 32px; border-radius: 0; }
+        .admin-logo span { font-family: var(--sans); font-weight: 800; font-size: 18px; color: #fff; }
+        .admin-logo span span { color: var(--accent); }
+        .admin-nav { display: flex; flex-direction: column; gap: 2px; padding: 15px 10px; flex: 1; }
+        .admin-nav details { display: flex; flex-direction: column; }
+        .admin-nav details summary { display: flex; align-items: center; gap: 10px; padding: 10px 15px; color: var(--muted); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; cursor: pointer; border-radius: 10px; user-select: none; list-style: none; transition: color 0.2s; }
+        .admin-nav details summary::-webkit-details-marker { display: none; }
+        .admin-nav details summary::marker { display: none; }
+        .admin-nav details summary i { font-size: 12px; width: 20px; text-align: center; }
+        .admin-nav details summary .arrow { margin-left: auto; font-size: 10px; transition: transform 0.2s; }
+        .admin-nav details[open] summary .arrow { transform: rotate(90deg); }
+        .admin-nav details summary:hover { color: var(--accent); }
+        .admin-nav details a { display: flex; align-items: center; gap: 12px; padding: 10px 15px 10px 47px; color: var(--muted); text-decoration: none; border-radius: 8px; font-weight: 500; font-size: 14px; transition: all 0.2s; }
+        .admin-nav details a:hover, .admin-nav details a.active { background: rgba(88, 101, 242, 0.12); color: var(--accent); }
+        .admin-nav details a i { width: 16px; text-align: center; font-size: 14px; }
+        .admin-content { flex: 1; min-width: 0; }
+
+        @media (max-width: 1100px) {
+            .admin-layout { flex-direction: column; }
+            .admin-sidebar { display: none; }
         }
 
         .profile-card {
@@ -913,67 +938,84 @@
                 ? `<div class="avatar-decoration-container" id="avatar-decoration-container"><img src="https://cdn.discordapp.com/avatar-decoration-presets/${decorationAsset}.png" class="avatar-decoration" id="avatar-decoration-img" alt="Avatar decoration" onerror="this.onerror=null;this.parentElement.style.display='none'"></div>`
                 : `<div class="avatar-decoration-container" id="avatar-decoration-container" style="display:none"></div>`;
 
+            const encodedUsername = encodeURIComponent(user.username);
+
             container.innerHTML = `
-                <article class="profile-card" aria-live="polite">
-                    <div class="profile-card-body">
-                        <section class="profile-summary">
-                            <div class="profile-avatar-wrap">
-                                <div class="avatar-stack">
-                                    <img loading="lazy" src="${avatarUrl}" alt="${escapeHtml(user.global_name || user.username)} avatar" class="profile-avatar" id="profile-avatar-img">
-                                    ${decorationHtml}
-                                </div>
-                            </div>
-                            <div class="profile-name-block">
-                                <h2>${escapeHtml(user.global_name || user.username)}</h2>
-                                <div class="username">@${escapeHtml(user.username)}${user.discriminator && user.discriminator !== '0' ? `#${escapeHtml(user.discriminator)}` : ''} <a href="/u/${encodeURIComponent(user.username)}/settings/" class="settings-icon" title="Settings"><i class="fa-solid fa-gear"></i></a></div>
-                            </div>
-                            <div class="profile-status-chip"><i class="fa-solid fa-check"></i> Connected to Discord</div>
-                            ${badgesSection}
-                            <div id="guild-tag-area"></div>
-                            <div class="profile-actions">
-                                <a href="/u/logout/" class="btn-secondary"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
-                                <a href="/tools/" class="btn-primary"><i class="fa-solid fa-arrow-left"></i> Back to Tools</a>
-                            </div>
-                        </section>
+                <div class="admin-layout">
+                    <aside class="admin-sidebar">
+                        <a href="/" class="admin-logo">
+                            <img src="/assets/img/logo.png" alt="Disc-Tools Logo">
+                            <span>Disc<span>-</span>Tools</span>
+                        </a>
+                        <nav class="admin-nav">
+                            <details open>
+                                <summary><i class="fa-solid fa-user"></i> Account <span class="arrow">&#9654;</span></summary>
+                                <a href="/u/${encodedUsername}/" class="active"><i class="fa-solid fa-id-card"></i> Profile</a>
+                                <a href="/u/${encodedUsername}/servers/"><i class="fa-solid fa-server"></i> Servers</a>
+                                <a href="/u/${encodedUsername}/settings/"><i class="fa-solid fa-gear"></i> Settings</a>
+                            </details>
+                            <a href="/u/logout/" style="margin-top: auto; color: var(--muted); display: flex; align-items: center; gap: 12px; padding: 12px 15px; text-decoration: none; border-radius: 10px; font-weight: 500; font-size: 14px; transition: all 0.2s;"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+                        </nav>
+                    </aside>
+                    <main class="admin-content">
+                        <article class="profile-card" aria-live="polite">
+                            <div class="profile-card-body">
+                                <section class="profile-summary">
+                                    <div class="profile-avatar-wrap">
+                                        <div class="avatar-stack">
+                                            <img loading="lazy" src="${avatarUrl}" alt="${escapeHtml(user.global_name || user.username)} avatar" class="profile-avatar" id="profile-avatar-img">
+                                            ${decorationHtml}
+                                        </div>
+                                    </div>
+                                    <div class="profile-name-block">
+                                        <h2>${escapeHtml(user.global_name || user.username)}</h2>
+                                        <div class="username">@${escapeHtml(user.username)}${user.discriminator && user.discriminator !== '0' ? `#${escapeHtml(user.discriminator)}` : ''}</div>
+                                    </div>
+                                    <div class="profile-status-chip"><i class="fa-solid fa-check"></i> Connected to Discord</div>
+                                    ${badgesSection}
+                                    <div id="guild-tag-area"></div>
+                                </section>
 
-                        <section class="profile-details">
-                            <p class="profile-intro">Your Discord profile is linked securely through OAuth2. This page shows your public Discord identity and account status without storing your login credentials.</p>
+                                <section class="profile-details">
+                                    <p class="profile-intro">Your Discord profile is linked securely through OAuth2. This page shows your public Discord identity and account status without storing your login credentials.</p>
 
-                            <div id="profile-bio-area" class="profile-bio"></div>
+                                    <div id="profile-bio-area" class="profile-bio"></div>
 
-                            <div class="profile-stats">
-                                <div class="profile-stat">
-                                    <div class="profile-stat-label">Member since</div>
-                                    <div class="profile-stat-value">${joinedAt.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</div>
-                                </div>
-                                <div class="profile-stat">
-                                    <div class="profile-stat-label">Discord ID</div>
-                                    <div class="profile-stat-value" style="font-size:16px;">${escapeHtml(user.id)}</div>
-                                </div>
-                                <div class="profile-stat">
-                                    <div class="profile-stat-label">Active Nitro</div>
-                                    <div class="profile-stat-value" style="font-size:16px;" id="nitro-status">${escapeHtml(getNitroLabel(user))}</div>
-                                </div>
-                            </div>
+                                    <div class="profile-stats">
+                                        <div class="profile-stat">
+                                            <div class="profile-stat-label">Member since</div>
+                                            <div class="profile-stat-value">${joinedAt.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</div>
+                                        </div>
+                                        <div class="profile-stat">
+                                            <div class="profile-stat-label">Discord ID</div>
+                                            <div class="profile-stat-value" style="font-size:16px;">${escapeHtml(user.id)}</div>
+                                        </div>
+                                        <div class="profile-stat">
+                                            <div class="profile-stat-label">Active Nitro</div>
+                                            <div class="profile-stat-value" style="font-size:16px;" id="nitro-status">${escapeHtml(getNitroLabel(user))}</div>
+                                        </div>
+                                    </div>
 
-                            <div class="profile-meta">
-                                <div class="meta-row">
-                                    <div class="meta-label">Primary email</div>
-                                    <div class="meta-value privacy-blur" data-full-value="${escapeHtml(user.email || 'Not provided')}" data-revealed="false" onclick="revealSecret(this)" title="Click to reveal email">${escapeHtml(maskEmail(user.email))}</div>
-                                </div>
-                                <div class="meta-row">
-                                    <div class="meta-label">Two-factor auth</div>
-                                    <div class="meta-value" id="mfa-status">${user.mfa_enabled ? 'Enabled' : 'Disabled'}</div>
-                                </div>
-                                <div class="meta-row">
-                                    <div class="meta-label">Account status</div>
-                                    <div class="meta-value"><span class="status-pill ${accountSafety.style}">${escapeHtml(accountSafety.label)}</span></div>
-                                </div>
-                            </div>
+                                    <div class="profile-meta">
+                                        <div class="meta-row">
+                                            <div class="meta-label">Primary email</div>
+                                            <div class="meta-value privacy-blur" data-full-value="${escapeHtml(user.email || 'Not provided')}" data-revealed="false" onclick="revealSecret(this)" title="Click to reveal email">${escapeHtml(maskEmail(user.email))}</div>
+                                        </div>
+                                        <div class="meta-row">
+                                            <div class="meta-label">Two-factor auth</div>
+                                            <div class="meta-value" id="mfa-status">${user.mfa_enabled ? 'Enabled' : 'Disabled'}</div>
+                                        </div>
+                                        <div class="meta-row">
+                                            <div class="meta-label">Account status</div>
+                                            <div class="meta-value"><span class="status-pill ${accountSafety.style}">${escapeHtml(accountSafety.label)}</span></div>
+                                        </div>
+                                    </div>
 
                         </section>
                     </div>
                 </article>
+                    </main>
+                </div>
             `;
         }
 
