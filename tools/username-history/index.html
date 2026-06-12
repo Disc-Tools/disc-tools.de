@@ -90,43 +90,50 @@
 
                 <div id="tool-content">
                     <div class="decoder-card">
-                        <div class="input-group">
-                            <input type="text" id="userIdInput" class="snowflake-input" placeholder="Enter Discord User ID (e.g. 175928847299117056)">
-                            <button class="decode-btn" onclick="lookupUsernameHistory()">Look Up</button>
+                        <div id="eligibilityLocked" style="display:none; text-align:center; padding:30px;">
+                            <i class="fa-solid fa-lock" style="font-size:40px; opacity:0.3; margin-bottom:15px;"></i>
+                            <div id="eligibilityMessage"></div>
                         </div>
+                        <div id="toolMainContent">
+                            <div class="input-group">
+                                <input type="text" id="userIdInput" class="snowflake-input" placeholder="Enter Discord User ID (e.g. 175928847299117056)">
+                                <button class="decode-btn" onclick="lookupUsernameHistory()">Look Up</button>
+                            </div>
+                            <div id="freeSearchCounter" style="text-align:right; font-size:12px; color:var(--muted); margin-top:6px; min-height:16px;"><i class="fa-solid fa-spinner fa-spin"></i></div>
 
-                        <div id="userInfo" style="display:none; margin-top:20px; padding:15px; background:rgba(255,255,255,0.03); border-radius:8px; border:1px solid var(--border);">
-                            <div style="display:flex; align-items:center; gap:15px;">
-                                <img id="userAvatar" src="" alt="" style="width:48px; height:48px; border-radius:50%;">
-                                <div>
-                                    <div id="userDisplayName" style="font-weight:600; font-size:16px;"></div>
-                                    <div id="userUsername" style="color:var(--muted); font-size:13px;"></div>
+                            <div id="userInfo" style="display:none; margin-top:20px; padding:15px; background:rgba(255,255,255,0.03); border-radius:8px; border:1px solid var(--border);">
+                                <div style="display:flex; align-items:center; gap:15px;">
+                                    <img id="userAvatar" src="" alt="" style="width:48px; height:48px; border-radius:50%;">
+                                    <div>
+                                        <div id="userDisplayName" style="font-weight:600; font-size:16px;"></div>
+                                        <div id="userUsername" style="color:var(--muted); font-size:13px;"></div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div id="resultsContainer" style="margin-top:20px; display:none;">
-                            <div id="noData" style="text-align:center; padding:30px; color:var(--muted);">
-                                <i class="fa-solid fa-clock-rotate-left" style="font-size:32px; opacity:0.3; margin-bottom:10px;"></i>
-                                <p>No username changes recorded for this user.</p>
+                            <div id="resultsContainer" style="margin-top:20px; display:none;">
+                                <div id="noData" style="text-align:center; padding:30px; color:var(--muted);">
+                                    <i class="fa-solid fa-clock-rotate-left" style="font-size:32px; opacity:0.3; margin-bottom:10px;"></i>
+                                    <p>No username changes recorded for this user.</p>
+                                </div>
+                                <div id="historyTable" style="display:none;">
+                                    <table style="width:100%; border-collapse:collapse;">
+                                        <thead>
+                                            <tr style="border-bottom:1px solid var(--border);">
+                                                <th style="padding:10px 12px; text-align:left; color:var(--muted); font-size:12px; text-transform:uppercase;">Old Username</th>
+                                                <th style="padding:10px 12px; text-align:left; color:var(--muted); font-size:12px; text-transform:uppercase;">New Username</th>
+                                                <th style="padding:10px 12px; text-align:left; color:var(--muted); font-size:12px; text-transform:uppercase;">Changed</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="historyBody"></tbody>
+                                    </table>
+                                </div>
                             </div>
-                            <div id="historyTable" style="display:none;">
-                                <table style="width:100%; border-collapse:collapse;">
-                                    <thead>
-                                        <tr style="border-bottom:1px solid var(--border);">
-                                            <th style="padding:10px 12px; text-align:left; color:var(--muted); font-size:12px; text-transform:uppercase;">Old Username</th>
-                                            <th style="padding:10px 12px; text-align:left; color:var(--muted); font-size:12px; text-transform:uppercase;">New Username</th>
-                                            <th style="padding:10px 12px; text-align:left; color:var(--muted); font-size:12px; text-transform:uppercase;">Changed</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="historyBody"></tbody>
-                                </table>
-                            </div>
-                        </div>
 
-                        <div id="historyEmptyState" class="empty-state" style="margin-top:20px;">
-                            <i class="fa-solid fa-clock-rotate-left" style="font-size:40px; opacity:0.1; margin-bottom:15px;"></i>
-                            <p>Enter a Discord User ID to see their username history.</p>
+                            <div id="historyEmptyState" class="empty-state" style="margin-top:20px;">
+                                <i class="fa-solid fa-clock-rotate-left" style="font-size:40px; opacity:0.1; margin-bottom:15px;"></i>
+                                <p>Enter a Discord User ID to see their username history.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -179,8 +186,8 @@
     </footer>
 
 
-    <script src="/js/username-history.js?v=4" defer></script>
-    <script src="/js/main.js?v=4" defer></script>
+    <script src="/js/username-history.js?v=5" defer></script>
+    <script src="/js/main.js?v=5" defer></script>
 </body>
 
 </html>

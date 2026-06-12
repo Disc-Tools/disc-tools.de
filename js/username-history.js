@@ -2,7 +2,36 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('userIdInput').addEventListener('keypress', function (e) {
         if (e.key === 'Enter') lookupUsernameHistory();
     });
+    updateFreeSearchCounter();
 });
+
+async function updateFreeSearchCounter() {
+    const counter = document.getElementById('freeSearchCounter');
+    if (!counter) return;
+    try {
+        const res = await fetch('/api/username-history/eligibility', { cache: 'no-store' });
+        const data = res.ok ? await res.json() : null;
+        if (!data) {
+            return;
+        }
+        if (data.isLoggedIn) {
+            counter.style.display = 'block';
+            counter.innerHTML = data.optedOut
+                ? `<span style="color:#e74c3c;"><i class="fa-solid fa-user-lock" style="margin-right:4px;"></i>Search blocked — you opted out</span>`
+                : `<span style="color:#2ecc71;"><i class="fa-solid fa-check-circle" style="margin-right:4px;"></i>Unlimited searches</span>`;
+        } else {
+            counter.style.display = 'block';
+            const used = data.freeSearchesUsed || 0;
+            const max = data.freeSearchesMax || 1;
+            const remaining = max - used;
+            if (remaining > 0) {
+                counter.innerHTML = `<i class="fa-solid fa-key" style="margin-right:4px;"></i>Free searches: <strong>${remaining}/${max}</strong>`;
+            } else {
+                counter.innerHTML = `<i class="fa-solid fa-key" style="margin-right:4px;"></i>Free searches: <strong>0/${max}</strong> &middot; <a href="/api/auth/login" style="color:var(--accent);">Login</a>`;
+            }
+        }
+    } catch (e) {};
+}
 
 async function lookupUsernameHistory() {
     const userId = document.getElementById('userIdInput').value.trim();
@@ -22,6 +51,15 @@ async function lookupUsernameHistory() {
 
     try {
         const res = await fetch(`/api/username-history/${userId}`, { cache: 'no-store' });
+
+        if (res.status === 403) {
+            const err = await res.json().catch(() => ({}));
+            showBlocked(err);
+            btn.disabled = false;
+            btn.textContent = 'Look Up';
+            return;
+        }
+
         if (!res.ok) {
             const err = await res.json().catch(() => ({}));
             showToast(err.error || 'Failed to fetch username history.');
@@ -29,6 +67,9 @@ async function lookupUsernameHistory() {
             btn.textContent = 'Look Up';
             return;
         }
+
+        // Update counter after successful search
+        updateFreeSearchCounter();
 
         const data = await res.json();
 
@@ -93,6 +134,51 @@ async function lookupUsernameHistory() {
     } finally {
         btn.disabled = false;
         btn.textContent = 'Look Up';
+    }
+}
+
+function showBlocked(data) {
+    const mainContent = document.getElementById('toolMainContent');
+    const locked = document.getElementById('eligibilityLocked');
+    const message = document.getElementById('eligibilityMessage');
+
+    if (!mainContent || !locked || !message) return;
+
+    mainContent.style.display = 'none';
+    locked.style.display = 'block';
+
+    if (data.isLoggedIn && data.optedOut) {
+        message.innerHTML = `
+            <p style="color:var(--muted); margin-bottom:10px;">You have opted out of username history tracking.</p>
+            <p style="color:var(--muted); margin-bottom:15px; font-size:13px;">To search other users, you need to allow being searched yourself.</p>
+            <button class="decode-btn" onclick="toggleOptIn()" style="background:var(--accent);">Allow Search & Unlock</button>
+        `;
+    } else {
+        const used = data.freeSearchesUsed || 0;
+        const max = data.freeSearchesMax || 1;
+        message.innerHTML = `
+            <p style="color:var(--muted); margin-bottom:10px;">Free searches used: <strong>${used}/${max}</strong></p>
+            <p style="color:var(--muted); margin-bottom:15px; font-size:13px;">Log in with Discord to continue using the Username History tool.</p>
+            <a href="/api/auth/login" class="decode-btn" style="background:var(--accent); text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
+                <i class="fa-brands fa-discord"></i> Login with Discord
+            </a>
+        `;
+    }
+}
+
+async function toggleOptIn() {
+    try {
+        const res = await fetch('/api/username-history/optout', { method: 'POST' });
+        if (res.ok) {
+            const data = await res.json();
+            if (!data.optedOut) {
+                document.getElementById('eligibilityLocked').style.display = 'none';
+                document.getElementById('toolMainContent').style.display = 'block';
+                showToast('You can now search other users.');
+            }
+        }
+    } catch (e) {
+        showToast('Failed to update settings. Please try again.');
     }
 }
 
