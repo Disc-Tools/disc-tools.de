@@ -1204,6 +1204,7 @@
         }
 
         const VERIFY_PROVIDERS = {
+            discord: { name: 'Discord', color: '#5865F2', icon: 'fa-brands fa-discord' },
             github: { name: 'GitHub', color: '#4078c0', icon: 'fa-brands fa-github' },
             twitch: { name: 'Twitch', color: '#9146FF', icon: 'fa-brands fa-twitch' }
         };
@@ -1273,10 +1274,30 @@
                         ${isConnected
                             ? `<button class="verify-conn-btn connected" disabled><i class="fa-solid fa-check"></i> Verified</button>
                                <button class="verify-conn-btn disconnect" data-provider="${provider}"><i class="fa-solid fa-unlink"></i> Unlink</button>`
-                            : `<a href="/api/auth/${provider}/login" class="verify-conn-btn connect"><i class="${cfg.icon}"></i> Connect ${cfg.name}</a>`
+                            : provider === 'discord'
+                                ? `<button class="verify-conn-btn connect" data-provider="discord"><i class="${cfg.icon}"></i> Connect ${cfg.name}</button>`
+                                : `<a href="/api/auth/${provider}/login" class="verify-conn-btn connect"><i class="${cfg.icon}"></i> Connect ${cfg.name}</a>`
                         }
                     </div>
                 `;
+                const connectBtn = card.querySelector('.verify-conn-btn.connect');
+                if (connectBtn && provider === 'discord') {
+                    connectBtn.addEventListener('click', async (e) => {
+                        e.stopPropagation();
+                        try {
+                            const r = await fetch('/api/auth/connections/discord/link', { method: 'POST' });
+                            const data = await r.json();
+                            if (r.ok) {
+                                showToast('Discord account verified!');
+                                await loadConnections();
+                            } else {
+                                showToast(data.error || 'Failed to link Discord.', true);
+                            }
+                        } catch (e) {
+                            showToast('Failed to link Discord.', true);
+                        }
+                    });
+                }
                 const unlinkBtn = card.querySelector('.verify-conn-btn.disconnect');
                 if (unlinkBtn) {
                     unlinkBtn.addEventListener('click', async (e) => {
@@ -1721,7 +1742,11 @@
                 return;
             }
 
-            const discordId = document.getElementById('preset-discord-id-input').value.trim() || undefined;
+            const discordId = document.getElementById('preset-discord-id-input').value.trim();
+            if (selectedPresetPlatform === 'discord' && !discordId) {
+                showToast('Please enter your Discord User ID (numeric).', true);
+                return;
+            }
 
             if (editingLinkId) {
                 const existingLink = linksList.find(l => l.id === editingLinkId);
