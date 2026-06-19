@@ -852,6 +852,10 @@
                 <label id="preset-username-label">Username / Handle</label>
                 <input type="text" id="preset-username-input" placeholder="e.g. disc_tools">
             </div>
+            <div class="form-group" id="preset-discord-id-group" style="margin-top: 10px; display: none;">
+                <label>Discord User ID (numeric)</label>
+                <input type="text" id="preset-discord-id-input" placeholder="e.g. 1366501281337839777">
+            </div>
             <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:10px;">
                 <button class="btn-secondary" id="preset-cancel-btn">Cancel</button>
                 <button class="btn-primary" id="preset-save-btn" style="padding:10px 20px;">Add Link</button>
@@ -1560,6 +1564,8 @@
             selectedPresetPlatform = null;
             setSelectedPresetButton(null);
             document.getElementById('preset-username-input').value = '';
+            document.getElementById('preset-discord-id-input').value = '';
+            document.getElementById('preset-discord-id-group').style.display = 'none';
             document.getElementById('custom-label-input').value = '';
             document.getElementById('custom-url-input').value = '';
             document.getElementById('custom-icon-input').value = '';
@@ -1585,6 +1591,12 @@
                 editingLinkId = link.id;
                 selectedPresetPlatform = link.platform;
                 setSelectedPresetButton(selectedPresetPlatform);
+                const discordIdGroup = document.getElementById('preset-discord-id-group');
+                if (selectedPresetPlatform === 'discord') {
+                    discordIdGroup.style.display = 'block';
+                } else {
+                    discordIdGroup.style.display = 'none';
+                }
                 const labels = {
                     instagram: 'Instagram Handle',
                     twitter: 'Twitter/X Handle',
@@ -1593,7 +1605,7 @@
                     twitch: 'Twitch Channel Name',
                     tiktok: 'TikTok Handle (no @)',
                     linkedin: 'LinkedIn Profile Username',
-                    discord: 'Discord User ID / Username',
+                    discord: 'Discord Display Name / Handle',
                     steam: 'Steam Community ID',
                     spotify: 'Spotify Username',
                     soundcloud: 'SoundCloud Profile Username',
@@ -1601,6 +1613,7 @@
                 };
                 document.getElementById('preset-username-label').textContent = labels[selectedPresetPlatform] || 'Username / Handle';
                 document.getElementById('preset-username-input').value = link.username || '';
+                document.getElementById('preset-discord-id-input').value = link.discordId || '';
                 document.querySelector('#preset-dialog .dialog-title').textContent = 'Edit Social Link';
                 document.getElementById('preset-save-btn').textContent = 'Save Changes';
             } else {
@@ -1669,7 +1682,14 @@
             btn.addEventListener('click', () => {
                 selectedPresetPlatform = btn.dataset.platform;
                 setSelectedPresetButton(selectedPresetPlatform);
-                
+
+                const discordIdGroup = document.getElementById('preset-discord-id-group');
+                if (selectedPresetPlatform === 'discord') {
+                    discordIdGroup.style.display = 'block';
+                } else {
+                    discordIdGroup.style.display = 'none';
+                }
+
                 const labels = {
                     instagram: 'Instagram Handle',
                     twitter: 'Twitter/X Handle',
@@ -1678,7 +1698,7 @@
                     twitch: 'Twitch Channel Name',
                     tiktok: 'TikTok Handle (no @)',
                     linkedin: 'LinkedIn Profile Username',
-                    discord: 'Discord User ID / Username',
+                    discord: 'Discord Display Name / Handle',
                     steam: 'Steam Community ID',
                     spotify: 'Spotify Username',
                     soundcloud: 'SoundCloud Profile Username',
@@ -1701,20 +1721,25 @@
                 return;
             }
 
+            const discordId = document.getElementById('preset-discord-id-input').value.trim() || undefined;
+
             if (editingLinkId) {
                 const existingLink = linksList.find(l => l.id === editingLinkId);
                 if (existingLink) {
                     existingLink.type = 'preset';
                     existingLink.platform = selectedPresetPlatform;
                     existingLink.username = val;
+                    existingLink.discordId = discordId;
                 }
             } else {
-                linksList.push({
+                const link = {
                     id: `l_${Date.now()}`,
                     type: 'preset',
                     platform: selectedPresetPlatform,
                     username: val
-                });
+                };
+                if (discordId) link.discordId = discordId;
+                linksList.push(link);
             }
 
             renderLinksList();

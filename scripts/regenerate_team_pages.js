@@ -58,7 +58,7 @@ const LINK_PLATFORM_CONFIG = {
     twitch: { name: 'Twitch', icon: 'fa-brands fa-twitch', url: username => `https://twitch.tv/${username}` },
     tiktok: { name: 'TikTok', icon: 'fa-brands fa-tiktok', url: username => `https://tiktok.com/@${username}` },
     linkedin: { name: 'LinkedIn', icon: 'fa-brands fa-linkedin', url: username => `https://linkedin.com/in/${username}` },
-    discord: { name: 'Discord', icon: 'fa-brands fa-discord', url: username => `https://discord.com/users/${username}` },
+    discord: { name: 'Discord', icon: 'fa-brands fa-discord', url: (username, link) => `https://discord.com/users/${link?.discordId || username}` },
     steam: { name: 'Steam', icon: 'fa-brands fa-steam', url: username => `https://steamcommunity.com/id/${username}` },
     spotify: { name: 'Spotify', icon: 'fa-brands fa-spotify', url: username => `https://open.spotify.com/user/${username}` },
     soundcloud: { name: 'SoundCloud', icon: 'fa-brands fa-soundcloud', url: username => `https://soundcloud.com/${username}` },
@@ -81,7 +81,7 @@ function getWebsiteHandle(url) {
 function getLinkUrl(link) {
     if (link.url) return link.url;
     const platform = LINK_PLATFORM_CONFIG[link.platform];
-    if (platform && link.username) return platform.url(String(link.username).trim().replace(/^@+/, ''));
+    if (platform && link.username) return platform.url(String(link.username).trim().replace(/^@+/, ''), link);
     return '#';
 }
 
