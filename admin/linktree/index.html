@@ -1205,6 +1205,7 @@
 
         const VERIFY_PROVIDERS = {
             discord: { name: 'Discord', color: '#5865F2', icon: 'fa-brands fa-discord' },
+            spotify: { name: 'Spotify', color: '#1DB954', icon: 'fa-brands fa-spotify' },
             github: { name: 'GitHub', color: '#4078c0', icon: 'fa-brands fa-github' },
             twitch: { name: 'Twitch', color: '#9146FF', icon: 'fa-brands fa-twitch' }
         };
@@ -1284,7 +1285,9 @@
                                <button class="verify-conn-btn disconnect" data-provider="${provider}"><i class="fa-solid fa-unlink"></i> Unlink</button>`
                             : provider === 'discord'
                                 ? `<button class="verify-conn-btn connect" data-provider="discord"><i class="${cfg.icon}"></i> Connect ${cfg.name}</button>`
-                                : `<a href="/api/auth/${provider}/login" class="verify-conn-btn connect"><i class="${cfg.icon}"></i> Connect ${cfg.name}</a>`
+                                : provider === 'spotify'
+                                    ? `<a href="/api/auth/spotify" class="verify-conn-btn connect"><i class="${cfg.icon}"></i> Connect ${cfg.name}</a>`
+                                    : `<a href="/api/auth/${provider}/login" class="verify-conn-btn connect"><i class="${cfg.icon}"></i> Connect ${cfg.name}</a>`
                         }
                     </div>
                 `;
