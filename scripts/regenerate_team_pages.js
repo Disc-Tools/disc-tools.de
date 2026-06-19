@@ -50,6 +50,21 @@ function normalizeSoundcloudEmbedUrl(url) {
     return '';
 }
 
+const PLATFORM_COLORS = {
+    instagram: '#E4405F',
+    twitter: '#1DA1F2',
+    github: '#4078c0',
+    youtube: '#FF0000',
+    twitch: '#9146FF',
+    tiktok: '#000000',
+    linkedin: '#0A66C2',
+    discord: '#5865F2',
+    steam: '#1b2838',
+    spotify: '#1DB954',
+    soundcloud: '#FF5500',
+    reddit: '#FF4500'
+};
+
 const LINK_PLATFORM_CONFIG = {
     instagram: { name: 'Instagram', icon: 'fa-brands fa-instagram', url: username => `https://instagram.com/${username}` },
     twitter: { name: 'Twitter/X', icon: 'fa-brands fa-x-twitter', url: username => `https://x.com/${username}` },
@@ -92,7 +107,8 @@ function getLinkDisplay(link) {
         url,
         title: link.label || platform?.name || link.platform || url,
         handler: platform ? normalizeHandle(link.username) : getWebsiteHandle(url),
-        iconClass: platform?.icon || 'fa-solid fa-globe'
+        iconClass: platform?.icon || 'fa-solid fa-globe',
+        color: PLATFORM_COLORS[link.platform] || null
     };
 }
 
@@ -137,7 +153,8 @@ function renderProfileHtml(p) {
 
     const linksHtml = (p.links || []).map(l => {
         const link = getLinkDisplay(l);
-        return `<a href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer" class="profile-link"><i class="${escapeHtml(link.iconClass)} profile-link-icon"></i><span class="profile-link-text"><span class="profile-link-title">${escapeHtml(link.title)}</span>${link.handler ? `<span class="profile-link-handle">${escapeHtml(link.handler)}</span>` : ''}</span></a>`;
+        const iconStyle = link.color ? `color:${link.color};` : '';
+        return `<a href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer" class="profile-link"><i class="${escapeHtml(link.iconClass)} profile-link-icon" style="${iconStyle}"></i><span class="profile-link-text"><span class="profile-link-title">${escapeHtml(link.title)}</span>${link.handler ? `<span class="profile-link-handle">${escapeHtml(link.handler)}</span>` : ''}</span></a>`;
     }).join('\n');
 
     return `<!DOCTYPE html>
