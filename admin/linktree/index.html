@@ -1225,23 +1225,35 @@
         }
 
         function syncConnectionsToLinks() {
-            // Remove preset links for providers that have a verified connection
+            // Remove preset links for providers that have a verified connection,
+            // but remember their position to insert the connection at the same spot
             const connectedProviders = new Set(connectedAccounts.map(c => c.provider));
-            linksList = linksList.filter(l => {
+            const insertPositions = {};
+            const filtered = [];
+            for (let i = 0; i < linksList.length; i++) {
+                const l = linksList[i];
                 if (l.type === 'preset' && l.platform && connectedProviders.has(l.platform)) {
-                    return false;
+                    insertPositions[l.platform] = i;
+                } else {
+                    filtered.push(l);
                 }
-                return true;
-            });
-            // Remove existing connection items, then re-add current ones
+            }
+            linksList = filtered;
+            // Remove existing connection items, then re-add current ones at their original positions
             linksList = linksList.filter(l => l.type !== 'connection');
             for (const conn of connectedAccounts) {
-                linksList.push({
+                const pos = insertPositions[conn.provider];
+                const entry = {
                     id: 'conn_' + conn.provider,
                     type: 'connection',
                     provider: conn.provider,
                     provider_username: conn.provider_username
-                });
+                };
+                if (pos !== undefined && pos <= linksList.length) {
+                    linksList.splice(pos, 0, entry);
+                } else {
+                    linksList.push(entry);
+                }
             }
             // Restore order from verifiedOrder
             const order = currentProfile?.verifiedOrder || [];
@@ -1295,6 +1307,10 @@
                 if (connectBtn && provider === 'discord') {
                     connectBtn.addEventListener('click', async (e) => {
                         e.stopPropagation();
+                        const existingDiscord = linksList.find(l => l.type === 'preset' && l.platform === 'discord');
+                        if (existingDiscord && !confirm('Replace your current Discord social link with a verified one?')) {
+                            return;
+                        }
                         try {
                             const r = await fetch('/api/auth/connections/discord/link', { method: 'POST' });
                             const data = await r.json();
