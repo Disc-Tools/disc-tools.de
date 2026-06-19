@@ -1224,6 +1224,14 @@
         }
 
         function syncConnectionsToLinks() {
+            // Remove preset links for providers that have a verified connection
+            const connectedProviders = new Set(connectedAccounts.map(c => c.provider));
+            linksList = linksList.filter(l => {
+                if (l.type === 'preset' && l.platform && connectedProviders.has(l.platform)) {
+                    return false;
+                }
+                return true;
+            });
             // Remove existing connection items, then re-add current ones
             linksList = linksList.filter(l => l.type !== 'connection');
             for (const conn of connectedAccounts) {
