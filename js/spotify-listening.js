@@ -1,10 +1,13 @@
 (function () {
     const script = document.currentScript;
     const userId = script?.dataset?.userId;
+    const layout = script?.dataset?.layout || 'card';
     if (!userId) return;
 
     const container = document.getElementById('spotify-now-playing');
     if (!container) return;
+
+    container.className = 'currently-playing-card currently-playing-' + layout;
 
     let playback = null;
     let currentTrackId = null;
@@ -38,13 +41,13 @@
     }
 
     function updateProgressUI() {
-        if (animationId) return;
         if (!container.querySelector('.listening-card')) return;
         const fill = container.querySelector('.listening-progress-fill');
         const current = container.querySelector('.listening-time-current');
         if (!fill || !playback?.durationMs) return;
 
         const pos = getProgressMs();
+        fill.style.transition = 'none';
         fill.style.width = `${getProgressPercent()}%`;
         if (current) current.textContent = formatTime(pos);
     }
@@ -57,14 +60,13 @@
 
         const startPercent = parseFloat(fill.style.width) || 0;
         const startTime = performance.now();
-        fill.style.transition = 'none';
 
         function step(now) {
             const elapsed = now - startTime;
             const t = Math.min(1, elapsed / duration);
-            const ease = 1 - Math.pow(1 - t, 3);
-            const val = startPercent + (targetPercent - startPercent) * ease;
+            const val = startPercent + (targetPercent - startPercent) * t;
 
+            fill.style.transition = 'none';
             fill.style.width = `${val}%`;
             if (current && playback?.durationMs) {
                 current.textContent = formatTime((val / 100) * playback.durationMs);
@@ -73,11 +75,11 @@
             if (t < 1) {
                 animationId = requestAnimationFrame(step);
             } else {
+                fill.style.transition = 'none';
                 fill.style.width = `${targetPercent}%`;
                 if (current && playback?.durationMs) {
                     current.textContent = formatTime((targetPercent / 100) * playback.durationMs);
                 }
-                fill.style.transition = 'width 0.35s linear';
                 animationId = null;
                 if (callback) callback();
             }
@@ -86,34 +88,67 @@
     }
 
     function createCard(track) {
-        container.innerHTML = ''
-            + '<div class="listening-card">'
-            + '<div class="listening-header">'
-            + '<div class="listening-title"><i class="fa-brands fa-spotify spotify-color"></i> Currently Listening</div>'
-            + '<div class="wave">'
-            + '<span class="stroke"></span><span class="stroke"></span><span class="stroke"></span>'
-            + '</div></div>'
-            + '<a href="' + escHtml(track.url) + '" target="_blank" rel="noopener noreferrer" class="listening-body">'
-            + '<img src="' + escHtml(track.albumArt) + '" alt="Album Art" class="album-art">'
-            + '<div class="track-info">'
-            + '<div class="track-title">' + escHtml(track.title) + '</div>'
-            + '<div class="track-artist">' + escHtml(track.artist) + '</div>'
-            + '</div>'
-            + '<i class="fa-solid fa-play listening-play"></i>'
-            + '</a>'
-            + '<div class="listening-progress">'
-            + '<div class="listening-progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="' + track.durationMs + '" aria-valuenow="0">'
-            + '<div class="listening-progress-fill" style="width:0%"></div>'
-            + '</div>'
-            + '<div class="listening-progress-times">'
-            + '<span class="listening-time-current">0:00</span>'
-            + '<span class="listening-time-total">' + formatTime(track.durationMs) + '</span>'
-            + '</div></div>'
-            + '<div class="listening-footer">'
-            + '<a href="' + escHtml(track.url) + '" target="_blank" rel="noopener noreferrer" class="listening-link">'
-            + '<i class="fa-brands fa-spotify"></i> Open on Spotify</a>'
-            + '</div></div>';
+        let html = '';
+        if (layout === 'minimal') {
+            html = '<div class="listening-card">'
+                + '<div class="listening-body">'
+                + '<img src="' + escHtml(track.albumArt) + '" alt="" class="album-art">'
+                + '<div class="track-info">'
+                + '<div class="track-title">' + escHtml(track.title) + '</div>'
+                + '<div class="track-artist">' + escHtml(track.artist) + '</div>'
+                + '</div>'
+                + '<i class="fa-brands fa-spotify spotify-color"></i>'
+                + '</div>'
+                + '<div class="listening-progress">'
+                + '<div class="listening-progress-bar"><div class="listening-progress-fill" style="width:0%"></div></div>'
+                + '</div>'
+                + '</div>';
+        } else if (layout === 'clean') {
+            html = '<div class="listening-card">'
+                + '<a href="' + escHtml(track.url) + '" target="_blank" rel="noopener noreferrer" class="listening-body">'
+                + '<img src="' + escHtml(track.albumArt) + '" alt="" class="album-art">'
+                + '<div class="track-info">'
+                + '<div class="track-title">' + escHtml(track.title) + '</div>'
+                + '<div class="track-artist">' + escHtml(track.artist) + '</div>'
+                + '<div class="listening-progress">'
+                + '<div class="listening-progress-bar"><div class="listening-progress-fill" style="width:0%"></div></div>'
+                + '<div class="listening-progress-times">'
+                + '<span class="listening-time-current">0:00</span>'
+                + '<span class="listening-time-total">' + formatTime(track.durationMs) + '</span>'
+                + '</div></div></div>'
+                + '<div class="listening-play-wrap"><i class="fa-brands fa-spotify spotify-color"></i></div>'
+                + '</a>'
+                + '</div>';
+        } else {
+            html = '<div class="listening-card">'
+                + '<div class="listening-header">'
+                + '<div class="listening-title"><i class="fa-brands fa-spotify spotify-color"></i> Currently Listening</div>'
+                + '<div class="wave">'
+                + '<span class="stroke"></span><span class="stroke"></span><span class="stroke"></span>'
+                + '</div></div>'
+                + '<a href="' + escHtml(track.url) + '" target="_blank" rel="noopener noreferrer" class="listening-body">'
+                + '<img src="' + escHtml(track.albumArt) + '" alt="Album Art" class="album-art">'
+                + '<div class="track-info">'
+                + '<div class="track-title">' + escHtml(track.title) + '</div>'
+                + '<div class="track-artist">' + escHtml(track.artist) + '</div>'
+                + '</div>'
+                + '<i class="fa-solid fa-play listening-play"></i>'
+                + '</a>'
+                + '<div class="listening-progress">'
+                + '<div class="listening-progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="' + track.durationMs + '" aria-valuenow="0">'
+                + '<div class="listening-progress-fill" style="width:0%"></div>'
+                + '</div>'
+                + '<div class="listening-progress-times">'
+                + '<span class="listening-time-current">0:00</span>'
+                + '<span class="listening-time-total">' + formatTime(track.durationMs) + '</span>'
+                + '</div></div>'
+                + '<div class="listening-footer">'
+                + '<a href="' + escHtml(track.url) + '" target="_blank" rel="noopener noreferrer" class="listening-link">'
+                + '<i class="fa-brands fa-spotify"></i> Open on Spotify</a>'
+                + '</div></div>';
+        }
 
+        container.innerHTML = html;
         container.style.display = 'block';
     }
 
@@ -130,14 +165,19 @@
         const bodyLink = container.querySelector('.listening-body');
         if (bodyLink) bodyLink.href = track.url;
 
-        const footerLink = container.querySelector('.listening-link');
-        if (footerLink) footerLink.href = track.url;
+        if (layout === 'card') {
+            const footerLink = container.querySelector('.listening-link');
+            if (footerLink) footerLink.href = track.url;
 
-        const total = container.querySelector('.listening-time-total');
-        if (total) total.textContent = formatTime(track.durationMs);
+            const total = container.querySelector('.listening-time-total');
+            if (total) total.textContent = formatTime(track.durationMs);
 
-        const bar = container.querySelector('.listening-progress-bar');
-        if (bar) bar.setAttribute('aria-valuemax', track.durationMs);
+            const bar = container.querySelector('.listening-progress-bar');
+            if (bar) bar.setAttribute('aria-valuemax', track.durationMs);
+        } else if (layout === 'clean') {
+            const total = container.querySelector('.listening-time-total');
+            if (total) total.textContent = formatTime(track.durationMs);
+        }
     }
 
     async function updateListening() {

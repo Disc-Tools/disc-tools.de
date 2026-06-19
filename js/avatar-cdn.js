@@ -1,5 +1,6 @@
 let currentUser = null;
 let currentFormat = 'png';
+let bannerFormat = 'png';
 
 async function fetchUser() {
     const userId = document.getElementById('userId').value.trim();
@@ -54,6 +55,7 @@ function displayUser(user) {
 
     renderTabs(user);
     renderMatrix(user, currentFormat);
+    renderBanner(user);
 }
 
 function renderTabs(user) {
@@ -90,6 +92,57 @@ function renderMatrix(user, format) {
 
     sizes.forEach(size => {
         const url = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${format}?size=${size}`;
+        const item = document.createElement('div');
+        item.className = 'cdn-item';
+        item.innerHTML = `
+            <div class="cdn-info">${format.toUpperCase()} @ ${size}px</div>
+            <div class="cdn-link-row">
+                <input type="text" class="cdn-input" value="${url}" readonly onclick="this.select()">
+                <button class="copy-btn-mini" onclick="copyToClipboard('${url}', this)"><i class="fa-solid fa-copy"></i></button>
+            </div>
+        `;
+        container.appendChild(item);
+    });
+}
+
+function renderBanner(user) {
+    const section = document.getElementById('banner-section');
+    if (!user.banner) {
+        section.style.display = 'none';
+        return;
+    }
+    section.style.display = 'block';
+
+    const tabContainer = document.getElementById('banner-format-tabs');
+    tabContainer.innerHTML = '';
+
+    const formats = ['png', 'jpg', 'webp'];
+    if (user.banner.startsWith('a_')) formats.push('gif');
+
+    formats.forEach(f => {
+        const tab = document.createElement('div');
+        tab.className = `format-tab ${bannerFormat === f ? 'active' : ''}`;
+        tab.textContent = f.toUpperCase();
+        tab.onclick = () => {
+            bannerFormat = f;
+            document.querySelectorAll('#banner-format-tabs .format-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            renderBannerMatrix(user, f);
+        };
+        tabContainer.appendChild(tab);
+    });
+
+    renderBannerMatrix(user, bannerFormat);
+}
+
+function renderBannerMatrix(user, format) {
+    const container = document.getElementById('banner-cdn-matrix');
+    container.innerHTML = '';
+
+    const sizes = [256, 512, 1024, 2048, 4096];
+
+    sizes.forEach(size => {
+        const url = `https://cdn.discordapp.com/banners/${user.id}/${user.banner}.${format}?size=${size}`;
         const item = document.createElement('div');
         item.className = 'cdn-item';
         item.innerHTML = `

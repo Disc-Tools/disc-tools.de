@@ -143,11 +143,13 @@
         }
 
         document.addEventListener('DOMContentLoaded', async () => {
+            let username = null;
+
             try {
-                const res = await fetch('/api/auth/me');
+                const res = await fetch('/api/auth/me', { cache: 'no-store' });
                 const data = await res.json();
                 if (data.authenticated) {
-                    const username = data.user.username;
+                    username = data.user.username;
                     const urlUsername = getUrlUsernameServers();
 
                     if (!urlUsername) {
@@ -172,8 +174,15 @@
             const countBadge = document.getElementById('server-count');
             
             try {
-                const response = await fetch('/api/user/guilds');
-                if (response.status === 401) throw new Error('AUTH_REQUIRED');
+                const response = await fetch('/api/user/guilds', { cache: 'no-store' });
+                if (response.status === 401) {
+                    if (username) {
+                        window.location.replace('/api/auth/login?redirect=/u/' + encodeURIComponent(username) + '/servers/');
+                    } else {
+                        window.location.replace('/api/auth/login?redirect=' + encodeURIComponent(window.location.pathname));
+                    }
+                    return;
+                }
                 if (!response.ok) throw new Error('API_ERROR');
                 
                 allGuilds = await response.json();
@@ -190,6 +199,7 @@
 
             } catch (err) {
                 countBadge.style.display = 'none';
+                const loginUrl = '/api/auth/login?redirect=' + encodeURIComponent(window.location.pathname);
                 container.innerHTML = `
                     <div class="auth-required-card" style="grid-column: 1/-1;">
                         <div class="auth-icon-wrapper">
@@ -197,7 +207,7 @@
                         </div>
                         <h2>Authentication Required</h2>
                         <p>To view and manage your Discord servers, please connect your account.</p>
-                        <a href="/api/auth/login" class="login-btn-large">
+                        <a href="` + loginUrl + `" class="login-btn-large">
                             <i class="fa-brands fa-discord"></i>
                             Connect with Discord
                         </a>

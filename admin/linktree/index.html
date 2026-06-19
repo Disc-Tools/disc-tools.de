@@ -7,7 +7,7 @@
     <script>document.documentElement.style.display='none';fetch('/api/admin/check').then(r=>{if(!r.ok)window.location.href='/';else document.documentElement.style.display=''}).catch(()=>{window.location.href='/'})</script>
     <link rel="stylesheet" href="/assets/fontawesome/css/all.min.css">
     <link rel="icon" type="image/png" href="/assets/img/admin_logo.png">
-    <link rel="stylesheet" href="/css/style.css?v=2">
+    <link rel="stylesheet" href="/css/style.css?v=3">
     <script src="/assets/js/sortable.min.js"></script>
     <script defer src="https://umami.disc-tools.de/script.js" data-website-id="0cf82497-80c8-42a2-b6e4-8a8ae179d1fe"></script>
     
@@ -329,6 +329,74 @@
         }
         .spotify-btn-disconnect:hover { background: rgba(231, 76, 60, 0.2); transform: scale(1.03); }
 
+        .verify-provider-card {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            transition: border-color 0.2s;
+        }
+        .verify-provider-card.connected {
+            border-color: rgba(46, 204, 113, 0.3);
+            background: rgba(46, 204, 113, 0.05);
+        }
+        .verify-provider-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .verify-provider-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #fff;
+            flex-shrink: 0;
+        }
+        .verify-provider-name {
+            font-weight: 700;
+            font-size: 14px;
+        }
+        .verify-provider-username {
+            font-size: 12px;
+            color: var(--muted);
+        }
+        .verify-conn-btn {
+            padding: 7px 16px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .verify-conn-btn:hover { transform: scale(1.03); }
+        .verify-conn-btn.connect {
+            background: var(--accent, #5865F2);
+            color: #fff;
+        }
+        .verify-conn-btn.connected {
+            background: rgba(46, 204, 113, 0.15);
+            color: #2ecc71;
+            border: 1px solid rgba(46, 204, 113, 0.3);
+        }
+        .verify-conn-btn.disconnect {
+            background: rgba(231, 76, 60, 0.1);
+            color: #e74c3c;
+            border: 1px solid rgba(231, 76, 60, 0.3);
+        }
+
         .toast {
             position: fixed; bottom: 30px; right: 30px; background: #2ecc71; color: #fff; padding: 14px 24px; border-radius: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); font-weight: 600; display: flex; align-items: center; gap: 10px; transform: translateY(100px); opacity: 0; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 3000;
         }
@@ -462,6 +530,10 @@
             align-items: center;
             justify-content: center;
             gap: 10px;
+        }
+        .layout-option:hover {
+            border-color: var(--accent, #5865f2) !important;
+            background: rgba(88,101,242,0.08) !important;
         }
     </style>
     <meta property="og:image" content="https://disc-tools.de/assets/img/logo.png">
@@ -610,6 +682,7 @@
                         <div style="display:flex; gap:8px;">
                             <button class="btn-secondary" id="add-preset-modal-btn" style="padding: 6px 12px; font-size: 12px; border-radius: 8px;" onclick="event.stopPropagation()"><i class="fa-solid fa-plus"></i> Add Social</button>
                             <button class="btn-secondary" id="add-custom-modal-btn" style="padding: 6px 12px; font-size: 12px; border-radius: 8px;" onclick="event.stopPropagation()"><i class="fa-solid fa-globe"></i> Add Custom Link</button>
+                            <button class="btn-secondary" id="verify-account-btn" style="padding: 6px 12px; font-size: 12px; border-radius: 8px; color:#2ecc71; border-color:rgba(46,204,113,0.3);" onclick="event.stopPropagation()"><i class="fa-solid fa-shield-halved"></i> Verify Account</button>
                         </div>
                         <i class="fa-solid fa-chevron-down section-arrow"></i>
                     </div>
@@ -618,8 +691,6 @@
                             <!-- Links injected dynamically -->
                         </div>
                     </div>
-
-                    <!-- Section: Hobbies -->
                     <div class="editor-section-title" onclick="toggleSection(this)">
                         <span><i class="fa-solid fa-heart"></i> Hobbies &amp; Interests</span>
                         <i class="fa-solid fa-chevron-down section-arrow"></i>
@@ -673,6 +744,34 @@
                                     Display Active Spotify Listening Status
                                 </span>
                                 <i class="fa-solid fa-toggle-off" id="listening-toggle-icon"></i>
+                            </div>
+                            <div style="margin-top: 12px;" id="spotify-layout-selector">
+                                <label style="display:block; font-size:12px; font-weight:600; color:var(--muted); margin-bottom:8px; text-transform:uppercase; letter-spacing:0.05em;">Widget Layout</label>
+                                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                                    <label class="layout-option" data-layout="card" style="flex:1; min-width:100px; cursor:pointer; padding:10px 14px; border:2px solid var(--border); border-radius:12px; text-align:center; transition:all 0.2s; background:rgba(255,255,255,0.04);">
+                                        <input type="radio" name="spotify-layout" value="card" style="display:none;">
+                                        <i class="fa-solid fa-id-card" style="font-size:18px; display:block; margin-bottom:4px;"></i>
+                                        <span style="font-size:12px; font-weight:600;">Card</span>
+                                    </label>
+                                    <label class="layout-option" data-layout="minimal" style="flex:1; min-width:100px; cursor:pointer; padding:10px 14px; border:2px solid var(--border); border-radius:12px; text-align:center; transition:all 0.2s; background:rgba(255,255,255,0.04);">
+                                        <input type="radio" name="spotify-layout" value="minimal" style="display:none;">
+                                        <i class="fa-solid fa-rectangle-ad" style="font-size:18px; display:block; margin-bottom:4px;"></i>
+                                        <span style="font-size:12px; font-weight:600;">Minimal</span>
+                                    </label>
+                                    <label class="layout-option" data-layout="clean" style="flex:1; min-width:100px; cursor:pointer; padding:10px 14px; border:2px solid var(--border); border-radius:12px; text-align:center; transition:all 0.2s; background:rgba(255,255,255,0.04);">
+                                        <input type="radio" name="spotify-layout" value="clean" style="display:none;">
+                                        <i class="fa-solid fa-compact-disc" style="font-size:18px; display:block; margin-bottom:4px;"></i>
+                                        <span style="font-size:12px; font-weight:600;">Clean</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div style="margin-top: 8px;" id="spotify-layout-preview-wrap">
+                                <div style="display:flex; align-items:center; gap:8px; cursor:pointer; padding:6px 0; user-select:none;" id="preview-toggle" title="Toggle preview">
+                                    <i class="fa-solid fa-chevron-down" id="preview-chevron" style="font-size:10px; color:var(--muted); transition:transform 0.2s;"></i>
+                                    <span style="font-size:12px; color:var(--muted); font-weight:600;">Preview</span>
+                                </div>
+                                <div id="spotify-layout-preview" style="display:none; margin-top:8px; border-radius:12px; overflow:hidden; border:1px solid var(--border); background:rgba(255,255,255,0.02);">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -777,6 +876,16 @@
             <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:10px;">
                 <button class="btn-secondary" id="custom-cancel-btn">Cancel</button>
                 <button class="btn-primary" id="custom-save-btn" style="padding:10px 20px;">Add Link</button>
+            </div>
+        </div>
+
+        <!-- Verify Account modal -->
+        <div class="dialog-box" id="verify-dialog" style="display:none;">
+            <div class="dialog-title">Verify Account</div>
+            <p style="color:var(--muted); font-size:13px; margin-bottom:16px;">Connect your GitHub or Twitch account to display it as a verified link on your profile.</p>
+            <div id="verify-provider-grid" style="display:flex; flex-direction:column; gap:10px;"></div>
+            <div style="display:flex; justify-content:flex-end; margin-top:16px;">
+                <button class="btn-secondary" id="verify-cancel-btn">Close</button>
             </div>
         </div>
 
@@ -930,6 +1039,11 @@
                     const isListeningEnabled = currentProfile.music?.currentlyListeningEnabled;
                     setToggleState('listening-toggle-card', 'listening-toggle-icon', isListeningEnabled);
                     updateSpotifyDesc();
+                    fetchCurrentTrack().then(t => {
+                        if (t) t.fetchedAt = Date.now();
+                        cachedTrack = t;
+                        updatePreview(currentProfile.music?.spotifyListeningLayout || 'card');
+                    });
                 } else {
                     spotifyTitle.textContent = "Spotify Disconnected";
                     spotifyTitle.style.color = "#fff";
@@ -941,6 +1055,7 @@
                     spotifyDisconnectBtn.style.display = 'none';
                     listeningToggleWrapper.style.display = 'none';
                 }
+                setSpotifyLayout(currentProfile.music?.spotifyListeningLayout || 'card');
 
                 // Visibility and Featured
                 setToggleState('visibility-card', 'visibility-icon', currentProfile.visibility === 'public');
@@ -953,8 +1068,9 @@
                 // Links List
                 linksList = currentProfile.links || [];
                 renderLinksList();
-                
-                
+
+                // Connections (verified accounts)
+                loadConnections();
 
             } catch (e) {
                 console.error(e);
@@ -1000,12 +1116,41 @@
                 let title = '';
                 let url = '';
 
-                if (link.type === 'preset') {
+                if (link.type === 'connection') {
+                    const verifyCfg = VERIFY_PROVIDERS[link.provider];
+                    const iconClass = verifyCfg?.icon || 'fa-solid fa-shield-halved';
+                    const color = verifyCfg?.color || '#2ecc71';
+                    iconHtml = `<i class="${iconClass}" style="font-size:20px; color:${color};"></i>`;
+                    title = (verifyCfg?.name || link.provider) + ' <span style="color:#2ecc71;font-size:11px;font-weight:600;">✓ Verified</span>';
+                    url = `@${link.provider_username || ''}`;
+                    card.innerHTML = `
+                        <div class="link-drag-handle"><i class="fa-solid fa-bars"></i></div>
+                        <div class="link-icon">${iconHtml}</div>
+                        <div class="link-edit-info">
+                            <div class="link-edit-title">${title}</div>
+                            <div class="link-edit-url">${url}</div>
+                        </div>
+                        <button class="link-open-btn" onclick="event.stopPropagation(); window.open('${escapePreviewHtml('https://' + link.provider + '.com/' + (link.provider_username || ''))}', '_blank', 'noopener')" title="Open profile"><i class="fa-solid fa-up-right-from-square"></i></button>
+                        <button class="link-delete-btn" onclick="event.stopPropagation(); removeConnectionFromLinks('${link.provider}')" title="Remove from list"><i class="fa-solid fa-xmark"></i></button>
+                    `;
+                } else if (link.type === 'preset') {
                     const iconClass = presetIcons[link.platform] || 'fa-solid fa-link';
                     iconHtml = `<i class="${iconClass}" style="font-size:20px; color:#5865F2;"></i>`;
                     title = link.platform.charAt(0).toUpperCase() + link.platform.slice(1);
                     if (title === 'Twitter') title = 'Twitter/X';
                     url = `@${link.username}`;
+                    card.innerHTML = `
+                        <div class="link-drag-handle"><i class="fa-solid fa-bars"></i></div>
+                        <div class="link-icon">${iconHtml}</div>
+                        <div class="link-edit-info">
+                            <div class="link-edit-title">${title}</div>
+                            <div class="link-edit-url">${url}</div>
+                            <div class="link-edit-hint">Click to edit</div>
+                        </div>
+                        <button class="link-open-btn" onclick="event.stopPropagation(); window.open('${escapePreviewHtml(url)}', '_blank', 'noopener')" title="Open link"><i class="fa-solid fa-up-right-from-square"></i></button>
+                        <button class="link-delete-btn" onclick="event.stopPropagation(); deleteLink('${link.id}')"><i class="fa-solid fa-trash"></i></button>
+                    `;
+                    card.addEventListener('click', () => editLink(link.id));
                 } else {
                     let hostname = 'disc-tools.de';
                     try { hostname = new URL(link.url).hostname; } catch(e) {}
@@ -1013,20 +1158,19 @@
                     iconHtml = `<img src="${iconSrc}" style="width:20px; height:20px; border-radius:4px;" alt="" onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<i class=\\'fa-solid fa-globe\\' style=\\'font-size:20px;color:#888;\\'></i>')">`;
                     title = link.label || link.url;
                     url = link.url;
+                    card.innerHTML = `
+                        <div class="link-drag-handle"><i class="fa-solid fa-bars"></i></div>
+                        <div class="link-icon">${iconHtml}</div>
+                        <div class="link-edit-info">
+                            <div class="link-edit-title">${title}</div>
+                            <div class="link-edit-url">${url}</div>
+                            <div class="link-edit-hint">Click to edit</div>
+                        </div>
+                        <button class="link-open-btn" onclick="event.stopPropagation(); window.open('${escapePreviewHtml(url)}', '_blank', 'noopener')" title="Open link"><i class="fa-solid fa-up-right-from-square"></i></button>
+                        <button class="link-delete-btn" onclick="event.stopPropagation(); deleteLink('${link.id}')"><i class="fa-solid fa-trash"></i></button>
+                    `;
+                    card.addEventListener('click', () => editLink(link.id));
                 }
-
-                card.innerHTML = `
-                    <div class="link-drag-handle"><i class="fa-solid fa-bars"></i></div>
-                    <div class="link-icon">${iconHtml}</div>
-                    <div class="link-edit-info">
-                        <div class="link-edit-title">${title}</div>
-                        <div class="link-edit-url">${url}</div>
-                        <div class="link-edit-hint">Click to edit</div>
-                    </div>
-                    <button class="link-open-btn" onclick="event.stopPropagation(); window.open('${escapePreviewHtml(url)}', '_blank', 'noopener')" title="Open link"><i class="fa-solid fa-up-right-from-square"></i></button>
-                    <button class="link-delete-btn" onclick="event.stopPropagation(); deleteLink('${link.id}')"><i class="fa-solid fa-trash"></i></button>
-                `;
-                card.addEventListener('click', () => editLink(link.id));
                 container.appendChild(card);
             });
 
@@ -1049,6 +1193,114 @@
             renderLinksList();
             markDirty();
         };
+
+        // Build verified order array matching the backend merge logic
+        function getLinkOrder() {
+            return linksList.map(l => l.type === 'connection' ? l.provider : l.id);
+        }
+
+        const VERIFY_PROVIDERS = {
+            github: { name: 'GitHub', color: '#4078c0', icon: 'fa-brands fa-github' },
+            twitch: { name: 'Twitch', color: '#9146FF', icon: 'fa-brands fa-twitch' }
+        };
+
+        let connectedAccounts = [];
+
+        async function loadConnections() {
+            try {
+                const res = await fetch('/api/auth/connections');
+                if (!res.ok) return;
+                connectedAccounts = await res.json();
+            } catch (e) {
+                connectedAccounts = [];
+            }
+            renderVerifyAccounts();
+            syncConnectionsToLinks();
+        }
+
+        function syncConnectionsToLinks() {
+            // Remove existing connection items, then re-add current ones
+            linksList = linksList.filter(l => l.type !== 'connection');
+            for (const conn of connectedAccounts) {
+                linksList.push({
+                    id: 'conn_' + conn.provider,
+                    type: 'connection',
+                    provider: conn.provider,
+                    provider_username: conn.provider_username
+                });
+            }
+            // Restore order from verifiedOrder
+            const order = currentProfile?.verifiedOrder || [];
+            if (order.length > 0) {
+                const orderMap = {};
+                order.forEach((entry, i) => { orderMap[entry] = i; });
+                linksList.sort((a, b) => {
+                    const aKey = a.type === 'connection' ? a.provider : a.id;
+                    const bKey = b.type === 'connection' ? b.provider : b.id;
+                    const aIdx = orderMap[aKey] ?? Infinity;
+                    const bIdx = orderMap[bKey] ?? Infinity;
+                    return aIdx - bIdx;
+                });
+            }
+            renderLinksList();
+        }
+
+        function renderVerifyAccounts() {
+            // Refresh the dialog content if it's open
+            const grid = document.getElementById('verify-provider-grid');
+            if (!grid) return;
+            grid.innerHTML = '';
+            for (const [provider, cfg] of Object.entries(VERIFY_PROVIDERS)) {
+                const conn = connectedAccounts.find(c => c.provider === provider);
+                const isConnected = !!conn;
+                const card = document.createElement('div');
+                card.className = 'verify-provider-card' + (isConnected ? ' connected' : '');
+                card.innerHTML = `
+                    <div class="verify-provider-left">
+                        <div class="verify-provider-icon" style="background:${cfg.color};">
+                            <i class="${cfg.icon}"></i>
+                        </div>
+                        <div>
+                            <div class="verify-provider-name">${cfg.name}</div>
+                            ${isConnected ? `<div class="verify-provider-username">@${escapePreviewHtml(conn.provider_username)}</div>` : '<div class="verify-provider-username" style="color:var(--muted);">Not connected</div>'}
+                        </div>
+                    </div>
+                    <div style="display:flex;gap:6px;">
+                        ${isConnected
+                            ? `<button class="verify-conn-btn connected" disabled><i class="fa-solid fa-check"></i> Verified</button>
+                               <button class="verify-conn-btn disconnect" data-provider="${provider}"><i class="fa-solid fa-unlink"></i> Unlink</button>`
+                            : `<a href="/api/auth/${provider}/login" class="verify-conn-btn connect"><i class="${cfg.icon}"></i> Connect ${cfg.name}</a>`
+                        }
+                    </div>
+                `;
+                const unlinkBtn = card.querySelector('.verify-conn-btn.disconnect');
+                if (unlinkBtn) {
+                    unlinkBtn.addEventListener('click', async (e) => {
+                        e.stopPropagation();
+                        if (!confirm(`Unlink your ${cfg.name} account?`)) return;
+                        try {
+                            const r = await fetch(`/api/auth/connections/${provider}/unlink`, { method: 'POST' });
+                            if (r.ok) {
+                                showToast(`${cfg.name} unlinked.`);
+                                await loadConnections();
+                            }
+                        } catch (e) {
+                            showToast('Failed to unlink.', true);
+                        }
+                    });
+                }
+                grid.appendChild(card);
+            }
+        }
+
+        function removeConnectionFromLinks(provider) {
+            const idx = linksList.findIndex(l => l.type === 'connection' && l.provider === provider);
+            if (idx !== -1) {
+                linksList.splice(idx, 1);
+                renderLinksList();
+                markDirty();
+            }
+        }
 
         // Banner selection input toggle
         function toggleBannerInput(type) {
@@ -1097,6 +1349,123 @@
                 spotifyDesc.innerHTML = `${nameDisplay} &bull; Live track is visible to visitors.`;
             } else {
                 spotifyDesc.innerHTML = `${nameDisplay} &bull; Enable the toggle below to share your live track.`;
+            }
+        }
+
+        function formatTime(ms) {
+            const totalSec = Math.max(0, Math.floor(ms / 1000));
+            const min = Math.floor(totalSec / 60);
+            const sec = totalSec % 60;
+            return `${min}:${String(sec).padStart(2, '0')}`;
+        }
+
+        function setSpotifyLayout(layout) {
+            document.querySelectorAll('.layout-option').forEach(el => {
+                const isActive = el.dataset.layout === layout;
+                el.style.borderColor = isActive ? 'var(--accent, #5865f2)' : 'var(--border)';
+                el.style.background = isActive ? 'rgba(88,101,242,0.1)' : 'rgba(255,255,255,0.04)';
+                const radio = el.querySelector('input[type="radio"]');
+                if (radio) radio.checked = isActive;
+            });
+            updatePreview(layout);
+        }
+
+        let cachedTrack = null;
+
+        async function fetchCurrentTrack() {
+            try {
+                const uid = currentProfile?.userId || currentProfile?.user_id;
+                if (!uid) return null;
+                const res = await fetch('/api/spotify/currently-playing?userId=' + encodeURIComponent(uid) + '&admin=1');
+                if (!res.ok) return null;
+                const data = await res.json();
+                return data.currentlyListening || null;
+            } catch {
+                return null;
+            }
+        }
+
+        function escAttr(v) {
+            return String(v || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        }
+
+        function renderPreviewHtml(layout, track) {
+            if (!track || !track.isPlaying) {
+                return '<div style="padding:20px;text-align:center;color:var(--muted);font-size:13px;">Play a song on Spotify to see the preview.</div>';
+            }
+            const esc = escAttr;
+            const nowMs = (track.progressMs || 0) + (Date.now() - (track.fetchedAt || Date.now()));
+            const boundedMs = Math.min(nowMs, track.durationMs || 1);
+            const pct = track.durationMs ? Math.min(100, (boundedMs / track.durationMs) * 100) : 0;
+            if (layout === 'minimal') {
+                return '<div class="listening-card" style="margin:0;">'
+                    + '<div style="display:flex;align-items:center;gap:12px;padding:10px 16px;text-decoration:none;color:inherit;">'
+                    + '<img src="' + esc(track.albumArt) + '" alt="" style="width:32px;height:32px;border-radius:8px;object-fit:cover;flex-shrink:0;">'
+                    + '<div style="flex:1;min-width:0;display:flex;align-items:center;gap:8px;">'
+                    + '<div style="font-size:13px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(track.title) + '</div>'
+                    + '<div style="font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(track.artist) + '</div>'
+                    + '</div>'
+                    + '<i class="fa-brands fa-spotify" style="color:#1DB954;font-size:16px;flex-shrink:0;"></i>'
+                    + '</div>'
+                    + '<div style="padding:0 16px 8px;">'
+                    + '<div style="width:100%;height:4px;border-radius:999px;background:rgba(255,255,255,0.12);overflow:hidden;">'
+                    + '<div style="height:100%;border-radius:inherit;background:var(--accent, #5865F2);width:' + pct + '%;"></div>'
+                    + '</div></div></div>';
+            } else if (layout === 'clean') {
+                return '<div class="listening-card" style="margin:0;">'
+                    + '<div style="display:flex;align-items:center;gap:14px;padding:14px 18px;text-decoration:none;color:inherit;">'
+                    + '<img src="' + esc(track.albumArt) + '" alt="" style="width:48px;height:48px;border-radius:12px;object-fit:cover;flex-shrink:0;">'
+                    + '<div style="flex:1;min-width:0;">'
+                    + '<div style="font-size:14px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(track.title) + '</div>'
+                    + '<div style="font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:6px;">' + esc(track.artist) + '</div>'
+                    + '<div style="display:flex;align-items:center;gap:8px;">'
+                    + '<div style="flex:1;height:4px;border-radius:999px;background:rgba(255,255,255,0.12);overflow:hidden;">'
+                    + '<div style="height:100%;border-radius:inherit;background:var(--accent, #5865F2);width:' + pct + '%;"></div>'
+                    + '</div>'
+                    + '<div style="display:flex;gap:4px;font-size:11px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--muted);">'
+                    + '<span style="color:#fff;">' + esc(formatTime(boundedMs)) + '</span>/<span>' + esc(formatTime(track.durationMs)) + '</span>'
+                    + '</div></div></div>'
+                    + '<div style="flex-shrink:0;display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:rgba(29,185,84,0.1);">'
+                    + '<i class="fa-brands fa-spotify" style="color:#1DB954;font-size:18px;"></i>'
+                    + '</div></div></div>';
+            }
+            const pct2 = track.durationMs ? Math.min(100, (boundedMs / track.durationMs) * 100) : 0;
+            return '<div class="listening-card" style="margin:0;">'
+                + '<div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 20px;">'
+                + '<div style="display:inline-flex;align-items:center;gap:10px;font-weight:700;"><i class="fa-brands fa-spotify" style="color:#1DB954;"></i> Currently Listening</div>'
+                + '<div style="display:flex;gap:4px;align-items:center;">'
+                + '<span style="width:4px;height:14px;border-radius:999px;background:rgba(255,255,255,0.35);"></span>'
+                + '<span style="width:4px;height:14px;border-radius:999px;background:rgba(255,255,255,0.35);"></span>'
+                + '<span style="width:4px;height:14px;border-radius:999px;background:rgba(255,255,255,0.35);"></span>'
+                + '</div></div>'
+                + '<div style="display:flex;align-items:center;gap:16px;padding:16px 20px;text-decoration:none;color:inherit;">'
+                + '<img src="' + esc(track.albumArt) + '" alt="" style="width:72px;height:72px;border-radius:16px;object-fit:cover;flex-shrink:0;">'
+                + '<div style="min-width:0;"><div style="font-size:16px;font-weight:700;color:#fff;margin-bottom:6px;">' + esc(track.title) + '</div>'
+                + '<div style="color:var(--muted);font-size:14px;">' + esc(track.artist) + '</div></div>'
+                + '<i class="fa-solid fa-play" style="color:var(--accent, #5865F2);font-size:20px;"></i>'
+                + '</div>'
+                + '<div style="padding:0 20px 16px;">'
+                + '<div style="width:100%;height:6px;border-radius:999px;background:rgba(255,255,255,0.12);overflow:hidden;">'
+                + '<div style="width:' + pct2 + '%;height:100%;border-radius:inherit;background:var(--accent, #5865F2);"></div>'
+                + '</div>'
+                + '<div style="display:flex;justify-content:space-between;margin-top:8px;font-size:12px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--muted);">'
+                + '<span style="color:#fff;">' + esc(formatTime(boundedMs)) + '</span><span>' + esc(formatTime(track.durationMs)) + '</span>'
+                + '</div></div>'
+                + '<div style="padding:0 20px 20px;">'
+                + '<span style="display:inline-flex;align-items:center;gap:8px;color:var(--accent, #5865F2);font-weight:700;">'
+                + '<i class="fa-brands fa-spotify"></i> Open on Spotify</span>'
+                + '</div></div>';
+        }
+
+        function updatePreview(layout) {
+            const wrap = document.getElementById('spotify-layout-preview');
+            if (!wrap) return;
+            const wrapParent = document.getElementById('spotify-layout-preview-wrap');
+            if (!wrapParent || wrapParent.style.display === 'none') return;
+            if (cachedTrack) {
+                wrap.innerHTML = renderPreviewHtml(layout, cachedTrack);
+            } else {
+                wrap.innerHTML = '<div style="padding:20px;text-align:center;color:var(--muted);font-size:13px;">Loading preview...</div>';
             }
         }
 
@@ -1272,6 +1641,19 @@
             openCustomDialog();
         });
 
+        document.getElementById('verify-account-btn').addEventListener('click', () => {
+            renderVerifyAccounts();
+            dialogBackdrop.style.display = 'flex';
+            presetDialog.style.display = 'none';
+            customDialog.style.display = 'none';
+            document.getElementById('verify-dialog').style.display = 'block';
+        });
+
+        document.getElementById('verify-cancel-btn').addEventListener('click', () => {
+            dialogBackdrop.style.display = 'none';
+            document.getElementById('verify-dialog').style.display = 'none';
+        });
+
         function closeModal() {
             dialogBackdrop.style.display = 'none';
             presetDialog.style.display = 'none';
@@ -1438,12 +1820,14 @@
                 featured: isFeatured,
                 showAvatarDecoration: showDecoration,
                 hobbies: selectedHobbies,
-                links: linksList,
+                links: linksList.filter(l => l.type !== 'connection'),
                 music: {
                     spotifyEmbed,
                     soundcloudEmbed,
                     currentlyListeningEnabled: isListeningEnabled
-                }
+                },
+                verifiedOrder: getLinkOrder(),
+                spotifyListeningLayout: document.querySelector('input[name="spotify-layout"]:checked')?.value || 'card'
             };
 
             try {
@@ -1459,6 +1843,7 @@
                 } else {
                     showToast('Profile saved and sitemap updated successfully!');
                     markClean();
+                    console.log('[DEBUG] Saved layout:', bodyData.spotifyListeningLayout);
                     loadProfile(); // reload fresh state
                 }
             } catch(e) {
@@ -1501,14 +1886,25 @@
             }
         });
 
-        // Parse query params for Spotify oauth feedback
+        // Parse query params for OAuth feedback
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('spotify') === 'success') {
             showToast('Spotify successfully connected!');
-            // Clean URL query params without reloading
             window.history.replaceState({}, document.title, window.location.pathname);
         } else if (urlParams.get('spotify') === 'error') {
             showToast('Failed to connect Spotify account.', true);
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+        if (urlParams.get('connection') === 'success') {
+            showToast('Account verified successfully!');
+            window.history.replaceState({}, document.title, window.location.pathname);
+            // Reload connections to show verified status
+            loadConnections();
+        } else if (urlParams.get('connection') === 'error') {
+            showToast('Failed to verify account.', true);
+            window.history.replaceState({}, document.title, window.location.pathname);
+        } else if (urlParams.get('connection') === 'taken') {
+            showToast('This account is already linked by another user.', true);
             window.history.replaceState({}, document.title, window.location.pathname);
         }
 
@@ -1560,6 +1956,33 @@
         // Restore collapsed sections from localStorage
         restoreSections();
 
+        // Layout option click handler
+        document.addEventListener('click', (e) => {
+            const opt = e.target.closest('.layout-option');
+            if (opt) {
+                const layout = opt.dataset.layout;
+                setSpotifyLayout(layout);
+                markDirty();
+                const preview = document.getElementById('spotify-layout-preview');
+                if (preview && preview.style.display === 'none') {
+                    preview.style.display = 'block';
+                    const chevron = document.getElementById('preview-chevron');
+                    if (chevron) chevron.style.transform = 'rotate(0deg)';
+                }
+            }
+        });
+
+        // Preview toggle
+        document.getElementById('preview-toggle')?.addEventListener('click', () => {
+            const wrap = document.getElementById('spotify-layout-preview');
+            const chevron = document.getElementById('preview-chevron');
+            if (!wrap) return;
+            const isHidden = wrap.style.display === 'none';
+            wrap.style.display = isHidden ? 'block' : 'none';
+            chevron.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(-90deg)';
+            if (isHidden) updatePreview(document.querySelector('input[name="spotify-layout"]:checked')?.value || 'card');
+        });
+
         // Ctrl+S to save
         document.addEventListener('keydown', (e) => {
             if ((e.ctrlKey || e.metaKey) && e.key === 's') {
@@ -1584,6 +2007,15 @@
         document.querySelectorAll('.toggle-card').forEach(el => {
             el.addEventListener('click', markDirty);
         });
+
+        // Live preview refresh
+        setInterval(() => {
+            const preview = document.getElementById('spotify-layout-preview');
+            if (preview && preview.style.display !== 'none' && cachedTrack) {
+                const currentLayout = document.querySelector('input[name="spotify-layout"]:checked')?.value || 'card';
+                preview.innerHTML = renderPreviewHtml(currentLayout, cachedTrack);
+            }
+        }, 1000);
 
         // Start initialization
         loadProfile();

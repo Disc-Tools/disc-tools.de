@@ -73,6 +73,15 @@
                     </a>
                 </section>
 
+                <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
+                    <a href="/invite/bot/disc-tools/" style="display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);text-decoration:none;padding:8px 16px;background:rgba(88,101,242,.1);border:1px solid rgba(88,101,242,.2);border-radius:8px;transition:.2s;" onmouseover="this.style.background='rgba(88,101,242,.2)'" onmouseout="this.style.background='rgba(88,101,242,.1)'">
+                        <i class="fa-brands fa-discord" style="color:#5865F2;"></i> Also available as <code style="font-size:12px;">/avatar</code>
+                    </a>
+                    <a href="/invite/bot/disc-tools/" style="display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);text-decoration:none;padding:8px 16px;background:rgba(88,101,242,.1);border:1px solid rgba(88,101,242,.2);border-radius:8px;transition:.2s;" onmouseover="this.style.background='rgba(88,101,242,.2)'" onmouseout="this.style.background='rgba(88,101,242,.1)'">
+                        <i class="fa-brands fa-discord" style="color:#5865F2;"></i> Also available as <code style="font-size:12px;">/banner</code>
+                    </a>
+                </div>
+
                 <div class="input-card">
                     <div class="input-group">
                         <input type="text" id="userId" placeholder="Paste Discord User ID here...">
@@ -100,6 +109,14 @@
                             <div class="format-tabs" id="format-tabs"></div>
                         </div>
                         <div class="cdn-grid" id="cdn-matrix"></div>
+                    </div>
+
+                    <div class="data-section" id="banner-section" style="display:none;">
+                        <div class="data-section-title">
+                            <i class="fa-solid fa-flag"></i> Banner CDN Links
+                            <div class="format-tabs" id="banner-format-tabs"></div>
+                        </div>
+                        <div class="cdn-grid" id="banner-cdn-matrix"></div>
                     </div>
                 </div>
 

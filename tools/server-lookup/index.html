@@ -79,14 +79,18 @@
                     </a>
                 </section>
 
+                <a href="/invite/bot/disc-tools/" style="display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);text-decoration:none;margin-bottom:16px;padding:8px 16px;background:rgba(88,101,242,.1);border:1px solid rgba(88,101,242,.2);border-radius:8px;transition:.2s;" onmouseover="this.style.background='rgba(88,101,242,.2)'" onmouseout="this.style.background='rgba(88,101,242,.1)'">
+                    <i class="fa-brands fa-discord" style="color:#5865F2;"></i> Also available as <code style="font-size:12px;">/server-lookup</code> on Discord
+                </a>
+
                 <div class="input-card">
                     <div class="input-group">
-                        <input type="text" id="serverInput" placeholder="Enter Discord Server ID...">
+                        <input type="text" id="server-input" placeholder="Enter Discord Server ID...">
                         <button onclick="lookupServer()">Lookup</button>
                     </div>
                 </div>
 
-                <div id="result" class="result-area">
+                <div id="server-result" class="result-area">
                     <div class="empty-state">
                         <i class="fa-solid fa-server"></i>
                         <p>Enter a Server ID to fetch public information from Discord's Widget API.</p>
@@ -139,7 +143,7 @@
     </footer>
 
 
-    <script src="/js/server-lookup.js" defer></script>
+    <script src="/js/server-lookup.js?v=1" defer></script>
     <script src="/js/main.js?v=3" defer></script>
 </body>
 
