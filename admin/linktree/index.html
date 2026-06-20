@@ -1111,25 +1111,6 @@
                 reddit: 'fa-brands fa-reddit'
             };
 
-            const presetColors = {
-                instagram: '#E4405F',
-                twitter: '#1DA1F2',
-                github: '#4078c0',
-                youtube: '#FF0000',
-                twitch: '#9146FF',
-                tiktok: '#000000',
-                linkedin: '#0A66C2',
-                discord: '#5865F2',
-                steam: '#1b2838',
-                spotify: '#1DB954',
-                soundcloud: '#FF5500',
-                reddit: '#FF4500'
-            };
-
-            linksList.forEach(link => {
-                const card = document.createElement('div');
-                card.className = 'link-edit-card';
-                card.dataset.id = link.id;
 
                 let iconHtml = '';
                 let title = '';
@@ -1138,8 +1119,7 @@
                 if (link.type === 'connection') {
                     const verifyCfg = VERIFY_PROVIDERS[link.provider];
                     const iconClass = verifyCfg?.icon || 'fa-solid fa-shield-halved';
-                    const color = verifyCfg?.color || '#2ecc71';
-                    iconHtml = `<i class="${iconClass}" style="font-size:20px; color:${color};"></i>`;
+                    iconHtml = `<i class="${iconClass}" style="font-size:20px; color:#5865F2;"></i>`;
                     title = (verifyCfg?.name || link.provider) + ' <span style="color:#2ecc71;font-size:11px;font-weight:600;">✓ Verified</span>';
                     url = `@${link.provider_username || ''}`;
                     card.innerHTML = `
@@ -1154,8 +1134,7 @@
                     `;
                 } else if (link.type === 'preset') {
                     const iconClass = presetIcons[link.platform] || 'fa-solid fa-link';
-                    const color = presetColors[link.platform] || '#5865F2';
-                    iconHtml = `<i class="${iconClass}" style="font-size:20px; color:${color};"></i>`;
+                    iconHtml = `<i class="${iconClass}" style="font-size:20px; color:#5865F2;"></i>`;
                     title = link.platform.charAt(0).toUpperCase() + link.platform.slice(1);
                     if (title === 'Twitter') title = 'Twitter/X';
                     url = `@${link.username}`;
