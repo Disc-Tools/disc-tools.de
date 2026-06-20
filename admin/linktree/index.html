@@ -1112,6 +1112,9 @@
             };
 
             linksList.forEach(link => {
+                const card = document.createElement('div');
+                card.className = 'link-edit-card';
+                card.dataset.id = link.id;
                 let iconHtml = '';
                 let title = '';
                 let url = '';
