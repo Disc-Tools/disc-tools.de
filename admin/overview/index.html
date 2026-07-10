@@ -209,12 +209,11 @@
             try {
                 const res = await fetch('/api/admin/check');
                 if (!res.ok) { window.location.href = '/'; return; }
-                
-                const userRes = await fetch('/api/auth/me/refresh');
-                const userData = await userRes.json();
-                if (userData.authenticated) {
-                    const u = userData.user;
-                    const highestRole = u.guild_role_data?.[0]?.name || 'Administrator';
+                const data = await res.json();
+
+                const u = data.user;
+                if (u) {
+                    const highestRole = data.highestRole || 'Administrator';
                     let avatarUrl = `https://cdn.discordapp.com/embed/avatars/${(u.discriminator || 0) % 5}.png`;
                     if (u.avatar) {
                         const ext = u.avatar.startsWith('a_') ? 'gif' : 'png';

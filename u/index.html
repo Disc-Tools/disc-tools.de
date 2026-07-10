@@ -757,26 +757,47 @@
                     if (bioArea && fu.bio) {
                         bioArea.textContent = fu.bio;
                     }
+                }).catch(() => {});
 
-                    // Guild tag (nickname + roles)
+                // Fetch premium status
+                fetch('/api/premium/status/' + user.id).then(r => r.json()).then(p => {
+                    const el = document.getElementById('premium-status');
+                    if (!el) return;
+                    if (p.premium) {
+                        const since = new Date(p.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+                        const until = p.expires_at ? new Date(p.expires_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : 'Lifetime';
+                        el.innerHTML = `<span style="color:#5865F2;font-weight:600;">Active</span> <span style="color:var(--muted);font-size:12px;">since ${since} • until ${until}</span>`;
+                    } else {
+                        el.innerHTML = `<span style="color:var(--muted)">Inactive</span> <a href="/premium/" style="color:var(--accent);font-size:12px;text-decoration:none;">Get Premium</a>`;
+                    }
+                }).catch(() => {
+                    const el = document.getElementById('premium-status');
+                    if (el) el.textContent = 'Unavailable';
+                });
+
+                // Fetch guild profile data (roles, badges) from lightweight endpoint
+                fetch('/api/auth/guild-profile').then(r => r.json()).then(gp => {
+                    if (!gp.ok) return;
+
                     const guildArea = document.getElementById('guild-tag-area');
                     if (guildArea) {
-                        if (fu.guild_nick || (fu.guild_role_data && fu.guild_role_data.length > 0) || (fu.guild_roles && fu.guild_roles.length > 0)) {
-                            const nick = fu.guild_nick ? escapeHtml(fu.guild_nick) : null;
-                            let rolesHtml = '';
-                            if (fu.guild_role_data && fu.guild_role_data.length > 0) {
-                                rolesHtml = `<div class="guild-roles">${fu.guild_role_data.map(r => {
-                                    const bg = r.color ? r.color + '30' : 'rgba(255,255,255,0.08)';
-                                    const col = r.color || '#ccc';
-                                    return `<span class="guild-role-pill" style="background:${bg};color:${col}">${escapeHtml(r.name)}</span>`;
-                                }).join('')}</div>`;
-                            }
-                            guildArea.innerHTML = `<div class="guild-tag">${nick ? `<strong>${nick}</strong> ` : ''}<span style="color:var(--muted);font-size:12px;">on Disc-Tools server</span></div>${rolesHtml}`;
+                        const nick = gp.guild_nick || null;
+                        let parts = [];
+                        if (nick) parts.push(`<strong>${escapeHtml(nick)}</strong>`);
+                        parts.push('<span style="color:var(--muted);font-size:12px;">on Disc-Tools server</span>');
+                        let rolesHtml = '';
+                        if (gp.guild_role_data && gp.guild_role_data.length > 0) {
+                            rolesHtml = `<div class="guild-roles">${gp.guild_role_data.map(r => {
+                                const bg = r.color ? r.color + '30' : 'rgba(255,255,255,0.08)';
+                                const col = r.color || '#ccc';
+                                return `<span class="guild-role-pill" style="background:${bg};color:${col}">${escapeHtml(r.name)}</span>`;
+                            }).join('')}</div>`;
                         }
+                        guildArea.innerHTML = `<div class="guild-tag">${parts.join(' ')}</div>${rolesHtml}`;
                     }
 
-                    // Profile badges (from profile endpoint)
-                    if (fu.profile_badges && Array.isArray(fu.profile_badges) && fu.profile_badges.length) {
+                    // Profile badges
+                    if (gp.profile_badges && Array.isArray(gp.profile_badges) && gp.profile_badges.length) {
                         let container = document.getElementById('profile-badges');
                         if (!container) {
                             const chip = document.querySelector('.profile-status-chip');
@@ -793,7 +814,7 @@
                                 const bid = img.getAttribute('data-badge-id') || '';
                                 if (bid) existing.add(bid);
                             });
-                            fu.profile_badges.forEach(b => {
+                            gp.profile_badges.forEach(b => {
                                 if (!b.icon || existing.has(b.id)) return;
                                 const img = document.createElement('img');
                                 img.src = `https://cdn.discordapp.com/badge-icons/${b.icon}.png`;
@@ -993,6 +1014,10 @@
                                         <div class="profile-stat">
                                             <div class="profile-stat-label">Active Nitro</div>
                                             <div class="profile-stat-value" style="font-size:16px;" id="nitro-status">${escapeHtml(getNitroLabel(user))}</div>
+                                        </div>
+                                        <div class="profile-stat">
+                                            <div class="profile-stat-label">Disc-Tools Premium</div>
+                                            <div class="profile-stat-value" style="font-size:16px;" id="premium-status">Loading...</div>
                                         </div>
                                     </div>
 

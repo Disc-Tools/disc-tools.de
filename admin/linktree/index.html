@@ -949,9 +949,9 @@
         // Verify Authentication and Load Profile Data
         async function loadProfile() {
             try {
-                const roleRes = await fetch('/api/auth/me/refresh');
-                const roleData = await roleRes.json();
-                const highestRole = roleData.authenticated ? (roleData.user.guild_role_data?.[0]?.name || 'Team Member') : 'Team Member';
+                const checkRes = await fetch('/api/admin/check');
+                const checkData = await checkRes.json();
+                const highestRole = checkData.highestRole || 'Team Member';
 
                 const res = await fetch('/api/admin/linktree');
                 if (!res.ok) { window.location.href = '/'; return; }

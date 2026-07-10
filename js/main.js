@@ -580,6 +580,28 @@ function updateUIForAuth(user) {
             })
             .catch(() => {});
 
+        // Check Premium Status asynchronously
+        fetch('/api/premium/status/' + user.id, { cache: 'no-store' })
+            .then(res => res.json())
+            .then(data => {
+                const nav = document.querySelector('.nav-links');
+                if (!nav) return;
+                let existing = nav.querySelector('.nav-premium-link');
+                if (data.premium) {
+                    if (existing) existing.remove();
+                    return;
+                }
+                if (!existing) {
+                    const link = document.createElement('a');
+                    link.href = '/premium/';
+                    link.className = 'nav-link nav-premium-link';
+                    link.innerHTML = '<i class="fa-solid fa-crown" style="color:#F1C40F;"></i> Premium';
+                    link.style.cssText = 'color:var(--accent)!important;font-weight:600';
+                    nav.appendChild(link);
+                }
+            })
+            .catch(() => {});
+
         // Check Partner Status asynchronously
         fetch('/api/user/partner', { cache: 'no-store' })
             .then(res => res.json())
