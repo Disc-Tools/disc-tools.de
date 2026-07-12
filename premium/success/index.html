@@ -12,13 +12,21 @@
     <script defer src="https://umami.disc-tools.de/script.js" data-website-id="0cf82497-80c8-42a2-b6e4-8a8ae179d1fe"></script>
     <script>
     (async () => {
+        const isGift = new URLSearchParams(window.location.search).has('gift');
         try {
             const auth = await fetch('/api/auth/me', { cache: 'no-store' });
             const data = await auth.json();
             if (!data.authenticated || !data.user) { window.location.href = '/premium/'; return; }
-            const status = await fetch(`/api/premium/status/${data.user.id}`, { cache: 'no-store' });
-            const prem = await status.json();
-            if (!prem.premium || !prem.active) { window.location.href = '/premium/'; return; }
+            if (!isGift) {
+                const status = await fetch(`/api/premium/status/${data.user.id}`, { cache: 'no-store' });
+                const prem = await status.json();
+                if (!prem.premium || !prem.active) { window.location.href = '/premium/'; return; }
+            } else {
+                document.getElementById('success-title').textContent = 'Gift Sent!';
+                document.getElementById('success-text').innerHTML = 'Your gift has been sent. The recipient will receive a DM with their Premium perks and the role will be assigned automatically if they are on the server.';
+                document.getElementById('success-btn').innerHTML = 'Back to Premium <i class="fa-solid fa-arrow-right"></i>';
+                document.getElementById('success-btn').href = '/premium/';
+            }
         } catch { window.location.href = '/premium/'; }
     })();
     </script>
@@ -62,11 +70,11 @@
         <span class="login-badge"></span>
     </header>
     <main>
-        <div class="success-wrap">
+        <div class="success-wrap" id="success-wrap">
             <div class="check"><i class="fa-solid fa-circle-check"></i></div>
-            <h1>Welcome to Premium!</h1>
-            <p>Your subscription is active. Join the Discord server and you'll automatically get the Premium role. You can now use <code>/alt</code> and premium quote GIFs.</p>
-            <a href="/tools/" class="btn-done">Start Using Tools <i class="fa-solid fa-arrow-right"></i></a>
+            <h1 id="success-title">Welcome to Premium!</h1>
+            <p id="success-text">Your subscription is active. Join the Discord server and you'll automatically get the Premium role. You can now use <code>/alt</code> and premium quote GIFs.</p>
+            <a href="/tools/" class="btn-done" id="success-btn">Start Using Tools <i class="fa-solid fa-arrow-right"></i></a>
         </div>
     </main>
     <footer>
@@ -103,6 +111,7 @@
                 <ul class="footer-links">
                     <li><a href="/legal/privacy-policy/">Privacy Policy</a></li>
                     <li><a href="/legal/terms-of-service/">Terms of Service</a></li>
+                    <li><a href="/legal/refund-policy/">Refund Policy</a></li>
                     <li><a href="/legal/imprint/">Imprint</a></li>
                 </ul>
             </div>

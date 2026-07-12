@@ -44,27 +44,52 @@
       <h2>6. Username history</h2>
       <p>Our Discord bot monitors username changes of server members. When a member changes their Discord username, the old and new usernames are stored together with a timestamp. This data is used to provide the Username History tool on our website, which allows anyone to look up previous usernames of a Discord user by their user ID. Legal basis: Art. 6(1)(f) GDPR (provision of a useful service feature).</p>
 
-      <h2>7. Spotify OAuth and music features</h2>
+      <h2>7. Premium subscriptions and Stripe payments</h2>
+      <p>When you purchase a Premium subscription or send a Premium gift, payment processing is handled entirely by <strong>Stripe</strong>. We do not see, store or process your credit card number, bank details or any other full payment instrument data. The following data is transmitted to Stripe and processed by them as a data processor:</p>
+      <ul>
+        <li>Discord user ID (as <code>client_reference_id</code>)</li>
+        <li>Stripe customer ID (assigned by Stripe, stored in our database)</li>
+        <li>Stripe subscription ID (assigned by Stripe, stored in our database)</li>
+        <li>Payment amount and currency</li>
+        <li>Email address (if provided to Stripe during checkout)</li>
+      </ul>
+      <p>The following data is stored in our database for the duration of the subscription and up to 3 years after cancellation for tax and accounting purposes (Art. 6(1)(c) GDPR): Discord user ID, Stripe customer ID, Stripe subscription ID, subscription status (<code>active</code>), start date and expiry date. Stripe's privacy policy applies to all data processed by Stripe: <a href="https://stripe.com/privacy" target="_blank">https://stripe.com/privacy</a>.</p>
+
+      <h2>8. Spotify OAuth and music features</h2>
       <p>If team members connect Spotify, we store a Spotify refresh token to display currently playing tracks. Spotify track URLs and SoundCloud URLs may also be shown on public profiles. Connection is voluntary and can be deleted on request.</p>
 
-      <h2>8. Cookies and local storage</h2>
-      <ul><li>Login cookie: httpOnly, secure, SameSite=Lax, up to 7 days.</li><li>Cookie consent and UI settings may be stored locally in your browser.</li><li>Cloudflare may set technically necessary security cookies.</li></ul>
+      <h2>9. Cookies and local storage</h2>
+        <ul><li>Login token (JWT): httpOnly, secure, SameSite=Strict, up to 7 days.</li><li>Discord OAuth tokens (access + refresh): httpOnly, secure, SameSite=Lax, up to 7 days (required for OAuth redirect flow).</li><li>Session ID: httpOnly, secure, SameSite=Strict, up to 7 days.</li><li>Cookie consent and UI settings may be stored locally in your browser.</li><li>Cloudflare may set technically necessary security cookies.</li></ul>
 
-      <h2>9. Analytics</h2>
+      <h2>10. Analytics</h2>
       <p>We use self-hosted Umami Analytics at umami.Disc-Tools. We do not use Google Analytics. Umami helps measure usage and improve the service on the basis of legitimate interests, Art. 6(1)(f) GDPR.</p>
 
-      <h2>10. Fonts and external content</h2>
+      <h2>11. Fonts and external content</h2>
       <p>Fonts are served locally by Disc-Tools; no Google Fonts are loaded from Google servers. Icons are loaded via Font Awesome/CDNJS. External embeds or services may involve Discord, Spotify, SoundCloud, Cloudflare and Umami.</p>
 
-      <h2>11. Contact, partnership requests and admin features</h2>
+      <h2>12. Contact, partnership requests and admin features</h2>
       <p>For partnership requests we process Discord ID, username, avatar, server/project information, website, description and message content. Admin logs and moderation data are visible only to authorized administrators.</p>
 
-      <h2>12. Your rights</h2>
+      <h2>13. Your rights</h2>
       <p>Under the GDPR you have rights of access, rectification, erasure, restriction, portability and objection. You may also complain to a data protection authority. Requests: <a href="mailto:info@disc-tools.de">info@disc-tools.de</a>.</p>
 
-      <h2>13. Deletion</h2>
-      <p>You may request deletion of stored profile, OAuth, Spotify, partnership, username history and verification data by email. Legal retention obligations and security interests may prevent immediate deletion of some log data.</p>
-      <p class="muted">Last updated: 8 June 2026</p>
+      <h2>14. Deletion</h2>
+      <p>You may request deletion of stored profile, OAuth, Spotify, partnership, username history and verification data by email. Legal retention obligations and security interests may prevent immediate deletion of some log data. Premium payment data (Stripe customer/subscription IDs and transaction records) are retained for the statutory retention period (up to 10 years for tax purposes).</p>
+
+      <h2>15. GIF uploads</h2>
+      <p>When you upload a GIF to the GIF Upload feature, the following data is processed:</p>
+      <ul>
+        <li><strong>Discord user ID</strong> – to associate the GIF with your account (Art. 6(1)(b) GDPR)</li>
+        <li><strong>GIF file</strong> – stored on our server (Hetzner, Helsinki) for display and sharing (Art. 6(1)(b) GDPR)</li>
+        <li><strong>GIF name, tags and NSFW flag</strong> – provided by you for categorization (Art. 6(1)(b) GDPR)</li>
+        <li><strong>File size, dimensions, upload timestamp</strong> – automatically collected technical metadata (Art. 6(1)(f) GDPR)</li>
+        <li><strong>View count</strong> – aggregated usage statistic (Art. 6(1)(f) GDPR)</li>
+        <li><strong>Moderation status, moderator ID and reason</strong> – only for moderated/blocked GIFs, visible to authorized administrators (Art. 6(1)(f) GDPR)</li>
+      </ul>
+      <p><strong>Date of birth</strong> – If you choose to view NSFW content, we ask for your date of birth to verify you are 18 or older. This is stored securely and used solely for age verification purposes. Legal basis: Art. 6(1)(c) GDPR (legal obligation to protect minors). You may request deletion of your date of birth at any time, which will result in NSFW content being hidden.</p>
+      <p><strong>Storage duration:</strong> GIFs are stored until you delete them or until they are removed due to inactivity or a violation of our Terms of Service. Date of birth data is retained until you request its deletion.</p>
+      <p><strong>Public visibility:</strong> Uploaded GIFs (including name, tags and NSFW status) are publicly visible on the website. Your Discord user ID is displayed as the uploader identifier.</p>
+      <p class="muted">Last updated: 12 July 2026</p>
     </article>
   </main>
 
