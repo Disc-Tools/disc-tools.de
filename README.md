@@ -66,7 +66,7 @@ Twelve utilities in three categories:
 - Service worker for offline caching
 - Open Graph / Twitter Cards / JSON-LD for rich embeds
 
-**Backend** (served separately, not part of this repository)
+**Backend**
 - Node.js / Express 5
 - PostgreSQL
 - Discord OAuth2 with JWT sessions
@@ -76,10 +76,16 @@ Twelve utilities in three categories:
 
 ```
 ├── index.html                 # Home page
-├── 404.html / 500.html        # Error pages
+├── 404.html                   # Error page
 ├── about/                     # About page
 ├── admin/                     # OAuth-protected admin panel
 ├── announcements/             # Site announcements
+├── api/                       # Express backend
+│   ├── index.js               # Server entry point (port 3000)
+│   ├── db.js                  # PostgreSQL connection pool
+│   ├── middleware/            # Auth, CORS, rate limiting, VPN check
+│   ├── routes/                # API route handlers
+│   └── utils/                 # Discord, IP and Spotify helpers
 ├── blocked/                   # Banned / VPN blocked pages
 ├── gifs/                      # GIF gallery
 ├── guides/                    # Guides overview
@@ -90,7 +96,7 @@ Twelve utilities in three categories:
 ├── profile/                   # User profile
 ├── security-articles/         # Security content
 ├── success/                   # Post-login/logout pages
-├── team/                      # Team member pages
+├── team/                      # Team page
 ├── tips/                      # Formatting + shortcuts
 ├── tools/                     # All tools grid
 ├── static/
@@ -114,7 +120,35 @@ cd disc-tools.de
 # e.g. with nginx, point `root` at this directory
 ```
 
-The backend API is not included in this repository.
+**Backend:**
+
+```bash
+cd api
+npm install
+cp .env.example .env   # fill in your credentials
+node index.js
+```
+
+### Environment Variables
+
+The API reads its configuration from `api/.env`:
+
+| Variable | Description |
+|----------|-------------|
+| `PORT` | API server port (default: 3000) |
+| `HOST` | Bind address (default: 127.0.0.1) |
+| `JWT_SECRET` | Secret for signing JWT tokens |
+| `DISCORD_CLIENT_ID` / `DISCORD_CLIENT_SECRET` | Discord OAuth2 credentials |
+| `DISCORD_REDIRECT_URI` | OAuth2 callback URL |
+| `DISCORD_BOT_TOKEN` | Discord bot token |
+| `GUILD_ID` | Discord guild ID |
+| `DISCORD_INVITE` | Discord server invite link |
+| `DB_HOST` / `DB_PORT` / `DB_NAME` / `DB_USER` / `DB_PASSWORD` | PostgreSQL connection |
+| `IP_HASH_SALT` | Salt for IP hashing |
+| `SPOTIFY_CLIENT_ID` / `SPOTIFY_CLIENT_SECRET` / `SPOTIFY_REDIRECT_URI` | Spotify OAuth |
+| `TWITCH_CLIENT_ID` / `TWITCH_CLIENT_SECRET` / `TWITCH_REDIRECT_URI` | Twitch OAuth |
+| `GITHUB_CLIENT_ID` / `GITHUB_CLIENT_SECRET` / `GITHUB_REDIRECT_URI` | GitHub OAuth |
+| `GIFS_INTERNAL_SECRET` | Internal secret for the GIFs service |
 
 ## Contributing
 
