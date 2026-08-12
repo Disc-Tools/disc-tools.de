@@ -134,37 +134,6 @@ router.get('/auth/:provider/callback', async (req, res) => {
     const { code, state } = req.query;
     if (!code) return res.status(400).send('No code provided');
 
-    // Bot token generation flow (initiated via /auth/twitch/bot-init)
-    if (provider === 'twitch' && state === 'bot_token_gen') {
-        try {
-            const tokenRes = await axios.post('https://id.twitch.tv/oauth2/token', null, {
-                params: {
-                    client_id: process.env.TWITCH_CLIENT_ID,
-                    client_secret: process.env.TWITCH_CLIENT_SECRET,
-                    grant_type: 'authorization_code',
-                    code,
-                    redirect_uri: process.env.TWITCH_REDIRECT_URI || 'https://disc-tools.de/api/auth/twitch/callback'
-                },
-                headers: { 'Accept': 'application/json' }
-            });
-
-            const { access_token, scope } = tokenRes.data;
-
-            return res.send(`<html><body style="font-family:monospace;padding:2rem;">
-                <h2>✅ Twitch Bot Token</h2>
-                <p>In die <code>.env</code> kopieren:</p>
-                <pre style="background:#f4f4f4;padding:1rem;border-radius:8px;overflow-x:auto;">
-TWITCH_BOT_OAUTH_TOKEN=oauth:${access_token}
-                </pre>
-                <p style="color:#666;">Scopes: ${scope || 'chat:read chat:edit'}</p>
-                <p>Danach: <code>pm2 restart disc-tools-api</code></p>
-            </body></html>`);
-        } catch (err) {
-            console.error('[TWITCH-BOT-TOKEN] Exchange failed:', err.response?.data || err.message);
-            return res.status(500).send('Token exchange failed. Check server logs.');
-        }
-    }
-
     const expectedState = req.cookies.oauth_link_state;
     if (!expectedState || !state || expectedState !== state) {
         return res.status(403).send('Invalid state parameter');
@@ -287,16 +256,6 @@ router.get('/team/profiles/:username/connections', async (req, res) => {
         console.error('[CONNECTIONS] Public fetch failed:', err.message);
         res.json([]);
     }
-});
-
-// --- GET /api/auth/twitch/bot-init - Generate Twitch Chat Bot Token ---
-router.get('/auth/twitch/bot-init', (req, res) => {
-    const clientId = process.env.TWITCH_CLIENT_ID;
-    const redirectUri = process.env.TWITCH_REDIRECT_URI || 'https://disc-tools.de/api/auth/twitch/callback';
-    const scope = 'chat:read+chat:edit';
-    const state = 'bot_token_gen';
-    const url = `https://id.twitch.tv/oauth2/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=${scope}&state=${state}&force_verify=true`;
-    res.redirect(url);
 });
 
 module.exports = router;

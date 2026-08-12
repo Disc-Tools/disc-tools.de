@@ -664,6 +664,27 @@ main#main, main[class] {
     color: var(--text-muted);
     opacity: 0.8;
 }
+.footer-social {
+    display: flex;
+    gap: 10px;
+    margin: 18px 0;
+}
+.footer-social a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border: none;
+    color: var(--text-muted);
+    font-size: 17px;
+    text-decoration: none;
+    transition: color 0.2s, transform 0.15s;
+}
+.footer-social a:hover {
+    color: var(--blurple-soft);
+    transform: translateY(-2px);
+}
 .footer-col h3 {
     font-family: var(--font-mono);
     font-size: 12px;

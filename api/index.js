@@ -59,7 +59,6 @@ app.use('/api', vpnMiddleware);
 const authRoutes = require('./routes/auth');
 const discordRoutes = require('./routes/discord');
 const statsRoutes = require('./routes/stats');
-const adminRoutes = require('./routes/admin');
 const partnersRoutes = require('./routes/partners');
 const profilesRoutes = require('./routes/profiles');
 const verifyRoutes = require('./routes/verify');
@@ -77,7 +76,6 @@ app.use('/api/proxy', proxyRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api', discordRoutes);
 app.use('/api', statsRoutes);
-app.use('/api/admin', adminRoutes);
 app.use('/', partnersRoutes);
 app.use('/api', profilesRoutes);
 app.use('/api', verifyRoutes);
@@ -546,9 +544,48 @@ app.get('/api/user/check-beta', async (req, res) => {
 // Ensure tables exist
 (async () => {
     try {
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS admin_sessions (
+                id SERIAL PRIMARY KEY,
+                user_id TEXT NOT NULL,
+                username TEXT NOT NULL,
+                global_name TEXT,
+                avatar TEXT,
+                session_id UUID NOT NULL UNIQUE,
+                user_agent TEXT,
+                created_at TIMESTAMP DEFAULT NOW(),
+                last_active TIMESTAMP DEFAULT NOW(),
+                revoked BOOLEAN DEFAULT FALSE,
+                refresh_token TEXT
+            )
+        `);
+        await db.query(`ALTER TABLE admin_sessions ADD COLUMN IF NOT EXISTS refresh_token TEXT`);
         await db.query(`ALTER TABLE admin_sessions ADD COLUMN IF NOT EXISTS ip_hash VARCHAR(64)`);
+        await db.query(`CREATE INDEX IF NOT EXISTS idx_admin_sessions_user_id ON admin_sessions(user_id)`);
+        await db.query(`CREATE INDEX IF NOT EXISTS idx_admin_sessions_session_id ON admin_sessions(session_id)`);
     } catch (e) {
-        console.error('[SESSIONS] ip_hash column init failed:', e.message);
+        console.error('[SESSIONS] Table init failed:', e.message);
+    }
+    try {
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS blocked_users (
+                user_id TEXT PRIMARY KEY,
+                username TEXT,
+                blocked_at TIMESTAMP DEFAULT NOW(),
+                blocked_by TEXT
+            )
+        `);
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS blocked_ips (
+                ip_hash TEXT PRIMARY KEY,
+                user_id TEXT NOT NULL,
+                blocked_at TIMESTAMP DEFAULT NOW(),
+                blocked_by TEXT
+            )
+        `);
+        await db.query(`CREATE INDEX IF NOT EXISTS idx_blocked_ips_user_id ON blocked_ips(user_id)`);
+    } catch (e) {
+        console.error('[BLOCKED TABLES] Init failed:', e.message);
     }
     try {
         await db.query(`
