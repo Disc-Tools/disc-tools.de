@@ -403,7 +403,7 @@ router.post('/api/partners/request', authMiddleware, async (req, res) => {
                             { name: 'Discord', value: discordServer || '-', inline: true },
                             { name: 'Website', value: website || '-', inline: true }
                         ],
-                        url: 'https://disc-tools.de/admin/partner/requests/',
+                        url: 'https://admin.disc-tools.de/partners/',
                         footer: { text: 'Disc-Tools Partnership Program' }
                     }]
                 })
