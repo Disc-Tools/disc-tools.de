@@ -465,6 +465,161 @@
     .cta-box { padding: 64px 20px; }
 }
 
+/* ---------- Featured Partner (ServerGPT) — Homepage ---------- */
+.partner-feature-wrap {
+    padding: 28px 0 0;
+}
+.partner-feature-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+.partner-feature-label .partner-feature-ad {
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    text-transform: none;
+    opacity: 0.55;
+}
+.partner-card-featured {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    padding: 20px 22px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    text-decoration: none;
+    overflow: hidden;
+    transition: border-color 0.2s, transform 0.18s var(--ease-out), background-color 0.2s, box-shadow 0.2s;
+}
+.partner-card-featured::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(560px 180px at 22% 0%, rgba(88,101,242,0.10), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+.partner-card-featured:hover {
+    border-color: rgba(88, 101, 242, 0.55);
+    transform: translateY(-2px);
+    background: rgba(88, 101, 242, 0.04);
+    box-shadow: 0 12px 32px rgba(3,6,12,0.35);
+}
+.partner-card-featured:hover::before {
+    opacity: 1;
+}
+.partner-card-featured-icon {
+    flex-shrink: 0;
+    width: 72px;
+    height: 72px;
+    border-radius: 0;
+    background: transparent;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+    position: relative;
+    z-index: 0;
+}
+.partner-card-featured-icon img {
+    width: 72px;
+    height: 72px;
+    object-fit: contain;
+    display: block;
+    filter: drop-shadow(0 2px 10px rgba(0,0,0,0.25));
+}
+.partner-card-featured-copy,
+.partner-card-featured-cta {
+    position: relative;
+    z-index: 1;
+}
+.partner-card-featured-copy {
+    flex: 1;
+    min-width: 0;
+}
+.partner-card-featured-copy h3 {
+    font-family: var(--font-display);
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.25;
+    margin: 0;
+}
+.partner-card-featured-copy p {
+    margin-top: 5px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--text-muted);
+    max-width: 62ch;
+}
+.partner-card-featured-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 10px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--success);
+    background: rgba(78,203,141,0.10);
+    border: 1px solid rgba(78,203,141,0.28);
+    border-radius: 999px;
+    padding: 3px 9px;
+}
+.partner-card-featured-cta {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 42px;
+    padding: 10px 18px;
+    border-radius: 999px;
+    background: var(--blurple);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    white-space: nowrap;
+    transition: background 0.2s, transform 0.15s;
+}
+.partner-card-featured:hover .partner-card-featured-cta {
+    background: var(--blurple-strong);
+}
+.partner-feature-wrap + .section.tools {
+    padding-top: 48px;
+}
+@media (max-width: 880px) {
+    .partner-card-featured {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+        padding: 20px;
+    }
+    .partner-card-featured-cta {
+        width: 100%;
+        justify-content: center;
+    }
+    .partner-feature-wrap + .section.tools {
+        padding-top: 36px;
+    }
+}
+@media (max-width: 640px) {
+    .partner-feature-wrap {
+        padding: 20px 0 0;
+    }
+}
+
 /* Premium tag on home tool list */
 .home-premium-tag {
     display: inline-block;

@@ -1,8 +1,38 @@
 const express = require('express');
+const axios = require('axios');
 const db = require('../db');
 const { discordFetch } = require('../utils/discord');
 const { hashIP, hashIPLegacy } = require('../utils/ip');
 const authMiddleware = require('../middleware/auth');
+
+// VPN check for verify (must be without VPN even when authenticated)
+async function checkVpnForVerify(ip) {
+    if (ip === '::1' || ip === '127.0.0.1' || ip.startsWith('192.168.') || ip.startsWith('10.')) {
+        return { isVpn: false };
+    }
+    try {
+        const key = process.env.PROXYCHECK_API_KEY;
+        const url = key
+            ? `https://proxycheck.io/v2/${ip}?vpn=1&asn=1&key=${key}`
+            : `https://proxycheck.io/v2/${ip}?vpn=1&asn=1`;
+        const response = await axios.get(url, { timeout: 3000 });
+        const data = response.data;
+        if (data.status !== 'ok') return { isVpn: false };
+        const ipData = data[ip];
+        if (!ipData) return { isVpn: false };
+        const isVpn = ipData.proxy === 'yes' || ipData.type === 'VPN' || ipData.type === 'Proxy' || ipData.type === 'Hosting';
+        return { isVpn, type: ipData.type || 'Unknown', provider: ipData.provider || 'Unknown' };
+    } catch (err) {
+        console.error(`[VERIFY VPN] Check failed for ${ip}:`, err.message);
+        return { isVpn: false, error: 'Fetch failed' };
+    }
+}
+
+function getVerifyIp(req) {
+    const rawIp = req.headers['cf-connecting-ip'] || req.headers['x-real-ip'] || req.headers['x-forwarded-for'] || req.ip;
+    const ip = String(rawIp).split(',')[0].trim().replace(/^::ffff:/, '');
+    return ip;
+}
 
 const router = express.Router();
 
@@ -64,6 +94,17 @@ async function memberHasRole(userId) {
 
 router.get('/verify/status', authMiddleware, async (req, res) => {
     try {
+        // Enforce VPN block even for status checks (defense in depth, middleware already blocks but keep consistent)
+        const vpnIp = getVerifyIp(req);
+        const vpnResult = await checkVpnForVerify(vpnIp);
+        if (vpnResult.isVpn) {
+            console.warn(`[VERIFY VPN BLOCKED] GET /verify/status from ${vpnIp} (${vpnResult.type}) user ${req.user.id}`);
+            return res.status(403).json({
+                error: 'VPN/Proxy access restricted',
+                detail: `${vpnResult.type} detected from your IP. Verification must be done without VPN/Proxy. Please disable your VPN and try again.`
+            });
+        }
+
         const result = await db.query(
             'SELECT user_id FROM verified_users WHERE user_id = $1',
             [req.user.id]
@@ -84,10 +125,19 @@ router.post('/verify/complete', authMiddleware, async (req, res) => {
         const userId = req.user.id;
         const username = req.user.username;
 
-        let ip = req.headers['x-real-ip'] || req.headers['x-forwarded-for'] || req.ip;
-        if (ip.startsWith('::ffff:')) ip = ip.split(':').pop();
+        let ip = getVerifyIp(req);
         if (ip === '::1' || ip === '127.0.0.1') {
             return res.status(400).json({ error: 'Cannot verify from localhost' });
+        }
+
+        // VPN check - verification must be done without VPN/Proxy (even for authenticated users)
+        const vpnResult = await checkVpnForVerify(ip);
+        if (vpnResult.isVpn) {
+            console.warn(`[VERIFY VPN BLOCKED] POST /verify/complete from ${ip} (${vpnResult.type}) user ${userId}`);
+            return res.status(403).json({
+                error: 'VPN/Proxy access restricted',
+                detail: `${vpnResult.type} detected from your IP. Verification must be done without VPN/Proxy. Please disable your VPN and try again.`
+            });
         }
 
         const ipHash = hashIP(ip);

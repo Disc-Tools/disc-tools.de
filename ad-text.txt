@@ -1,16 +1,23 @@
-__**Disc-Tools – One box of tools for everything Discord-related**__ <a:DiscToolsStaff:1529160620421681294>
+__**Disc-Tools — Free Tools for Discord**__ <a:DiscToolsStaff:1529160620421681294>
 
-Looking things up on Discord? **Disc-Tools** has you covered:
+The all-in-one toolbox for Discord — **16 utilities** directly in your browser. No install, no signup, no paywall.
 
-**🔍 User Lookup** – badges, account age and details for any user ID
-**📛 Username History** – every past username and discriminator
-**🔗 Invite Lookup** – guild info, member count, inviter and expiry
-**🖼️ Avatar CDN, 🎨 Embed Builder, 🎨 Color Picker, 😀 Emoji Stealer** and more
+**🔍 Lookup**
+> **User Lookup** — badges, account age and profile details for any user ID
+> **Username History** & **Alt Account Lookup** — track past usernames and linked accounts *(Premium)*
+> **Server & Invite Lookup** — members, channels, inviter and expiry
+> **Snowflake Decoder & Account Checker** — creation date, worker data and trust score from any ID
 
-The core tools are **free**. Premium is optional on top.
+**✨ Create & Format**
+> **Embed Builder, Markdown & Timestamp Generator and Color Picker** — build messages, embeds and role colors with live preview
 
-> 📢 The main site is getting a **fresh new look** – many tools are not available yet, but the ones above are live and ready!
+**📦 Extract & Manage**
+> **Emoji Stealer, Avatar CDN & Collectibles Inspector** — high-quality assets for any emoji, avatar, banner or decoration
+> **Link Cleaner & Webhook Manager** — strip 60+ trackers and manage webhooks without a bot
 
-**🔗 Main site:** https://disc-tools.de/
-**🛠️ Dashboard:** https://dash.disc-tools.de
-**💬 Join the community:** https://discord.gg/rtRs8rhj5u
+**Why Disc-Tools?**
+> Free core — Premium optional · Works without an account · Secure Discord OAuth2 only · Fast, mobile-friendly and actively maintained
+
+**🔗 Website:** https://disc-tools.de/
+**💬 Community:** https://discord.gg/rtRs8rhj5u
+**🛠️ Dashboard & Premium:** https://dash.disc-tools.de

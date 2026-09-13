@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="/static/css/user-lookup.css">
     <link rel="stylesheet" href="/static/css/emoji-stealer.css?v=1">
     <link rel="stylesheet" href="/static/css/avatar-cdn.css?v=6">
-    <link rel="stylesheet" href="/static/css/collectibles-inspector.css?v=4">
+    <link rel="stylesheet" href="/static/css/collectibles-inspector.css?v=5">
     <link rel="stylesheet" href="/static/fa-icons/fa.min.css">
 </head>
 <body>
@@ -41,7 +41,7 @@
                 </div>
             </div>
             <a href="/partner/">Partners</a>
-            <a href="https://status.disc-tools.de/status/main-site" rel="noopener">Status</a>
+            <a href="https://status.disc-tools.de/#cat-main-site" rel="noopener">Status</a>
             <a href="https://dash.disc-tools.de/premium" rel="noopener">Premium</a>
         </div>
         <div class="nav-actions">
@@ -60,7 +60,7 @@
             <a href="/security-articles/">Security</a>
             <a href="https://discord.gg/rtRs8rhj5u" rel="noopener">Community</a>
             <a href="/team/" class="btn btn-ghost btn-block"><i class="fa-solid fa-users" aria-hidden="true"></i> Team</a>
-            <a href="https://status.disc-tools.de/status/main-site" class="btn btn-ghost btn-block" rel="noopener"><i class="fa-solid fa-heart-pulse" aria-hidden="true"></i> Status</a>
+            <a href="https://status.disc-tools.de/#cat-main-site" class="btn btn-ghost btn-block" rel="noopener"><i class="fa-solid fa-heart-pulse" aria-hidden="true"></i> Status</a>
             <a href="https://dash.disc-tools.de/premium" class="btn btn-primary btn-block" rel="noopener"><i class="fa-solid fa-crown" aria-hidden="true"></i> Premium</a>
             <a href="/api/auth/login?redirect=/success/login/" class="btn btn-ghost btn-block">Login</a>
         </nav>
@@ -86,7 +86,13 @@
             <p class="lookup-hint">Try a flexed profile — e.g. <button type="button" class="hint-example" data-id="211576897711112193">211576897711112193</button> <span style="opacity:.6">(banner+deco+nameplate)</span> or <button type="button" class="hint-example" data-id="528938604647415811">528938604647415811</button></p>
         </form>
 
-        <div id="result" class="result"></div>
+        <div id="result" class="result">
+            <div class="ci-empty-state" id="ci-empty">
+                <div class="ci-empty-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                <h3>Nothing inspected yet</h3>
+                <p>Enter a Discord user ID above — or try one of the examples.</p>
+            </div>
+        </div>
 
         <section class="ci-info" id="ci-info">
             <h2><i class="fa-solid fa-circle-info"></i> What gets inspected?</h2>
@@ -139,8 +145,9 @@
             <h3>Site</h3>
             <a href="/team/">Team</a>
             <a href="/partner/">Partners</a>
+            <a href="/partner/terms/">Partner Terms</a>
             <a href="/announcements/">Announcements</a>
-            <a href="https://status.disc-tools.de/status/main-site" rel="noopener">Status</a>
+            <a href="https://status.disc-tools.de/#cat-main-site" rel="noopener">Status</a>
             <a href="https://dash.disc-tools.de" rel="noopener">Dashboard</a>
             <a href="https://dash.disc-tools.de/premium" rel="noopener">Premium</a>
         </nav>
@@ -148,6 +155,7 @@
             <h3>Legal</h3>
             <a href="/legal/privacy-policy/">Privacy Policy</a>
             <a href="/legal/terms-of-service/">Terms of Service</a>
+            <a href="/partner/terms/">Partner Terms</a>
             <a href="/legal/imprint/">Imprint</a>
             <a href="https://dash.disc-tools.de/legal/refund-policy/">Refund Policy</a>
         </nav>

@@ -18,13 +18,20 @@ const { hashIP } = require('../utils/ip');
 // --- OAuth2 Login Flow ---
 router.get('/login', (req, res) => {
     let redirect = '/u/';
-    if (req.query.redirect && req.query.redirect.startsWith('/') && !req.query.redirect.includes('//') && !req.query.redirect.includes(':')) {
-        redirect = req.query.redirect;
+    const rq = req.query.redirect;
+    if (typeof rq === 'string' && rq.length < 500) {
+        if (rq.startsWith('/') && !rq.includes('//') && !rq.includes(':')) {
+            redirect = rq;
+        } else if (/^https:\/\/(partner\.disc-tools\.de|disc-tools\.de|www\.disc-tools\.de|admin\.disc-tools\.de|dash\.disc-tools\.de)(\/|$)/.test(rq)) {
+            redirect = rq;
+        }
     }
+    const cookieDomain = '.disc-tools.de';
     res.cookie('redirect_to', redirect, {
         httpOnly: true,
         secure: true,
         sameSite: 'lax',
+        domain: cookieDomain,
         maxAge: 10 * 60 * 1000
     });
     const state = crypto.randomBytes(16).toString('hex');
@@ -32,6 +39,7 @@ router.get('/login', (req, res) => {
         httpOnly: true,
         secure: true,
         sameSite: 'lax',
+        domain: cookieDomain,
         maxAge: 10 * 60 * 1000
     });
     const url = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=code&scope=identify%20email%20guilds%20guilds.join%20connections&prompt=consent&state=${state}`;
@@ -48,7 +56,7 @@ async function handleAuthCallback(req, res) {
     if (!expectedState || !receivedState || expectedState !== receivedState) {
         return res.status(403).send('Invalid state parameter – possible CSRF attack.');
     }
-    res.clearCookie('oauth_state');
+    res.clearCookie('oauth_state', {httpOnly:true, secure:true, sameSite:'lax', path:'/', domain: '.disc-tools.de'});
 
     try {
         const tokenResponse = await axios.post('https://discord.com/api/oauth2/token', new URLSearchParams({
@@ -110,16 +118,19 @@ async function handleAuthCallback(req, res) {
             mfa_enabled: u.mfa_enabled ?? false
         }, JWT_SECRET, { expiresIn: '7d', algorithm: 'HS256' });
 
+        const cookieDomain = '.disc-tools.de';
         const cookieOptions = {
             httpOnly: true,
             secure: true,
             sameSite: 'lax',
+            domain: cookieDomain,
             maxAge: 7 * 24 * 60 * 60 * 1000
         };
         const strictCookieOptions = {
             httpOnly: true,
             secure: true,
-            sameSite: 'strict',
+            sameSite: 'lax',
+            domain: cookieDomain,
             maxAge: 7 * 24 * 60 * 60 * 1000
         };
 
@@ -141,8 +152,14 @@ async function handleAuthCallback(req, res) {
         } catch (e) {
             console.error('[AUTH] Session tracking failed:', e.message);
         }
-        const redirectTo = req.cookies.redirect_to || '/u/';
-        res.clearCookie('redirect_to');
+        const rawRedirect = req.cookies.redirect_to || '/';
+        let redirectTo = '/';
+        if (typeof rawRedirect === 'string' && rawRedirect.length < 800) {
+            if (rawRedirect.startsWith('/') && !rawRedirect.includes('//')) redirectTo = rawRedirect;
+            else if (/^https:\/\/(partner\.disc-tools\.de|disc-tools\.de|www\.disc-tools\.de|admin\.disc-tools\.de|dash\.disc-tools\.de)(\/|$)/.test(rawRedirect)) redirectTo = rawRedirect;
+        }
+        res.clearCookie('redirect_to', {httpOnly:true, secure:true, sameSite:'lax', path:'/', domain: '.disc-tools.de'});
+        // Prevent open redirect to external domain – already validated
         res.redirect(redirectTo);
     } catch (error) {
         console.error('[AUTH] Callback failed:', error.message);
@@ -275,6 +292,7 @@ router.get('/me/refresh', async (req, res) => {
             httpOnly: true,
             secure: true,
             sameSite: 'lax',
+            domain: '.disc-tools.de',
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
         res.json({ authenticated: true, user: safeUser });
@@ -291,10 +309,13 @@ router.post('/logout', async (req, res) => {
             await db.query(`UPDATE admin_sessions SET revoked = true WHERE session_id = $1`, [sid]);
         } catch (e) {}
     }
-    res.clearCookie('token');
-    res.clearCookie('discord_at');
-    res.clearCookie('discord_refresh');
-    res.clearCookie('session_id');
+    const domain = '.disc-tools.de';
+    res.clearCookie('token', {httpOnly:true, secure:true, sameSite:'lax', path:'/', domain});
+    res.clearCookie('discord_at', {httpOnly:true, secure:true, sameSite:'lax', path:'/', domain});
+    res.clearCookie('discord_refresh', {httpOnly:true, secure:true, sameSite:'lax', path:'/', domain});
+    res.clearCookie('session_id', {httpOnly:true, secure:true, sameSite:'lax', path:'/', domain});
+    res.clearCookie('redirect_to', {httpOnly:true, secure:true, sameSite:'lax', path:'/', domain});
+    res.clearCookie('oauth_state', {httpOnly:true, secure:true, sameSite:'lax', path:'/', domain});
     res.json({ success: true });
 });
 
@@ -306,10 +327,13 @@ router.get('/logout', async (req, res) => {
             await db.query(`UPDATE admin_sessions SET revoked = true WHERE session_id = $1`, [sid]);
         } catch (e) {}
     }
-    res.clearCookie('token');
-    res.clearCookie('discord_at');
-    res.clearCookie('discord_refresh');
-    res.clearCookie('session_id');
+    const domain = '.disc-tools.de';
+    res.clearCookie('token', {httpOnly:true, secure:true, sameSite:'lax', path:'/', domain});
+    res.clearCookie('discord_at', {httpOnly:true, secure:true, sameSite:'lax', path:'/', domain});
+    res.clearCookie('discord_refresh', {httpOnly:true, secure:true, sameSite:'lax', path:'/', domain});
+    res.clearCookie('session_id', {httpOnly:true, secure:true, sameSite:'lax', path:'/', domain});
+    res.clearCookie('redirect_to', {httpOnly:true, secure:true, sameSite:'lax', path:'/', domain});
+    res.clearCookie('oauth_state', {httpOnly:true, secure:true, sameSite:'lax', path:'/', domain});
     res.redirect('/');
 });
 

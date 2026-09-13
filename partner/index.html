@@ -28,8 +28,10 @@
         .partner-card .links { display: flex; gap: 12px; }
         .partner-card .links a { display: inline-flex; align-items: center; gap: 6px; color: var(--text-muted); font-size: 13px; text-decoration: none; transition: color 0.15s; }
         .partner-card .links a:hover { color: var(--blurple-soft); }
-        .cta-btn { display: inline-flex; align-items: center; gap: 8px; margin-top: 28px; padding: 10px 22px; border: 1px solid var(--border); border-radius: 12px; color: var(--text); text-decoration: none; font-weight: 600; font-size: 15px; transition: border-color 0.15s, background 0.15s; }
+        .cta-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 22px; border: 1px solid var(--border); border-radius: 12px; color: var(--text); text-decoration: none; font-weight: 600; font-size: 15px; transition: border-color 0.15s, background 0.15s, color 0.15s; cursor: pointer; font-family: inherit; background: transparent; }
         .cta-btn:hover { border-color: var(--blurple); background: rgba(88,101,242,0.08); }
+        .cta-btn.copied { border-color: var(--success); color: var(--success); background: rgba(78,203,141,0.08); }
+        .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
         .empty-state { grid-column: 1/-1; padding: 40px; text-align: center; color: var(--text-muted); border: 1px dashed var(--border); border-radius: 16px; }
         .empty-state i { font-size: 36px; color: var(--blurple); margin-bottom: 12px; }
         .empty-state h3 { font-size: 18px; margin-bottom: 6px; }
@@ -70,7 +72,7 @@
                 </div>
             </div>
             <a href="/partner/">Partners</a>
-            <a href="https://status.disc-tools.de/status/main-site" rel="noopener">Status</a>
+            <a href="https://status.disc-tools.de/#cat-main-site" rel="noopener">Status</a>
             <a href="https://dash.disc-tools.de/premium" rel="noopener">Premium</a>
         </div>
         <div class="nav-actions">
@@ -86,7 +88,7 @@
         <nav aria-label="Mobile navigation">
             <a href="/team/" class="btn btn-ghost btn-block"><i class="fa-solid fa-users" aria-hidden="true"></i> Team</a>
             <a href="/partner/" class="btn btn-ghost btn-block"><i class="fa-solid fa-handshake" aria-hidden="true"></i> Partners</a>
-            <a href="https://status.disc-tools.de/status/main-site" class="btn btn-ghost btn-block" rel="noopener"><i class="fa-solid fa-heart-pulse" aria-hidden="true"></i> Status</a>
+            <a href="https://status.disc-tools.de/#cat-main-site" class="btn btn-ghost btn-block" rel="noopener"><i class="fa-solid fa-heart-pulse" aria-hidden="true"></i> Status</a>
             <a href="https://dash.disc-tools.de/premium" class="btn btn-primary btn-block" rel="noopener"><i class="fa-solid fa-crown" aria-hidden="true"></i> Premium</a>
             <a href="/api/auth/login?redirect=/success/login/" class="btn btn-ghost btn-block">Login</a>
         </nav>
@@ -98,7 +100,12 @@
             <div class="partner-hero">
                 <h1>Our <em>Partners</em></h1>
                 <p class="team-intro">Projects and services we trust, working together to enhance the Discord ecosystem.</p>
-                <a href="/partner/request/" class="cta-btn"><i class="fa-solid fa-handshake"></i> Become a Partner</a>
+                <div class="hero-actions">
+                    <a href="/partner/request/" class="cta-btn"><i class="fa-solid fa-handshake"></i> Become a Partner</a>
+                    <button type="button" id="copyAdBtn" class="cta-btn" aria-label="Copy our advertisement to clipboard"><i class="fa-regular fa-copy" aria-hidden="true"></i> <span id="copyAdLabel">Copy our Advertisement</span></button>
+                    <a href="/partner/terms/" class="cta-btn"><i class="fa-solid fa-file-contract"></i> Partner Terms</a>
+                </div>
+                <p style="margin-top:14px;color:var(--text-muted);font-size:13.5px;line-height:1.5">By applying you agree to our <a href="/partner/terms/">Partner Terms</a>.</p>
             </div>
             <div id="partnersContainer" class="partner-grid"></div>
             <div id="emptyState" class="empty-state hidden">
@@ -150,8 +157,9 @@
             <h3>Site</h3>
             <a href="/team/">Team</a>
             <a href="/partner/">Partners</a>
+            <a href="/partner/terms/">Partner Terms</a>
             <a href="/announcements/">Announcements</a>
-            <a href="https://status.disc-tools.de/status/main-site" rel="noopener">Status</a>
+            <a href="https://status.disc-tools.de/#cat-main-site" rel="noopener">Status</a>
             <a href="https://dash.disc-tools.de" rel="noopener">Dashboard</a>
             <a href="https://dash.disc-tools.de/premium" rel="noopener">Premium</a>
         </nav>
@@ -159,6 +167,7 @@
             <h3>Legal</h3>
             <a href="/legal/privacy-policy/">Privacy Policy</a>
             <a href="/legal/terms-of-service/">Terms of Service</a>
+            <a href="/partner/terms/">Partner Terms</a>
             <a href="/legal/imprint/">Imprint</a>
             <a href="https://dash.disc-tools.de/legal/refund-policy/">Refund Policy</a>
         </nav>
@@ -186,7 +195,9 @@
     function showListing() {
         listingView.classList.remove('hidden');
         detailView.classList.add('hidden');
-        history.pushState(null, '', '/partner/');
+        if (location.pathname !== '/partner/' && location.pathname !== '/partner') {
+            history.pushState(null, '', '/partner/');
+        }
     }
 
     function showDetail(p) {
@@ -204,6 +215,18 @@
         history.pushState(null, '', '/partner/' + p.slug + '/');
     }
 
+    function showNotFound(slug) {
+        listingView.classList.add('hidden');
+        detailView.classList.remove('hidden');
+        var card = document.getElementById('partnerDetailCard');
+        card.innerHTML =
+            '<div style="padding:12px 0 8px"><i class="fa-solid fa-circle-exclamation" style="font-size:42px;color:var(--blurple)"></i></div>' +
+            '<h2>Partner Not Found</h2>' +
+            '<p class="desc">No partner with the slug <code style="background:var(--surface-2);padding:2px 6px;border-radius:6px;border:1px solid var(--border)">' + esc(slug) + '</code> was found. It may have been removed or the link is incorrect.</p>' +
+            '<div class="detail-links" style="margin-top:8px"><a href="/partner/" onclick="event.preventDefault();showListing()"><i class="fa-solid fa-arrow-left"></i> Back to Partners</a>' +
+            '<a href="/partner/request/"><i class="fa-solid fa-handshake"></i> Become a Partner</a></div>';
+    }
+
     window.showListing = showListing;
 
     window.addEventListener('popstate', function () {
@@ -215,12 +238,20 @@
         var parts = path.split('/');
         if (parts.length === 3 && parts[1] === 'partner' && parts[2]) {
             var slug = parts[2];
+            if (slug === 'request' || slug === 'terms') {
+                window.location.replace('/partner/' + slug + '/');
+                return;
+            }
             fetch('/api/partner/' + slug)
-                .then(function (r) { return r.json(); })
-                .then(function (p) { if (p && p.name) showDetail(p); else showListing(); })
-                .catch(function () { showListing(); });
+                .then(function (r) {
+                    if (!r.ok) throw new Error('not found');
+                    return r.json();
+                })
+                .then(function (p) { if (p && p.name) showDetail(p); else showNotFound(slug); })
+                .catch(function () { showNotFound(slug); });
         } else {
-            showListing();
+            listingView.classList.remove('hidden');
+            detailView.classList.add('hidden');
         }
     }
 
@@ -250,12 +281,69 @@
 
     window.loadPartner = function (slug) {
         fetch('/api/partner/' + slug)
-            .then(function (r) { return r.json(); })
-            .then(function (p) { if (p && p.name) showDetail(p); })
-            .catch(function () {});
+            .then(function (r) {
+                if (!r.ok) throw new Error('not found');
+                return r.json();
+            })
+            .then(function (p) { if (p && p.name) showDetail(p); else showNotFound(slug); })
+            .catch(function () { showNotFound(slug); });
     };
 
     loadView();
+})();
+</script>
+<script>
+(function () {
+    var btn = document.getElementById('copyAdBtn');
+    var label = document.getElementById('copyAdLabel');
+    if (!btn || !label) return;
+    var originalHTML = btn.innerHTML;
+    var resetTimer = null;
+
+    function showCopied() {
+        btn.classList.add('copied');
+        btn.innerHTML = '<i class="fa-solid fa-check" aria-hidden="true"></i> <span>Copied!</span>';
+        clearTimeout(resetTimer);
+        resetTimer = setTimeout(function () {
+            btn.classList.remove('copied');
+            btn.innerHTML = originalHTML;
+        }, 2000);
+    }
+
+    function showError() {
+        btn.innerHTML = '<i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> <span>Failed</span>';
+        clearTimeout(resetTimer);
+        resetTimer = setTimeout(function () {
+            btn.innerHTML = originalHTML;
+        }, 2000);
+    }
+
+    function fallbackCopy(text) {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        var ok = false;
+        try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+        document.body.removeChild(ta);
+        return ok;
+    }
+
+    btn.addEventListener('click', function () {
+        fetch('/ad-text.txt', { cache: 'no-cache' })
+            .then(function (r) { if (!r.ok) throw new Error('fetch failed'); return r.text(); })
+            .then(function (text) {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    return navigator.clipboard.writeText(text).then(function () { return true; }, function () { return fallbackCopy(text); });
+                }
+                return fallbackCopy(text);
+            })
+            .then(function (ok) { if (ok) showCopied(); else showError(); })
+            .catch(function () { showError(); });
+    });
 })();
 </script>
 <script defer src="https://umami.disc-tools.de/script.js" data-website-id="0cf82497-80c8-42a2-b6e4-8a8ae179d1fe"></script>

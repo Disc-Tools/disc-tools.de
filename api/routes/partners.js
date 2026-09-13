@@ -265,10 +265,51 @@ router.put('/api/user/partner', authMiddleware, async (req, res) => {
     }
 });
 
+// --- Get My Partnerships (owner or member) ---
+router.get('/api/user/partners', authMiddleware, async (req, res) => {
+    try {
+        const result = await db.query(`
+            SELECT p.id, p.name, p.slug, p.logo, p.background, p.description, p.website, p.discord_server, p.expires_at, p.created_at, p.user_id,
+                   COALESCE(json_agg(json_build_object('user_id', pm.user_id, 'added_at', pm.added_at)) FILTER (WHERE pm.user_id IS NOT NULL), '[]') as members
+            FROM partners p
+            LEFT JOIN partner_members pm ON pm.partner_id = p.id
+            WHERE p.status = 'active' AND (p.user_id = $1 OR p.id IN (SELECT partner_id FROM partner_members WHERE user_id = $1))
+            GROUP BY p.id
+            ORDER BY p.created_at DESC
+        `, [req.user.id]);
+        res.json(result.rows);
+    } catch (err) {
+        console.error('[PARTNERS] Mine fetch failed:', err.message);
+        res.status(500).json({ error: 'Failed to fetch your partnerships' });
+    }
+});
+router.get('/api/partners/mine', authMiddleware, async (req, res) => {
+    try {
+        const result = await db.query(`
+            SELECT p.id, p.name, p.slug, p.logo, p.background, p.description, p.website, p.discord_server, p.expires_at, p.created_at, p.user_id,
+                   COALESCE(json_agg(json_build_object('user_id', pm.user_id, 'added_at', pm.added_at)) FILTER (WHERE pm.user_id IS NOT NULL), '[]') as members
+            FROM partners p
+            LEFT JOIN partner_members pm ON pm.partner_id = p.id
+            WHERE p.status = 'active' AND (p.user_id = $1 OR p.id IN (SELECT partner_id FROM partner_members WHERE user_id = $1))
+            GROUP BY p.id
+            ORDER BY p.created_at DESC
+        `, [req.user.id]);
+        res.json(result.rows);
+    } catch (err) {
+        console.error('[PARTNERS] Mine fetch failed:', err.message);
+        res.status(500).json({ error: 'Failed to fetch your partnerships' });
+    }
+});
+
 // --- Submit Partnership Request ---
 router.post('/api/partners/request', authMiddleware, async (req, res) => {
     try {
-        const { name, discordServer, website } = req.body;
+        const { name, discordServer, website, agreeTerms, agree_terms } = req.body;
+        const hasAgreed = agreeTerms === true || agreeTerms === 'true' || agreeTerms === 'on' || agreeTerms === '1' || agreeTerms === 1 || agree_terms === true || agree_terms === 'true' || agree_terms === 'on';
+
+        if (!hasAgreed) {
+            return res.status(400).json({ error: 'You must accept the Partner Terms to submit a partnership request. Please see https://disc-tools.de/partner/terms/' });
+        }
 
         if (!name) {
             return res.status(400).json({ error: 'Project name is required' });
@@ -457,6 +498,11 @@ router.post('/api/admin/partner/requests/:id/approve', checkAdmin, async (req, r
         await db.query(
             `UPDATE partner_requests SET status = $1 WHERE id = $2`,
             ['approved', req.params.id]
+        );
+
+        await db.query(
+            'INSERT INTO partner_members (partner_id, user_id) VALUES ($1, $2) ON CONFLICT DO NOTHING',
+            [partnerReq.id, partnerReq.user_id]
         );
 
         // Send Discord DM with embed
@@ -674,8 +720,27 @@ router.get('/api/admin/partners', checkAdmin, async (req, res) => {
     }
 });
 
-// --- Admin: Resolve Discord user (avatar/username) for partner members ---
+// --- Resolve Discord user (avatar/username) for partner members (admin + partner self-service) ---
 const partnerUserCache = new Map();
+
+router.get('/api/partner/user/:id', authMiddleware, async (req, res) => {
+    const userId = req.params.id;
+    if (!/^\d{17,20}$/.test(userId)) {
+        return res.status(400).json({ error: 'Invalid user ID' });
+    }
+    const cached = partnerUserCache.get(userId);
+    if (cached && Date.now() - cached.time < 10 * 60 * 1000) {
+        return res.json(cached.data);
+    }
+    try {
+        const u = await discordFetch(`https://discord.com/api/v10/users/${userId}`, BOT_TOKEN, 'Bot ');
+        const data = { id: u.id, username: u.username, global_name: u.global_name, avatar: u.avatar };
+        partnerUserCache.set(userId, { data, time: Date.now() });
+        res.json(data);
+    } catch (err) {
+        res.status(404).json({ error: 'User not found' });
+    }
+});
 
 router.get('/api/admin/partner/user/:id', checkAdmin, async (req, res) => {
     const userId = req.params.id;
@@ -870,10 +935,17 @@ fs.mkdirSync(PARTNER_UPLOADS_DIR, { recursive: true });
 const ALLOWED_MIMES = ['image/png', 'image/jpeg', 'image/gif', 'image/webp'];
 const MAX_IMAGE_SIZE = 1 * 1024 * 1024;
 
+const SLUG_RE = /^[a-z0-9-]{2,32}$/;
+
 const partnerUpload = multer({
     storage: multer.diskStorage({
         destination: (req, file, cb) => {
-            const dest = path.join(PARTNER_UPLOADS_DIR, req.params.slug);
+            const slug = req.params.slug;
+            if (!SLUG_RE.test(slug)) return cb(new Error('Invalid slug'));
+            const dest = path.resolve(PARTNER_UPLOADS_DIR, slug);
+            if (!dest.startsWith(path.resolve(PARTNER_UPLOADS_DIR) + path.sep) && dest !== path.resolve(PARTNER_UPLOADS_DIR)) {
+                return cb(new Error('Invalid path'));
+            }
             fs.mkdirSync(dest, { recursive: true });
             cb(null, dest);
         },
@@ -898,10 +970,12 @@ async function checkPartnerAccess(req, res, next) {
     if (!token) return res.status(401).json({ error: 'Not authenticated' });
 
     try {
+        const slug = req.params.slug;
+        if (!SLUG_RE.test(slug)) return res.status(400).json({ error: 'Invalid slug format' });
+
         const decoded = jwt.verify(token, JWT_SECRET, { algorithms: ['HS256'] });
         req.user = decoded;
 
-        const slug = req.params.slug;
         const partner = await db.query(
             'SELECT id, user_id FROM partners WHERE slug = $1 AND status = $2',
             [slug, 'active']

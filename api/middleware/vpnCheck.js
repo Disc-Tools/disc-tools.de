@@ -20,7 +20,6 @@ const EXCLUDED_PATHS = [
     '/track/view',
     '/partners',
     '/profiles',
-    '/verify',
     '/username-history/eligibility',
     '/user-lookup/eligibility',
     '/username-history/optout',
@@ -33,9 +32,8 @@ function isExcluded(path) {
 }
 
 function getClientIp(req) {
-    let ip = req.headers['x-real-ip'] || req.headers['x-forwarded-for'] || req.ip;
-    if (typeof ip === 'string' && ip.includes(',')) ip = ip.split(',')[0].trim();
-    if (ip.startsWith('::ffff:')) ip = ip.split(':').pop();
+    const rawIp = req.headers['cf-connecting-ip'] || req.headers['x-real-ip'] || req.headers['x-forwarded-for'] || req.ip;
+    const ip = String(rawIp).split(',')[0].trim().replace(/^::ffff:/, '');
     return ip;
 }
 
@@ -55,7 +53,11 @@ async function checkVpn(ip) {
     }
 
     try {
-        const response = await axios.get(`https://proxycheck.io/v2/${ip}?vpn=1&asn=1`, { timeout: 3000 });
+        const key = process.env.PROXYCHECK_API_KEY;
+        const url = key
+            ? `https://proxycheck.io/v2/${ip}?vpn=1&asn=1&key=${key}`
+            : `https://proxycheck.io/v2/${ip}?vpn=1&asn=1`;
+        const response = await axios.get(url, { timeout: 3000 });
         const data = response.data;
 
         if (data.status !== 'ok') {
@@ -129,9 +131,9 @@ async function vpnMiddleware(req, res, next) {
         }
     }
 
-    // Authenticated users skip VPN check
+    // Authenticated users skip VPN check - EXCEPT for /verify (must be without VPN)
     const token = req.cookies?.token;
-    if (token) {
+    if (token && !req.path.startsWith('/verify')) {
         try {
             const jwt = require('jsonwebtoken');
             jwt.verify(token, process.env.JWT_SECRET, { algorithms: ['HS256'] });
@@ -142,10 +144,14 @@ async function vpnMiddleware(req, res, next) {
     const result = await checkVpn(ip);
 
     if (result.isVpn) {
-        console.warn(`[VPN BLOCKED] ${req.method} ${req.path} from ${ip} (${result.type})`);
+        // Special message for verify endpoints
+        const isVerify = req.path.startsWith('/verify');
+        console.warn(`[VPN BLOCKED] ${req.method} ${req.path} from ${ip} (${result.type})${isVerify ? ' [VERIFY]' : ''}`);
         return res.status(403).json({
             error: 'VPN/Proxy access restricted',
-            detail: `${result.type} detected from your IP. Log in with Discord to bypass.`
+            detail: isVerify
+                ? `${result.type} detected from your IP. Verification must be done without VPN/Proxy. Please disable your VPN and try again.`
+                : `${result.type} detected from your IP. Log in with Discord to bypass.`
         });
     }
 

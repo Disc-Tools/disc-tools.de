@@ -47,6 +47,45 @@
 .ci-info-item strong { font-size: 0.9rem; color: var(--text); line-height: 1.2; }
 .ci-info-item span { font-size: 0.78rem; color: var(--text-muted); line-height: 1.4; margin-top: 2px; }
 
+/* Empty state */
+.ci-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 0.6rem;
+    padding: 2.6rem 1.6rem;
+    background: var(--surface);
+    border: 1px dashed rgba(255,255,255,0.08);
+    border-radius: 16px;
+    color: var(--text-muted);
+}
+.ci-empty-state .ci-empty-icon {
+    width: 56px;
+    height: 56px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(88,101,242,0.12);
+    color: var(--blurple-soft);
+    border-radius: 14px;
+    font-size: 1.35rem;
+    margin-bottom: 0.2rem;
+}
+.ci-empty-state h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0;
+}
+.ci-empty-state p {
+    font-size: 0.85rem;
+    line-height: 1.5;
+    max-width: 36ch;
+    margin: 0;
+}
+
 /* Result chrome */
 .ci-result-head {
     display: flex;
