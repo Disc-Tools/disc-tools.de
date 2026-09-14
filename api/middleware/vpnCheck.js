@@ -21,6 +21,7 @@ const EXCLUDED_PATHS = [
     '/partners',
     '/profiles',
     '/username-history/eligibility',
+    '/username-history/stats',
     '/user-lookup/eligibility',
     '/username-history/optout',
     '/username-history/optout/status',

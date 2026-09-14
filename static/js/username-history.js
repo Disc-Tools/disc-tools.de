@@ -269,5 +269,24 @@
         });
     });
 
+    function loadStats() {
+        var trackedEl = document.getElementById('uh-tracked-count');
+        var changesEl = document.getElementById('uh-changes-count');
+        if (!trackedEl && !changesEl) return;
+        fetch('/api/username-history/stats', { credentials: 'omit' })
+            .then(function (r) { return r.ok ? r.json() : null; })
+            .then(function (data) {
+                if (!data) return;
+                if (trackedEl && typeof data.tracked_users === 'number') {
+                    trackedEl.textContent = data.tracked_users.toLocaleString('en-US');
+                }
+                if (changesEl && typeof data.total_changes === 'number') {
+                    changesEl.textContent = data.total_changes.toLocaleString('en-US');
+                }
+            })
+            .catch(function () { /* keep placeholder */ });
+    }
+
     checkEligibility();
+    loadStats();
 })();

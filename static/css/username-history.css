@@ -394,6 +394,45 @@
     transform: translateY(-2px);
 }
 
+/* ---------- Stats (tracked users) ---------- */
+.uh-stats {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-top: 18px;
+    padding: 10px 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+.uh-stat {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+.uh-stat i {
+    color: var(--blurple-soft);
+    font-size: 14px;
+}
+.uh-stat strong {
+    color: var(--text);
+    font-size: 15px;
+    font-variant-numeric: tabular-nums;
+}
+.uh-stats-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--border);
+    flex-shrink: 0;
+}
+
 /* ---------- Premium badge in hero ---------- */
 .uh-premium-tag {
     display: inline-flex;

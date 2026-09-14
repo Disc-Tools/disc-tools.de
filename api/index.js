@@ -293,6 +293,10 @@ app.get('/api/username-history/eligibility', async (req, res) => {
 
 const BETA_ROLE_ID = '1513630971679736078';
 
+// Public username-history stats (cached 5 min, no login required)
+let usernameHistoryStatsCache = { data: null, at: 0 };
+const USERNAME_HISTORY_STATS_TTL = 5 * 60 * 1000;
+
 function isBetaOrAdmin(user) {
     if (!user || !user.guild_roles) return false;
     const adminRoles = ['1503064097040629891', '1503064197704061109', '1503064289915965621', '1503064343837937795'];
@@ -316,6 +320,31 @@ app.get('/api/user-info/:userId', async (req, res) => {
     } catch (err) {
         console.error('[USER-INFO] Error:', err.message);
         res.status(500).json({ error: 'Failed to fetch user info' });
+    }
+});
+
+app.get('/api/username-history/stats', async (req, res) => {
+    try {
+        const now = Date.now();
+        if (usernameHistoryStatsCache.data && (now - usernameHistoryStatsCache.at) < USERNAME_HISTORY_STATS_TTL) {
+            return res.json(usernameHistoryStatsCache.data);
+        }
+        const result = await db.query(
+            `SELECT COUNT(*)::int AS total_changes, COUNT(DISTINCT user_id)::int AS tracked_users
+             FROM username_history`
+        );
+        const data = {
+            tracked_users: result.rows[0]?.tracked_users ?? 0,
+            total_changes: result.rows[0]?.total_changes ?? 0
+        };
+        usernameHistoryStatsCache = { data, at: now };
+        res.json(data);
+    } catch (err) {
+        console.error('[USERNAME-HISTORY-STATS] Error:', err.message);
+        if (usernameHistoryStatsCache.data) {
+            return res.json(usernameHistoryStatsCache.data);
+        }
+        res.status(500).json({ error: 'Failed to fetch username history stats' });
     }
 });
 
