@@ -482,7 +482,7 @@
                 if (!input.value.trim()) {
                     // Provide sample with text inside
                     // Keep code as is but replace generic with demo word?
-                    input.value = code.replace('text', 'hello').replace('code', 'code').replace('quote', 'quote');
+                    input.value = code.replace('text', 'hello');
                     // For some codes like -# subtext, keep
                     input.dispatchEvent(new Event('input'));
                     update();
