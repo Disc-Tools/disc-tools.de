@@ -94,12 +94,13 @@ const LINK_PLATFORM_CONFIG = {
 const TEAM_ROLES = [
     { id: '1503064097040629891', name: 'Founder', priority: 1, color: '#5865F2' },
     { id: '1503064197704061109', name: 'Co-Founder', priority: 2, color: '#4752C4' },
-    { id: '1503064289915965621', name: 'Sr. Admin', priority: 3, color: '#E74C3C' },
-    { id: '1503064343837937795', name: 'Admin', priority: 4, color: '#E67E22' },
-    { id: '1503064391564791899', name: 'Sr. Moderator', priority: 5, color: '#F1C40F' },
-    { id: '1503064448267718760', name: 'Moderator', priority: 6, color: '#2ECC71' },
-    { id: '1503064501573124276', name: 'Developer', priority: 7, color: '#1ABC9C' },
-    { id: '1503064547966058626', name: 'Helper', priority: 8, color: '#3498DB' }
+    { id: '1548803044643176488', name: 'Manager', priority: 3, color: '#206694' },
+    { id: '1503064289915965621', name: 'Sr. Admin', priority: 4, color: '#E74C3C' },
+    { id: '1503064343837937795', name: 'Admin', priority: 5, color: '#E67E22' },
+    { id: '1503064391564791899', name: 'Sr. Moderator', priority: 6, color: '#F1C40F' },
+    { id: '1503064448267718760', name: 'Moderator', priority: 7, color: '#2ECC71' },
+    { id: '1503064501573124276', name: 'Developer', priority: 8, color: '#1ABC9C' },
+    { id: '1503064547966058626', name: 'Helper', priority: 9, color: '#3498DB' }
 ];
 
 const ALL_TEAM_ROLE_IDS = TEAM_ROLES.map(r => r.id);
