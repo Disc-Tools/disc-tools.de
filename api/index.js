@@ -169,6 +169,13 @@ app.get('/api/team', async (req, res) => {
                     }
                 } catch (e) {}
 
+                // Fallback: role banner when the user has no Discord banner
+                // (see /static/assets/img/role-banners/<role-slug>/banner.png)
+                if (!bannerURL && highestRole) {
+                    const slug = highestRole.name.toLowerCase().replace(/\.\s*/g, '-').replace(/\s+/g, '-');
+                    bannerURL = `https://disc-tools.de/static/assets/img/role-banners/${slug}/banner.png`;
+                }
+
                 const avatarExt = m.user.avatar && m.user.avatar.startsWith('a_') ? 'gif' : 'png';
                 const avatarURL = m.user.avatar
                     ? `https://cdn.discordapp.com/avatars/${m.user.id}/${m.user.avatar}.${avatarExt}?size=256`
