@@ -10,6 +10,10 @@ async function checkVpnForVerify(ip) {
     if (ip === '::1' || ip === '127.0.0.1' || ip.startsWith('192.168.') || ip.startsWith('10.')) {
         return { isVpn: false };
     }
+    // Strict IP chars only (blocks query/path injection into the proxycheck URL).
+    if (typeof ip !== 'string' || ip.length === 0 || ip.length > 45 || !/^[0-9a-fA-F.:]+$/.test(ip)) {
+        return { isVpn: false };
+    }
     try {
         const key = process.env.PROXYCHECK_API_KEY;
         const url = key

@@ -22,6 +22,10 @@ const DISCORD_HEADERS = {
  * @returns {Promise} API response
  */
 async function discordFetch(url, token, type = '', maxRetries = 2) {
+    // SSRF guard: only Discord hosts may be fetched with (bot) credentials.
+    if (typeof url !== 'string' || !/^https:\/\/(discord\.com|cdn\.discordapp\.com|media\.discordapp\.net)\//.test(url)) {
+        throw new Error('Blocked host in discordFetch');
+    }
     const cacheKey = `${url}:${token}:${type}`;
 
     // Check Rate Limit Cache

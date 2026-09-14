@@ -39,6 +39,11 @@ function getClientIp(req) {
     return ip;
 }
 
+// Strict IP chars only (blocks query/path injection into the proxycheck URL).
+function isSafeIp(ip) {
+    return typeof ip === 'string' && ip.length > 0 && ip.length <= 45 && /^[0-9a-fA-F.:]+$/.test(ip);
+}
+
 async function checkVpn(ip) {
     const cached = vpnCache.get(ip);
     if (cached) {
@@ -52,6 +57,10 @@ async function checkVpn(ip) {
         const result = { isVpn: false, type: 'Local' };
         vpnCache.set(ip, { ...result, timestamp: Date.now() });
         return result;
+    }
+
+    if (!isSafeIp(ip)) {
+        return { isVpn: false, type: 'Unknown', error: 'Invalid IP' };
     }
 
     try {

@@ -75,7 +75,8 @@ function normalizeSpotifyEmbedUrl(url) {
     const playlistMatch = url.match(/^https?:\/\/open\.spotify\.com\/(?:embed\/)?playlist\/([A-Za-z0-9]+)(?:[/?].*)?$/);
     if (playlistMatch) return `https://open.spotify.com/embed/playlist/${playlistMatch[1]}`;
 
-    return url;
+    // Fail closed: anything else is not a Spotify URL (blocks javascript:/data: in iframes).
+    return '';
 }
 
 /**
@@ -86,14 +87,37 @@ function normalizeSpotifyEmbedUrl(url) {
 function normalizeSoundcloudEmbedUrl(url) {
     if (!url || typeof url !== 'string') return '';
     url = url.trim();
+    if (!url || url.length > 500) return '';
 
-    if (url.includes('soundcloud.com')) {
-        if (url.includes('w.soundcloud.com/player')) {
-            return url;
-        }
-        return `https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&color=%23ff5500&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=false`;
+    // Strict host check (blocks evil.com/?x=soundcloud.com bypasses and javascript:/data:).
+    let u;
+    try {
+        u = new URL(url);
+    } catch {
+        return '';
     }
-    return '';
+    if (u.protocol !== 'https:') return '';
+    const host = u.hostname.toLowerCase();
+    const isSoundcloud = host === 'soundcloud.com' || host.endsWith('.soundcloud.com');
+    if (!isSoundcloud) return '';
+
+    // Player URL with an inner track URL: validate the inner URL too, then rebuild with fixed params.
+    if (host === 'w.soundcloud.com' && u.pathname === '/player/') {
+        const inner = u.searchParams.get('url');
+        if (!inner) return '';
+        let iu;
+        try {
+            iu = new URL(inner);
+        } catch {
+            return '';
+        }
+        if (iu.protocol !== 'https:') return '';
+        const ih = iu.hostname.toLowerCase();
+        if (ih !== 'soundcloud.com' && ih !== 'api.soundcloud.com' && !ih.endsWith('.soundcloud.com')) return '';
+        url = iu.href;
+    }
+
+    return `https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&color=%23ff5500&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=false`;
 }
 
 module.exports = {

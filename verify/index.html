@@ -52,7 +52,9 @@
     'use strict';
 
     var box = document.getElementById('verifyContent');
-    var redirect = new URLSearchParams(location.search).get('redirect') || '/';
+    // Only same-origin paths (blocks open redirect to external sites).
+    var rawRedirect = new URLSearchParams(location.search).get('redirect') || '/';
+    var redirect = (/^\/(?!\/)/.test(rawRedirect) && !/[\\]/.test(rawRedirect)) ? rawRedirect : '/';
 
     function esc(s) {
         return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');

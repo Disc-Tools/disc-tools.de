@@ -162,6 +162,11 @@ router.get('/security/vpn-check', async (req, res) => {
         return res.json({ isVpn: false, ip, type: 'Local' });
     }
 
+    // Strict IP chars only (blocks query/path injection into the proxycheck URL).
+    if (typeof ip !== 'string' || ip.length === 0 || ip.length > 45 || !/^[0-9a-fA-F.:]+$/.test(ip)) {
+        return res.json({ isVpn: false, ip: 'invalid', error: 'Invalid IP' });
+    }
+
     try {
         const response = await axios.get(`https://proxycheck.io/v2/${ip}?vpn=1&asn=1`, { timeout: 3000 });
         const data = response.data;
