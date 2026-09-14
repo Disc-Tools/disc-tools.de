@@ -1,8 +1,16 @@
 const apiCache = new Map();
 const rateLimitCache = new Map();
+const MAX_CACHE_SIZE = 500;
+function setCache(map, key, value) {
+    if (map.size >= MAX_CACHE_SIZE) {
+        const firstKey = map.keys().next().value;
+        map.delete(firstKey);
+    }
+    map.set(key, value);
+}
 
 const DISCORD_HEADERS = {
-    'User-Agent': 'curl/8.5.0',
+    'User-Agent': 'Disc-Tools/1.0 (+https://disc-tools.de)',
     'Accept': '*/*'
 };
 
@@ -42,7 +50,7 @@ async function discordFetch(url, token, type = '', maxRetries = 2) {
             if (response.status === 429) {
                 const data = await response.json().catch(() => ({}));
                 const retryAfter = (data.retry_after || 1) * 1000;
-                rateLimitCache.set(cacheKey, Date.now() + retryAfter);
+                setCache(rateLimitCache, cacheKey, Date.now() + retryAfter);
                 console.warn(`[RATE LIMIT] ${url} - Retrying in ${retryAfter}ms`);
                 await new Promise(r => setTimeout(r, retryAfter));
                 continue;
@@ -57,7 +65,7 @@ async function discordFetch(url, token, type = '', maxRetries = 2) {
             }
 
             const result = await response.json();
-            apiCache.set(cacheKey, { data: result, timestamp: Date.now() });
+            setCache(apiCache, cacheKey, { data: result, timestamp: Date.now() });
             return result;
         } catch (err) {
             if (i === maxRetries) throw err;

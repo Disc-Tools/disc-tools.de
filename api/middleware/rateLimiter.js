@@ -33,12 +33,62 @@ setInterval(() => {
     }
 }, CLEANUP_INTERVAL);
 
-function rateLimitMiddleware(req, res, next) {
-    const ip = req.headers['cf-connecting-ip'] || req.headers['x-real-ip'] || req.ip;
-    const now = Date.now();
-    const config = getLimitConfig(req.path);
-    const mapKey = `${ip}:${req.path}`;
+// Redis-backed rate limiting with in-memory fallback
+let redisClient = null;
+let redisReady = false;
+try {
+    const Redis = require('ioredis');
+    redisClient = new Redis({
+        host: '127.0.0.1',
+        port: 6379,
+        lazyConnect: true,
+        enableOfflineQueue: false,
+        maxRetriesPerRequest: 1,
+        connectTimeout: 1000,
+        retryStrategy: () => null
+    });
+    redisClient.on('ready', () => { redisReady = true; });
+    redisClient.on('error', () => { redisReady = false; });
+    redisClient.on('close', () => { redisReady = false; });
+    // Try to connect but don't block startup
+    redisClient.connect().catch(() => { redisReady = false; });
+} catch (e) {
+    console.warn('[RATE_LIMIT] Redis not available, using in-memory fallback:', e.message);
+}
 
+async function rateLimitMiddleware(req, res, next) {
+    const rawIp = req.headers['cf-connecting-ip'] || req.headers['x-real-ip'] || req.ip;
+    const ip = String(rawIp).split(',')[0].trim().replace(/^::ffff:/, '');
+    const config = getLimitConfig(req.path);
+    const mapKey = `ratelimit:${ip}:${req.path}`;
+
+    // Try Redis first if ready
+    if (redisClient && redisReady) {
+        try {
+            const count = await redisClient.incr(mapKey);
+            if (count === 1) {
+                await redisClient.pexpire(mapKey, config.window);
+            }
+            if (count > config.max) {
+                const ttl = await redisClient.pttl(mapKey);
+                const retryAfter = Math.ceil((ttl > 0 ? ttl : config.window) / 1000);
+                console.warn(`[SECURITY] Rate limit (Redis) exceeded by IP: ${ip} on ${req.method} ${req.path} (${count}/${config.max})`);
+                res.setHeader('Retry-After', String(retryAfter));
+                return res.status(429).json({
+                    error: 'Too many requests',
+                    retryAfterSeconds: retryAfter
+                });
+            }
+            return next();
+        } catch (e) {
+            // Fallback to in-memory on Redis error
+            console.warn('[RATE_LIMIT] Redis error, fallback to memory:', e.message);
+            redisReady = false;
+        }
+    }
+
+    // In-memory fallback (survives within process, but not across restarts - Redis is primary)
+    const now = Date.now();
     if (!rateLimitMap.has(mapKey)) {
         rateLimitMap.set(mapKey, []);
     }
@@ -48,7 +98,7 @@ function rateLimitMiddleware(req, res, next) {
 
     if (timestamps.length >= config.max) {
         const retryAfter = Math.ceil((timestamps[0] + config.window - now) / 1000);
-        console.warn(`[SECURITY] Rate limit exceeded by IP: ${ip} on ${req.method} ${req.path}`);
+        console.warn(`[SECURITY] Rate limit (memory) exceeded by IP: ${ip} on ${req.method} ${req.path}`);
         res.setHeader('Retry-After', String(retryAfter));
         return res.status(429).json({
             error: 'Too many requests',

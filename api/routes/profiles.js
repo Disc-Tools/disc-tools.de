@@ -728,10 +728,8 @@ router.post('/admin/linktree', checkTeamRole, async (req, res) => {
             ]
         );
 
-        // Delete old links and insert new ones
-        await db.query(`DELETE FROM profile_links WHERE user_id = $1`, [req.user.id]);
-
-        if (Array.isArray(links) && links.length > 0) {
+        // Validate links before any DB mutation
+        if (Array.isArray(links)) {
             for (const link of links) {
                 if (link.url && !/^https?:\/\//i.test(link.url)) {
                     return res.status(400).json({ error: 'Invalid link URL – must start with http:// or https://' });
@@ -739,22 +737,36 @@ router.post('/admin/linktree', checkTeamRole, async (req, res) => {
                 if (link.icon && !/^https?:\/\//i.test(link.icon)) {
                     return res.status(400).json({ error: 'Invalid icon URL – must start with http:// or https://' });
                 }
-                await db.query(
-                    `INSERT INTO profile_links (id, user_id, platform, username, url, label, icon, position, type)
-                     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
-                    [
-                        link.id || `${req.user.id}_${Date.now()}_${Math.random()}`,
-                        req.user.id,
-                        link.platform || null,
-                        link.username || null,
-                        link.url || null,
-                        link.label || null,
-                        link.icon || null,
-                        links.indexOf(link),
-                        link.type === 'custom' ? 'custom' : 'preset'
-                    ]
-                );
             }
+        }
+
+        await db.query('BEGIN');
+        try {
+            await db.query(`DELETE FROM profile_links WHERE user_id = $1`, [req.user.id]);
+
+            if (Array.isArray(links) && links.length > 0) {
+                for (const link of links) {
+                    await db.query(
+                        `INSERT INTO profile_links (id, user_id, platform, username, url, label, icon, position, type)
+                         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+                        [
+                            link.id || `${req.user.id}_${Date.now()}_${Math.random()}`,
+                            req.user.id,
+                            link.platform || null,
+                            link.username || null,
+                            link.url || null,
+                            link.label || null,
+                            link.icon || null,
+                            links.indexOf(link),
+                            link.type === 'custom' ? 'custom' : 'preset'
+                        ]
+                    );
+                }
+            }
+            await db.query('COMMIT');
+        } catch (e) {
+            await db.query('ROLLBACK');
+            throw e;
         }
 
         // Remove stale folder when handle changed
@@ -945,7 +957,7 @@ router.get('/auth/spotify/callback', async (req, res) => {
     if (!state || !expectedState || state !== expectedState) {
         return res.status(403).send('Invalid OAuth state.');
     }
-    res.clearCookie('spotify_oauth_state');
+    res.clearCookie('spotify_oauth_state', {httpOnly:true, secure:true, sameSite:'lax', path:'/'});
 
     const token = req.cookies.token;
     if (!token) return res.status(401).send('Unauthorized connection attempt.');

@@ -37,10 +37,10 @@ router.delete('/sessions/:id', auth, async (req, res) => {
             return res.status(404).json({ error: 'Session not found' });
         }
         if (req.cookies.session_id === result.rows[0].session_id) {
-            res.clearCookie('token');
-            res.clearCookie('discord_at');
-            res.clearCookie('discord_refresh');
-            res.clearCookie('session_id');
+            res.clearCookie('token', {httpOnly:true, secure:true, sameSite:'strict', path:'/'});
+            res.clearCookie('discord_at', {httpOnly:true, secure:true, sameSite:'lax', path:'/'});
+            res.clearCookie('discord_refresh', {httpOnly:true, secure:true, sameSite:'lax', path:'/'});
+            res.clearCookie('session_id', {httpOnly:true, secure:true, sameSite:'strict', path:'/'});
         }
         res.json({ success: true });
     } catch (e) {

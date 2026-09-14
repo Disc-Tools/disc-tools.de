@@ -25,7 +25,8 @@ const EXCLUDED_PATHS = [
     '/user-lookup/eligibility',
     '/username-history/optout',
     '/username-history/optout/status',
-    '/admin'
+    '/admin',
+    '/guilds'
 ];
 
 function isExcluded(path) {
@@ -55,10 +56,11 @@ async function checkVpn(ip) {
 
     try {
         const key = process.env.PROXYCHECK_API_KEY;
-        const url = key
-            ? `https://proxycheck.io/v2/${ip}?vpn=1&asn=1&key=${key}`
-            : `https://proxycheck.io/v2/${ip}?vpn=1&asn=1`;
-        const response = await axios.get(url, { timeout: 3000 });
+        if (!key) {
+            console.error('[VPN] PROXYCHECK_API_KEY missing - aborting VPN check');
+            return { isVpn: false, type: 'Unknown', error: 'No API key' };
+        }
+        const response = await axios.get(`https://proxycheck.io/v2/${ip}?vpn=1&asn=1&key=${key}`, { timeout: 3000 });
         const data = response.data;
 
         if (data.status !== 'ok') {

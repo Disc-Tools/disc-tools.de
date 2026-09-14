@@ -51,6 +51,10 @@ app.use(rateLimitMiddleware);
 const corsMiddleware = require('./middleware/cors');
 app.use(corsMiddleware);
 
+// CSRF protection for admin POST (Origin check)
+const csrfMiddleware = require('./middleware/csrf');
+app.use(csrfMiddleware);
+
 // VPN check (server-side enforcement)
 const vpnMiddleware = require('./middleware/vpnCheck');
 app.use('/api', vpnMiddleware);
@@ -704,12 +708,12 @@ setInterval(async () => {
 
         let diskPercent = 0;
         try {
-            const { execSync } = require('child_process');
-            const df = execSync("df -h / | tail -1").toString().trim().split(/\s+/);
-            diskPercent = parseInt(df[4].replace('%', '')) || 0;
+            const stats = await fs.promises.statfs('/');
+            diskPercent = Math.round((1 - stats.bfree / stats.blocks) * 100);
         } catch (e) {}
 
-        const cpu = parseFloat(os.loadavg()[0].toFixed(2)) * 25;
+        const cpus = os.cpus().length || 4;
+        const cpu = Math.round((os.loadavg()[0] / cpus) * 100);
         const ram = Math.round((usedMem / totalMem) * 100);
 
         await db.query(
@@ -2274,14 +2278,17 @@ app.use((err, req, res, next) => {    if (err.message === 'Not allowed by CORS')
     res.status(500).json({ error: 'Internal Server Error' });
 });
 
-process.on('uncaughtException', (err) => {
+process.on('uncaughtException', async (err) => {
     console.error('[UNCAUGHT]', err);
     logError('Uncaught Exception', { error: err.message, stack: err.stack });
+    try { await db.end(); } catch {}
+    try { process.exit(1); } catch { process.exit(1); }
 });
 
-process.on('unhandledRejection', (reason) => {
+process.on('unhandledRejection', async (reason) => {
     console.error('[UNHANDLED REJECTION]', reason);
-    logError('Unhandled Rejection', { error: typeof reason === 'object' ? reason.message : String(reason) });
+    logError('Unhandled Rejection', { error: typeof reason === 'object' ? (reason && reason.message) : String(reason) });
+    // Graceful: log and continue, but ensure DB is still healthy
 });
 
 const PORT = process.env.PORT || 3000;

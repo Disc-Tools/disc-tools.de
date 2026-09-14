@@ -138,13 +138,13 @@ router.get('/auth/:provider/callback', async (req, res) => {
     if (!expectedState || !state || expectedState !== state) {
         return res.status(403).send('Invalid state parameter');
     }
-    res.clearCookie('oauth_link_state');
+    res.clearCookie('oauth_link_state', {httpOnly:true, secure:true, sameSite:'lax', path:'/'});
 
     const expectedProvider = req.cookies.oauth_link_provider;
     if (expectedProvider !== provider) {
         return res.status(403).send('Provider mismatch');
     }
-    res.clearCookie('oauth_link_provider');
+    res.clearCookie('oauth_link_provider', {httpOnly:true, secure:true, sameSite:'lax', path:'/'});
 
     const token = req.cookies.token;
     if (!token) return res.status(401).send('Not authenticated');

@@ -18,22 +18,11 @@ const ADMIN_ROLES = ['1503064097040629891', '1503064197704061109', '150306428991
 
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-const UPLOADS_DIR = path.join(__dirname, '../../uploads/gifs');
+const UPLOADS_DIR = path.join(__dirname, '../uploads/gifs');
 const MAX_FILE_SIZE = 8 * 1024 * 1024;
 const MAX_DIMENSION = 1920;
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        const userDir = path.join(UPLOADS_DIR, req.user.id);
-        fs.mkdirSync(userDir, { recursive: true });
-        cb(null, userDir);
-    },
-    filename: (req, file, cb) => {
-        const id = uuidv4();
-        req.gifId = id;
-        cb(null, `${id}.gif`);
-    }
-});
+const storage = multer.memoryStorage();
 
 const upload = multer({
     storage,
@@ -177,23 +166,33 @@ router.post('/gifs/upload', auth, (req, res, next) => {
 
         const { name, tags, nsfw } = req.body;
         if (!name || name.trim().length === 0 || name.length > 100) {
-            fs.unlinkSync(req.file.path);
             return res.status(400).json({ error: 'Name is required (max 100 chars)' });
+        }
+
+        // Magic-bytes check before any disk write (prevent polyglot)
+        const header = req.file.buffer.slice(0, 6).toString();
+        if (!header.startsWith('GIF87a') && !header.startsWith('GIF89a')) {
+            return res.status(400).json({ error: 'Invalid GIF file (magic bytes mismatch)' });
         }
 
         let dimensions;
         try {
-            const stream = fs.createReadStream(req.file.path);
-            dimensions = await probe(stream);
+            dimensions = probe.sync(req.file.buffer);
+            if (!dimensions) throw new Error('unreadable');
         } catch (e) {
-            fs.unlinkSync(req.file.path);
             return res.status(400).json({ error: 'Invalid or corrupted GIF' });
         }
 
         if (dimensions.width > MAX_DIMENSION || dimensions.height > MAX_DIMENSION) {
-            fs.unlinkSync(req.file.path);
             return res.status(400).json({ error: `Dimensions exceed ${MAX_DIMENSION}px` });
         }
+
+        // Generate ID and write to disk only after validation
+        const gifId = uuidv4();
+        req.gifId = gifId;
+        const userDir = path.join(UPLOADS_DIR, req.user.id);
+        fs.mkdirSync(userDir, { recursive: true });
+        fs.writeFileSync(path.join(userDir, `${gifId}.gif`), req.file.buffer);
 
         const parsedTags = tags
             ? tags.split(',').map(t => t.trim().toLowerCase()).filter(Boolean).slice(0, 10)
@@ -232,7 +231,93 @@ router.post('/gifs/upload', auth, (req, res, next) => {
         });
     } catch (err) {
         console.error('[GIFS UPLOAD]', err);
-        if (req.file && fs.existsSync(req.file.path)) fs.unlinkSync(req.file.path);
+        // No file on disk to cleanup with memoryStorage (already validated before write)
+        // If file was written, try to remove
+        try {
+            if (req.gifId) {
+                const p = path.join(UPLOADS_DIR, req.user.id, `${req.gifId}.gif`);
+                if (fs.existsSync(p)) fs.unlinkSync(p);
+            }
+        } catch {}
+        res.status(500).json({ error: 'Upload failed' });
+    }
+});
+
+const internalUpload = multer({
+    storage: multer.memoryStorage(),
+    limits: { fileSize: MAX_FILE_SIZE },
+    fileFilter: (req, file, cb) => {
+        if (file.mimetype !== 'image/gif') {
+            return cb(new Error('Only GIF files are allowed'));
+        }
+        cb(null, true);
+    }
+});
+
+// POST /api/gifs/internal-upload (internal - used by bots)
+router.post('/gifs/internal-upload', internalAuth, internalUpload.single('file'), async (req, res) => {
+    try {
+        if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+
+        const userId = /^\d{17,20}$/.test(req.body.user_id || '') ? req.body.user_id : null;
+        if (!userId) return res.status(400).json({ error: 'Invalid user_id' });
+
+        const name = (req.body.name || '').trim();
+        if (!name || name.length === 0 || name.length > 100) {
+            return res.status(400).json({ error: 'Name is required (max 100 chars)' });
+        }
+
+        let dimensions;
+        try {
+            dimensions = probe.sync(req.file.buffer);
+            if (!dimensions) throw new Error('unreadable');
+        } catch (e) {
+            return res.status(400).json({ error: 'Invalid or corrupted GIF' });
+        }
+
+        if (dimensions.width > MAX_DIMENSION || dimensions.height > MAX_DIMENSION) {
+            return res.status(400).json({ error: `Dimensions exceed ${MAX_DIMENSION}px` });
+        }
+
+        const parsedTags = req.body.tags
+            ? req.body.tags.split(',').map(t => t.trim().toLowerCase()).filter(Boolean).slice(0, 10)
+            : [];
+        const cleanName = name;
+        const isNsfw = req.body.nsfw === 'true' || req.body.nsfw === '1';
+        const modStatus = isNsfw ? 'pending' : 'approved';
+        const uploaderName = (req.body.uploader_name || 'Unknown').slice(0, 100);
+
+        const gifId = uuidv4();
+        const userDir = path.join(UPLOADS_DIR, userId);
+        fs.mkdirSync(userDir, { recursive: true });
+        fs.writeFileSync(path.join(userDir, `${gifId}.gif`), req.file.buffer);
+
+        await db.query(`
+            INSERT INTO gifs (id, user_id, uploader_name, storage_path, original_name, name, tags, nsfw, file_size, width, height, moderation_status)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+            RETURNING id
+        `, [
+            gifId, userId, uploaderName,
+            `${userId}/${gifId}.gif`,
+            req.file.originalname || `${gifId}.gif`,
+            cleanName, parsedTags, isNsfw,
+            req.file.size, dimensions.width, dimensions.height,
+            modStatus
+        ]);
+
+        const messageId = await sendModMessage(gifId, cleanName, userId, req.file.size, isNsfw, parsedTags, isNsfw);
+        if (messageId && isNsfw) {
+            await db.query('UPDATE gifs SET moderation_message_id = $1 WHERE id = $2', [messageId, gifId]);
+        }
+
+        res.json({
+            id: gifId,
+            url: `/gifs/${userId}/${gifId}/`,
+            direct_url: `https://disc-tools.de/uploads/gifs/${userId}/${gifId}.gif`,
+            moderation_status: modStatus
+        });
+    } catch (err) {
+        console.error('[GIFS INTERNAL UPLOAD]', err);
         res.status(500).json({ error: 'Upload failed' });
     }
 });

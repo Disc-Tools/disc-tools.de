@@ -17,6 +17,31 @@ const { discordFetch } = require('../utils/discord');
 const authMiddleware = require('../middleware/auth');
 
 const PARTNER_ROLE_ID = '1508659586339704883';
+const PARTNER_LOG_CHANNEL_ID = '1517825958575603743';
+
+async function sendPartnerLog(embed, content) {
+    try {
+        if (!BOT_TOKEN) return;
+        const body = { embeds: [embed] };
+        if (content) {
+            body.content = content;
+            body.allowed_mentions = { parse: ['users'] };
+        }
+        const res = await fetch(`https://discord.com/api/v10/channels/${PARTNER_LOG_CHANNEL_ID}/messages`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bot ${BOT_TOKEN}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+        });
+        if (!res.ok) {
+            console.warn(`[PARTNERS] Log send failed (${res.status})`);
+        }
+    } catch (e) {
+        console.warn('[PARTNERS] Failed to send partner log:', e.message);
+    }
+}
 
 (async () => {
     try {
@@ -546,6 +571,20 @@ router.post('/api/admin/partner/requests/:id/approve', checkAdmin, async (req, r
             console.warn('[PARTNERS] Failed to assign role:', e.message);
         }
 
+        // Partner log: partnership started
+        sendPartnerLog({
+            color: 0x2ECC71,
+            title: '🤝 Partnership Started',
+            description: `**${partnerReq.name}** is now a partner of **disc-tools.de**!`,
+            fields: [
+                { name: 'Partner', value: `**${partnerReq.name}** (<@${partnerReq.user_id}>)`, inline: false },
+                { name: 'Accepted by', value: `<@${req.user.id}>`, inline: true },
+                { name: 'Duration', value: expiresAt ? `${durationLabel} (until <t:${Math.floor(expiresAt.getTime() / 1000)}:F>)` : '∞ Permanent', inline: true }
+            ],
+            footer: { text: 'Disc-Tools Partnership Program' },
+            timestamp: new Date().toISOString()
+        }, `<@${partnerReq.user_id}>`);
+
         res.json({ success: true });
     } catch (err) {
         console.error('[ADMIN PARTNERS] Approve failed:', err.message);
@@ -825,7 +864,7 @@ router.post('/api/admin/partners/:id/delete', checkAdmin, async (req, res) => {
         const { reason } = req.body || {};
 
         const existing = await db.query(
-            `SELECT id, name, user_id FROM partners WHERE id = $1`,
+            `SELECT id, name, slug, user_id, expires_at FROM partners WHERE id = $1`,
             [req.params.id]
         );
         if (existing.rows.length === 0) {
@@ -866,7 +905,44 @@ router.post('/api/admin/partners/:id/delete', checkAdmin, async (req, res) => {
             });
         }
 
-        res.json({ success: true, notified: recipients.length });
+        // Remove partner role from users with no other active partnership
+        // (partner_members rows are gone via ON DELETE CASCADE, so this checks remaining ones)
+        let rolesRemoved = 0;
+        for (const uid of recipients) {
+            try {
+                const still = await db.query(
+                    `SELECT 1 FROM partner_members WHERE user_id = $1 AND partner_id IN (SELECT id FROM partners WHERE status = 'active') LIMIT 1`,
+                    [uid]
+                );
+                if (still.rows.length === 0) {
+                    const rm = await fetch(`https://discord.com/api/v10/guilds/${GUILD_ID}/members/${uid}/roles/${PARTNER_ROLE_ID}`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': `Bot ${BOT_TOKEN}` }
+                    });
+                    if (rm.status === 204) rolesRemoved++;
+                    else console.warn(`[PARTNERS] Role removal failed for ${uid} (${rm.status})`);
+                }
+            } catch (e) {
+                console.warn('[PARTNERS] Role removal failed for', uid, ':', e.message);
+            }
+        }
+
+        // Partner log: forced/manual end with reason
+        sendPartnerLog({
+            color: 0xE74C3C,
+            title: '💔 Partnership Ended',
+            description: `**${partner.name}** is no longer a partner of **disc-tools.de**.`,
+            fields: [
+                { name: 'End type', value: '⚠️ Forced / manual end', inline: false },
+                { name: 'Ended by', value: `<@${req.user.id}>`, inline: true },
+                { name: 'Ended at', value: `<t:${Math.floor(Date.now() / 1000)}:F>`, inline: true },
+                { name: 'Reason', value: endedReason.slice(0, 1000), inline: false }
+            ],
+            footer: { text: 'Disc-Tools Partnership Program' },
+            timestamp: new Date().toISOString()
+        }, [...new Set([partner.user_id, req.user.id].filter(Boolean))].map(id => `<@${id}>`).join(' '));
+
+        res.json({ success: true, notified: recipients.length, rolesRemoved });
     } catch (err) {
         console.error('[ADMIN PARTNERS] Delete failed:', err.message);
         res.status(500).json({ error: 'Failed to delete partner' });
@@ -920,6 +996,20 @@ router.post('/api/admin/partners/add', checkAdmin, async (req, res) => {
                 footer: { text: 'Disc-Tools Partnership Program' }
             });
         }
+
+        // Partner log: partnership started (manual add)
+        sendPartnerLog({
+            color: 0x2ECC71,
+            title: '🤝 Partnership Started',
+            description: `**${name}** is now a partner of **disc-tools.de**!`,
+            fields: [
+                { name: 'Partner', value: `**${name}** (<@${ids[0] || req.user.id}>)`, inline: false },
+                { name: 'Accepted by', value: `<@${req.user.id}>`, inline: true },
+                { name: 'Duration', value: expiresAt ? `Until <t:${Math.floor(expiresAt.getTime() / 1000)}:F>` : '∞ Permanent', inline: true }
+            ],
+            footer: { text: 'Disc-Tools Partnership Program' },
+            timestamp: new Date().toISOString()
+        }, `<@${ids[0] || req.user.id}>`);
 
         res.json({ success: true });
     } catch (err) {
@@ -1147,5 +1237,57 @@ async function updatePartnerManage(req, res) {
         res.status(500).json({ error: 'Failed to update partner: ' + err.message });
     }
 }
+
+// --- Expiry checker: log when partnership time simply ran out ---
+async function checkExpiredPartners() {
+    try {
+        const result = await db.query(
+            `SELECT id, name, slug, user_id, expires_at FROM partners
+             WHERE status = 'active' AND expires_at IS NOT NULL AND expires_at <= NOW()`
+        );
+        for (const partner of result.rows) {
+            await db.query(`UPDATE partners SET status = 'expired' WHERE id = $1 AND status = 'active'`, [partner.id]);
+
+            let members = [];
+            try {
+                const m = await db.query('SELECT user_id FROM partner_members WHERE partner_id = $1', [partner.id]);
+                members = m.rows.map(r => r.user_id);
+            } catch {}
+
+            // Remove partner role from members with no other active partnership
+            for (const uid of [...new Set([...members, partner.user_id].filter(Boolean))]) {
+                try {
+                    const still = await db.query(
+                        `SELECT 1 FROM partner_members WHERE user_id = $1 AND partner_id IN (SELECT id FROM partners WHERE status = 'active') LIMIT 1`,
+                        [uid]
+                    );
+                    if (still.rows.length === 0) {
+                        await fetch(`https://discord.com/api/v10/guilds/${GUILD_ID}/members/${uid}/roles/${PARTNER_ROLE_ID}`, {
+                            method: 'DELETE',
+                            headers: { 'Authorization': `Bot ${BOT_TOKEN}` }
+                        });
+                    }
+                } catch {}
+            }
+
+            sendPartnerLog({
+                color: 0xF1C40F,
+                title: '⏳ Partnership Ended',
+                description: `**${partner.name}** is no longer a partner of **disc-tools.de**.`,
+                fields: [
+                    { name: 'End type', value: '⌛ Time expired (duration ran out)', inline: false },
+                    { name: 'Expired at', value: `<t:${Math.floor(new Date(partner.expires_at).getTime() / 1000)}:F>`, inline: true }
+                ],
+                footer: { text: 'Disc-Tools Partnership Program' },
+                timestamp: new Date().toISOString()
+            }, partner.user_id ? `<@${partner.user_id}>` : undefined);
+            console.info(`[PARTNERS] Expired: ${partner.name} (${partner.id})`);
+        }
+    } catch (err) {
+        console.error('[PARTNERS] Expiry check failed:', err.message);
+    }
+}
+setInterval(checkExpiredPartners, 5 * 60 * 1000);
+setTimeout(checkExpiredPartners, 30 * 1000);
 
 module.exports = router;

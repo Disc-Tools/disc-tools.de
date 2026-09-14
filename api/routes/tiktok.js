@@ -53,16 +53,40 @@ const slogans = [
 
 const messages = [...getFeatures(), ...slogans];
 
+function isValidColor(v) {
+    if (typeof v !== 'string' || v.length > 80) return false;
+    if (/^#[0-9a-fA-F]{3,8}$/.test(v)) return true;
+    if (/^transparent$/i.test(v)) return true;
+    if (/^rgba?\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*(,\s*(0|1|0?\.\d+))?\s*\)$/i.test(v)) return true;
+    if (/^hsla?\(\s*\d{1,3}\s*,\s*\d{1,3}%\s*,\s*\d{1,3}%\s*(,\s*(0|1|0?\.\d+))?\s*\)$/i.test(v)) return true;
+    return false;
+}
+function sanitizeColor(v, fallback) { return isValidColor(v) ? v : fallback; }
+function sanitizeFont(v) {
+    if (typeof v !== 'string' || v.length > 120) return 'Inter, system-ui, sans-serif';
+    // Allow only safe font-family chars: letters, numbers, commas, spaces, quotes, hyphens
+    if (!/^[a-zA-Z0-9,\s\-'"]+$/.test(v)) return 'Inter, system-ui, sans-serif';
+    // Block CSS injection attempts: no ; } < > /
+    if (/[;{}<>]/.test(v)) return 'Inter, system-ui, sans-serif';
+    return v.replace(/["']/g, '').trim().substring(0, 80);
+}
+function clampInt(v, min, max, fallback) {
+    const n = parseInt(v, 10);
+    if (isNaN(n)) return fallback;
+    return Math.max(min, Math.min(max, n));
+}
+function sanitizeAlign(v) { return ['left','center','right'].includes(v) ? v : 'center'; }
+
 router.get('/tiktok-ad', (req, res) => {
-    const bg = req.query.bg || 'transparent';
-    const color = req.query.color || '#ffffff';
-    const size = parseInt(req.query.size) || 34;
-    const interval = parseInt(req.query.interval) || 3000;
-    const align = req.query.align || 'center';
-    const font = req.query.font || 'Inter, system-ui, sans-serif';
-    const accent = req.query.accent || '#5865F2';
-    const card = req.query.card !== undefined ? req.query.card : 'rgba(0,0,0,0.75)';
-    const radius = parseInt(req.query.radius) || 16;
+    const bg = sanitizeColor(req.query.bg, 'transparent');
+    const color = sanitizeColor(req.query.color, '#ffffff');
+    const size = clampInt(req.query.size, 10, 200, 34);
+    const interval = clampInt(req.query.interval, 1000, 10000, 3000);
+    const align = sanitizeAlign(req.query.align);
+    const font = sanitizeFont(req.query.font || 'Inter, system-ui, sans-serif');
+    const accent = sanitizeColor(req.query.accent, '#5865F2');
+    const card = (req.query.card !== undefined && isValidColor(req.query.card)) ? req.query.card : 'rgba(0,0,0,0.75)';
+    const radius = clampInt(req.query.radius, 0, 50, 16);
 
     res.send(`<!DOCTYPE html>
 <html lang="en">

@@ -98,30 +98,49 @@ router.post('/linktree/profile', auth, async (req, res) => {
             profileId = insert.rows[0].id;
         }
 
+        // Validate links/hobbies before any DB mutation
         if (links && Array.isArray(links)) {
-            await db.query('DELETE FROM linktree_links WHERE profile_id = $1', [profileId]);
-            for (let i = 0; i < Math.min(links.length, 20); i++) {
-                const l = links[i];
-                if (l.label && l.url) {
-                    await db.query(
-                        'INSERT INTO linktree_links (profile_id, label, url, icon, sort_order) VALUES ($1, $2, $3, $4, $5)',
-                        [profileId, l.label, l.url, l.icon || null, i]
-                    );
+            for (const l of links) {
+                if (l.url && !/^https?:\/\//i.test(l.url)) {
+                    return res.status(400).json({ error: 'Invalid link URL – must start with http:// or https://' });
+                }
+                if (l.icon && l.icon && !/^https?:\/\//i.test(l.icon)) {
+                    return res.status(400).json({ error: 'Invalid icon URL – must start with http:// or https://' });
                 }
             }
         }
 
-        if (hobbies && Array.isArray(hobbies)) {
-            await db.query('DELETE FROM linktree_hobbies WHERE profile_id = $1', [profileId]);
-            for (let i = 0; i < Math.min(hobbies.length, 20); i++) {
-                const h = hobbies[i];
-                if (h) {
-                    await db.query(
-                        'INSERT INTO linktree_hobbies (profile_id, hobby, sort_order) VALUES ($1, $2, $3)',
-                        [profileId, h, i]
-                    );
+        await db.query('BEGIN');
+        try {
+            if (links && Array.isArray(links)) {
+                await db.query('DELETE FROM linktree_links WHERE profile_id = $1', [profileId]);
+                for (let i = 0; i < Math.min(links.length, 20); i++) {
+                    const l = links[i];
+                    if (l.label && l.url) {
+                        await db.query(
+                            'INSERT INTO linktree_links (profile_id, label, url, icon, sort_order) VALUES ($1, $2, $3, $4, $5)',
+                            [profileId, l.label, l.url, l.icon || null, i]
+                        );
+                    }
                 }
             }
+
+            if (hobbies && Array.isArray(hobbies)) {
+                await db.query('DELETE FROM linktree_hobbies WHERE profile_id = $1', [profileId]);
+                for (let i = 0; i < Math.min(hobbies.length, 20); i++) {
+                    const h = hobbies[i];
+                    if (h) {
+                        await db.query(
+                            'INSERT INTO linktree_hobbies (profile_id, hobby, sort_order) VALUES ($1, $2, $3)',
+                            [profileId, h, i]
+                        );
+                    }
+                }
+            }
+            await db.query('COMMIT');
+        } catch (e) {
+            await db.query('ROLLBACK');
+            throw e;
         }
 
         res.json({ success: true, profileId, username });
