@@ -19,6 +19,20 @@ const authMiddleware = require('../middleware/auth');
 const PARTNER_ROLE_ID = '1508659586339704883';
 const PARTNER_LOG_CHANNEL_ID = '1517825958575603743';
 
+// Only http(s) URLs may be stored/rendered as links (blocks javascript:/data: XSS).
+function isHttpUrl(v, maxLen) {
+    if (typeof v !== 'string') return false;
+    const s = v.trim();
+    if (!s || s.length > (maxLen || 200)) return false;
+    let u;
+    try {
+        u = new URL(s);
+    } catch {
+        return false;
+    }
+    return u.protocol === 'http:' || u.protocol === 'https:';
+}
+
 async function sendPartnerLog(embed, content) {
     try {
         if (!BOT_TOKEN) return;
@@ -342,6 +356,9 @@ router.post('/api/partners/request', authMiddleware, async (req, res) => {
         if (!website && !discordServer) {
             return res.status(400).json({ error: 'Either a Website or Discord Server link is required' });
         }
+        if ((website && !isHttpUrl(website)) || (discordServer && !isHttpUrl(discordServer))) {
+            return res.status(400).json({ error: 'Website and Discord Server must be valid http(s) URLs' });
+        }
 
         // Check if user is in the Disc-Tools server
         if (!BOT_TOKEN) {
@@ -500,6 +517,9 @@ router.post('/api/admin/partner/requests/:id/approve', checkAdmin, async (req, r
 
         // Insert into partners table
         const slug = generateSlug(partnerReq.name);
+        // Sanitize historic request values (submitted before URL validation existed)
+        const safeWebsite = isHttpUrl(partnerReq.website) ? partnerReq.website.trim() : null;
+        const safeDiscord = isHttpUrl(partnerReq.discord_server) ? partnerReq.discord_server.trim() : null;
         await db.query(
             `INSERT INTO partners (id, name, slug, logo, description, website, discord_server, user_id, status, approved_by, approved_at, created_at, expires_at)
              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, NOW(), NOW(), $11)
@@ -510,8 +530,8 @@ router.post('/api/admin/partner/requests/:id/approve', checkAdmin, async (req, r
                 slug,
                 null,
                 partnerReq.description,
-                partnerReq.website,
-                partnerReq.discord_server,
+                safeWebsite,
+                safeDiscord,
                 partnerReq.user_id,
                 'active',
                 req.user.id,
@@ -805,6 +825,10 @@ router.put('/api/admin/partners/:id', checkAdmin, async (req, res) => {
     try {
         const { name, logo, description, website, discord_server, user_id, user_ids, duration } = req.body;
 
+        if ((website && !isHttpUrl(website)) || (discord_server && !isHttpUrl(discord_server))) {
+            return res.status(400).json({ error: 'Website and Discord Server must be valid http(s) URLs' });
+        }
+
         const existing = await db.query(
             `SELECT id, name FROM partners WHERE id = $1`,
             [req.params.id]
@@ -959,6 +983,9 @@ router.post('/api/admin/partners/add', checkAdmin, async (req, res) => {
         }
         if (!website && !discordServer) {
             return res.status(400).json({ error: 'Either Website or Discord Server link is required' });
+        }
+        if ((website && !isHttpUrl(website)) || (discordServer && !isHttpUrl(discordServer))) {
+            return res.status(400).json({ error: 'Website and Discord Server must be valid http(s) URLs' });
         }
 
         const ids = Array.isArray(user_ids) ? user_ids.filter(Boolean) : (req.body.user_id ? [req.body.user_id] : []);
@@ -1200,6 +1227,10 @@ router.post('/api/admin/partner/manage/:slug', checkPartnerAccess, async (req, r
 async function updatePartnerManage(req, res) {
     try {
         const { name, description, website, discord_server, user_ids } = req.body;
+
+        if ((website && !isHttpUrl(website)) || (discord_server && !isHttpUrl(discord_server))) {
+            return res.status(400).json({ error: 'Website and Discord Server must be valid http(s) URLs' });
+        }
 
         await db.query(
             `UPDATE partners SET
