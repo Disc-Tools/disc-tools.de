@@ -1,0 +1,26 @@
+.partner-request { max-width: 640px; }
+.partner-request form {
+    padding: clamp(16px, 4vw, 28px);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface);
+}
+.partner-request label { display: block; margin-bottom: 5px; font-weight: 600; }
+.partner-request input:not([type="checkbox"]), .partner-request textarea {
+    width: 100%;
+    margin: 0 0 14px;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg);
+    color: var(--text);
+    font: inherit;
+}
+.partner-request textarea { resize: vertical; }
+.partner-request input[type="checkbox"] { accent-color: var(--primary); }
+.partner-request-terms { display: flex; align-items: flex-start; gap: 8px; }
+.partner-request p { color: var(--muted); }
+.partner-request a:not(.button) { color: var(--accent); text-decoration: underline; }
+.partner-request button { cursor: pointer; font-family: inherit; }
+.partner-request button:disabled { cursor: wait; opacity: .65; }
+#partner-request-error { color: #f5a4ac; }

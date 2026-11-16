@@ -1,7 +1,7 @@
 /* Disc-Tools: Markdown Generator — editor + Discord preview */
 
 .lookup-page {
-    padding: calc(var(--nav-h) + 40px) 0 100px;
+    padding: clamp(38px, 7vw, 82px) 0 100px;
 }
 
 /* ---------- Hero ---------- */
@@ -9,7 +9,7 @@
     font-size: clamp(2rem, 5vw, 2.8rem);
 }
 .tool-hero h1 em {
-    color: var(--blurple-soft);
+    color: var(--accent);
     font-style: normal;
 }
 
@@ -85,7 +85,7 @@
     border: 1px solid var(--border, #232c40);
     border-radius: 8px;
     background: rgba(255,255,255,0.03);
-    color: var(--text-muted, #9aa5bc);
+    color: var(--muted, #9aa5bc);
     font-size: 13px;
     cursor: pointer;
     transition: color 0.15s, border-color 0.15s, background 0.15s, transform 0.1s;
@@ -121,7 +121,7 @@
     width: 100%;
     min-height: 260px;
     resize: vertical;
-    background: var(--surface-2, #171c29);
+    background: var(--hover, #171c29);
     border: 1px solid var(--border, #232c40);
     border-radius: 10px;
     padding: 0.85rem 0.95rem;
@@ -139,7 +139,7 @@
 }
 
 .mg-textarea::placeholder {
-    color: var(--text-muted, #9aa5bc);
+    color: var(--muted, #9aa5bc);
     opacity: 0.7;
 }
 
@@ -155,7 +155,7 @@
 
 .mg-count {
     font-size: 12px;
-    color: var(--text-muted, #9aa5bc);
+    color: var(--muted, #9aa5bc);
     font-variant-numeric: tabular-nums;
 }
 
@@ -350,7 +350,7 @@
 /* ---------- Raw output ---------- */
 .mg-raw-wrap {
     margin-top: 1rem;
-    background: var(--surface-2, #171c29);
+    background: var(--hover, #171c29);
     border: 1px solid var(--border, #232c40);
     border-radius: 10px;
     padding: 0.7rem 0.85rem;
@@ -364,7 +364,7 @@
     font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
     font-size: 12.5px;
     line-height: 1.55;
-    color: var(--text-muted, #9aa5bc);
+    color: var(--muted, #9aa5bc);
     white-space: pre-wrap;
     word-break: break-word;
     min-width: 0;
@@ -379,7 +379,7 @@
     border-radius: 8px;
     border: 1px solid var(--border, #232c40);
     background: rgba(255,255,255,0.04);
-    color: var(--text-muted, #9aa5bc);
+    color: var(--muted, #9aa5bc);
     font-size: 0.8rem;
     cursor: pointer;
     flex: 0 0 auto;
@@ -453,7 +453,7 @@
 }
 
 .mg-cheat-label i {
-    color: var(--blurple-soft, #7c85f0);
+    color: var(--accent, #7c85f0);
     font-size: 12px;
     flex: 0 0 auto;
 }
@@ -461,8 +461,8 @@
 .mg-cheat-code {
     font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
     font-size: 11.5px;
-    color: var(--text-muted, #9aa5bc);
-    background: var(--surface-2, #171c29);
+    color: var(--muted, #9aa5bc);
+    background: var(--hover, #171c29);
     border: 1px solid var(--border, #232c40);
     border-radius: 6px;
     padding: 0.18rem 0.4rem;
@@ -473,7 +473,7 @@
 /* ---------- Helpers ---------- */
 .mg-hint {
     font-size: 12.5px;
-    color: var(--text-muted, #9aa5bc);
+    color: var(--muted, #9aa5bc);
     margin: 0.6rem 0 0;
     line-height: 1.5;
 }

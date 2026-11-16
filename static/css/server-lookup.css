@@ -3,29 +3,6 @@
    Builds on top of user-lookup.css (result card, copy rows, …)
    ============================================================ */
 
-/* ---------- Page background (server splash, fixed layer) ---------- */
-#server-bg-layer {
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    pointer-events: none;
-    filter: brightness(1.6) saturate(1.05);
-}
-#server-bg-layer::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: rgba(10, 13, 19, 0.7);
-}
-
-/* Footer solid — splash stays out of the footer area */
-.footer {
-    background: var(--bg);
-}
-
 /* ---------- Icon (slightly smaller avatar) ---------- */
 .server-icon {
     width: 92px;
@@ -57,12 +34,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--surface-2);
+    background: var(--hover);
     border: 1px solid var(--border);
 }
 .result-avatar-fallback i {
     font-size: 34px;
-    color: var(--blurple-soft);
+    color: var(--accent);
 }
 
 /* ---------- Description ---------- */
@@ -73,7 +50,7 @@
     background: rgba(88, 101, 242, 0.07);
     border: 1px solid rgba(88, 101, 242, 0.22);
     border-radius: 12px;
-    color: var(--text-muted);
+    color: var(--muted);
     font-size: 14px;
     line-height: 1.55;
     font-style: italic;
@@ -85,7 +62,7 @@
     position: absolute;
     left: 16px;
     top: 13px;
-    color: var(--blurple-soft);
+    color: var(--accent);
     font-size: 13px;
 }
 
@@ -124,10 +101,10 @@
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--text-muted);
+    color: var(--muted);
 }
 .server-invite-code {
-    font-family: var(--font-mono);
+    font-family: ui-monospace, monospace;
     font-size: 15px;
     font-weight: 700;
     color: var(--text);
@@ -137,18 +114,18 @@
 }
 .server-invite-expiry {
     font-size: 12px;
-    color: var(--text-muted);
+    color: var(--muted);
 }
 .server-invite-none {
     justify-content: flex-start;
     background: rgba(10, 13, 19, 0.4);
     border-color: var(--border);
-    color: var(--text-muted);
+    color: var(--muted);
     font-size: 14px;
     gap: 12px;
 }
 .server-invite-none i {
-    color: var(--text-muted);
+    color: var(--muted);
 }
 
 /* ---------- Sections (channels / members) ---------- */
@@ -161,14 +138,14 @@
     margin-bottom: 16px;
 }
 .server-section .result-links-title i {
-    color: var(--blurple-soft);
+    color: var(--accent);
 }
 
 .server-list-empty {
     padding: 22px;
     text-align: center;
     font-size: 13.5px;
-    color: var(--text-muted);
+    color: var(--muted);
     font-style: italic;
     background: rgba(10, 13, 19, 0.4);
     border: 1px solid var(--border);
@@ -195,7 +172,7 @@
     min-width: 0;
 }
 .server-channel i {
-    color: var(--text-muted);
+    color: var(--muted);
     font-size: 12px;
     flex-shrink: 0;
 }
@@ -208,9 +185,9 @@
 }
 .server-channel-id {
     margin-left: auto;
-    font-family: var(--font-mono);
+    font-family: ui-monospace, monospace;
     font-size: 11px;
-    color: var(--text-muted);
+    color: var(--muted);
     flex-shrink: 0;
 }
 
@@ -245,7 +222,7 @@
     height: 38px;
     border-radius: 50%;
     object-fit: cover;
-    background: var(--surface-2);
+    background: var(--hover);
 }
 .server-member-avatar i {
     position: absolute;
@@ -277,7 +254,7 @@
 }
 .server-member-activity {
     font-size: 12.5px;
-    color: var(--text-muted);
+    color: var(--muted);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

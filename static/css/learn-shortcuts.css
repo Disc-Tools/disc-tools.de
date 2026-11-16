@@ -1,0 +1,15 @@
+.page { padding: clamp(32px, 6vw, 72px) 0 120px; }
+.hero { max-width: 720px; }
+.hero h1 { font-size: clamp(2.4rem, 5vw, 3.2rem); }
+.hero h1 em { color: var(--success); font-style: normal; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 18px; margin-top: 40px; }
+.cat-label { grid-column: 1/-1; display: flex; align-items: center; gap: 10px; font-size: 16px; font-weight: 700; color: var(--blurple-soft); margin-top: 8px; }
+.cat-label i { font-size: 15px; opacity: 0.7; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 24px; text-decoration: none; color: var(--text); display: flex; flex-direction: column; gap: 10px; transition: border-color 0.2s, transform 0.2s; }
+a.card:hover { border-color: var(--blurple); transform: translateY(-2px); }
+.card i.head-icon { font-size: 24px; color: var(--blurple); }
+.card h3 { font-size: 16px; }
+.card p { color: var(--text-muted); font-size: 13px; line-height: 1.5; flex: 1; }
+.card .keys { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; margin-top: 4px; }
+.card .keys kbd { display: inline-block; padding: 3px 8px; background: rgba(255,255,255,0.07); border: 1px solid var(--border); border-radius: 6px; font-family: var(--font-mono); font-size: 12px; color: var(--text); }
+.card .keys span { font-size: 12px; color: var(--text-muted); }

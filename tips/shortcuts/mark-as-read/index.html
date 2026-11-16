@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Quickly mark the current channel or server as read.">
+    <title>Mark as Read – Discord Keyboard Shortcuts | Disc-Tools</title>
+    <link rel="icon" type="image/svg+xml" href="/static/assets/img/logo.svg?v=20261116-live1">
+    <link rel="stylesheet" href="/static/fa-icons/fa.min.css?v=20261116-live1">
+    <link rel="stylesheet" href="/static/css/site.css?v=20261116-live1">
+    <script src="/static/js/auth-status.js?v=20261116-live1" defer></script>
+    <script src="/static/js/header.js?v=20261116-live1" defer></script>
+    <script src="/static/js/consent-ui.js?v=20261116-live1" defer></script>
+    <link rel="stylesheet" href="/static/css/learn.css?v=20261116-live1">
+    <link rel="stylesheet" href="/static/css/learn-shortcuts-article.css?v=20261116-live1">
+    <link rel="canonical" href="https://disc-tools.de/tips/shortcuts/mark-as-read/">
+</head>
+<body class="learn-layout">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+        <div class="header-background" aria-hidden="true"></div>
+        <nav class="nav" aria-label="Main navigation">
+            <a class="brand" href="/"><img src="/static/assets/img/logo.svg?v=20261116-live1" width="32" height="32" alt="">Disc-Tools</a>
+            <div class="nav-links">
+                <a href="/tools/">Tools</a>
+                <a href="/learn/" aria-current="true">Learn</a>
+                <a href="/team/">Team</a>
+                <a href="/partners/">Partners</a>
+                <a href="https://dash.disc-tools.de/premium">Premium</a>
+            </div>
+            <div class="account-control">
+                <details class="announcement-notifications" id="announcement-notifications">
+                    <summary aria-label="Announcement notifications">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/>
+                        </svg>
+                    </summary>
+                    <div class="announcement-notification-panel">
+                        <ul id="announcement-notification-list" aria-live="polite"><li>Loading announcements…</li></ul>
+                        <button type="button" id="announcement-mark-all" aria-disabled="true">Mark all as read</button>
+                    </div>
+                </details>
+                <a id="account-link" class="button button-outline login" href="https://disc-tools.de/api/auth/login?redirect=/success/login/">Log in</a>
+                <details id="account-menu" class="account-menu" hidden>
+                    <summary id="account-trigger" class="button account-profile"></summary>
+                    <div class="account-dropdown">
+                        <a href="/profile/">Profile</a>
+                        <a href="https://developers.disc-tools.de/">Developers</a>
+                        <a href="https://dash.disc-tools.de/">Dashboard</a>
+                        <a href="https://hosting.disc-tools.de/">Hosting</a>
+                        <a href="https://disc-tools.de/api/auth/logout">Logout</a>
+                    </div>
+                </details>
+            </div>
+        </nav>
+    </header>
+
+    <main id="main" class="page learn-guide">
+    <div class="container">
+        <nav class="crumbs" aria-label="Breadcrumb">
+            <a href="/learn/">Learn</a><span class="sep" aria-hidden="true">/</span>
+            <a href="/tips/shortcuts/">Shortcuts</a><span class="sep" aria-hidden="true">/</span>
+            <span aria-current="page">Mark as Read</span>
+        </nav>
+        <div class="hero-detail">
+            <span class="hero-icon"><i class="fa-solid fa-check-double"></i></span>
+            <div>
+                <h1>Mark as Read</h1>
+                <p class="desc">Quickly mark the current channel or server as read.</p>
+                <div class="meta-row">
+                    <span class="meta-pill"><i class="fa-solid fa-desktop"></i>Desktop</span>
+                </div>
+            </div>
+        </div>
+        <div class="panels">
+            <section class="panel" aria-label="Shortcut">
+                <div class="label"><i class="fa-solid fa-keyboard"></i> Press this</div>
+                <div class="syntax-row"><span><kbd>Esc</kbd> <span style="color:var(--text-muted);margin-left:8px">Mark current channel as read</span></span></div>
+<div class="syntax-row"><span><kbd>Shift+Esc</kbd> <span style="color:var(--text-muted);margin-left:8px">Mark current server as read</span></span></div>
+            </section>
+            <section class="panel" aria-label="What it does">
+                <div class="label"><i class="fa-solid fa-circle-info"></i> What it does</div>
+                <p style="color:var(--text-muted);font-size:14.5px;line-height:1.7;margin:0">Clears the unread indicator for the channel or server you are viewing, letting you catch up without scrolling every message.</p>
+            </section>
+        </div>
+        <div class="tip"><i class="fa-solid fa-lightbulb"></i><div>Use <kbd>Shift+Esc</kbd> to mark an entire server read at once. Combine with navigation shortcuts to triage unread channels quickly.</div></div>
+        <nav class="pager" aria-label="Previous and next shortcuts">
+            <a href="/tips/shortcuts/navigation/"><small>← Previous</small><strong>Navigation</strong></a>
+            <a class="next" href="/tips/shortcuts/emoji-picker/"><small>Next →</small><strong>Emoji Picker</strong></a>
+        </nav>
+        <section class="related">
+            <h2>Related shortcuts</h2>
+            <p>More keyboard shortcuts.</p>
+            <div class="related-grid"><a class="rel-card" href="/tips/shortcuts/navigation/"><i class="fa-solid fa-arrow-up"></i><span><strong>Navigation</strong><small>Shortcuts</small></span></a><a class="rel-card" href="/tips/shortcuts/quick-switcher/"><i class="fa-solid fa-bolt"></i><span><strong>Quick Switcher</strong><small>Shortcuts</small></span></a><a class="rel-card" href="/tips/shortcuts/search/"><i class="fa-solid fa-magnifying-glass"></i><span><strong>Search</strong><small>Shortcuts</small></span></a></div>
+        </section>
+    </div>
+</main>
+
+    <footer class="site-footer">
+        <div class="container footer-grid">
+            <div class="footer-brand">
+                <a class="brand" href="/"><img src="/static/assets/img/logo.svg?v=20261116-live1" width="28" height="28" alt="">Disc-Tools</a>
+                <nav class="footer-social-nav" aria-label="Social media">
+                    <ul class="footer-socials">
+                        <li><a href="https://discord.gg/rtRs8rhj5u" aria-label="Discord" title="Discord"><i class="fa-brands fa-discord" aria-hidden="true"></i></a></li>
+                        <li><a href="https://www.twitch.tv/disc_tools" aria-label="Twitch" title="Twitch"><i class="fa-brands fa-twitch" aria-hidden="true"></i></a></li>
+                        <li><a href="https://www.youtube.com/@disc-tools" aria-label="YouTube" title="YouTube"><i class="fa-brands fa-youtube" aria-hidden="true"></i></a></li>
+                        <li><a href="https://github.com/Disc-Tools/disc-tools.de" aria-label="GitHub" title="GitHub"><i class="fa-brands fa-github" aria-hidden="true"></i></a></li>
+                        <li><a href="https://www.instagram.com/disc.tools" aria-label="Instagram" title="Instagram"><i class="fa-brands fa-instagram" aria-hidden="true"></i></a></li>
+                        <li><a href="https://www.tiktok.com/@disc.tools" aria-label="TikTok" title="TikTok"><i class="fa-brands fa-tiktok" aria-hidden="true"></i></a></li>
+                        <li><a href="https://x.com/disc_tools" aria-label="X" title="X"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a></li>
+                    </ul>
+                </nav>
+                <p>Not affiliated with Discord Inc.</p>
+            </div>
+            <nav class="footer-column" aria-labelledby="footer-explore">
+                <h2 id="footer-explore">Explore</h2>
+                <a href="/tools/">Tool directory</a>
+                <a href="/learn/">Discord guides</a>
+                <a href="https://dash.disc-tools.de/">Dashboard</a>
+                <a href="https://status.disc-tools.de/#cat-main-site">Service status</a>
+            </nav>
+            <nav class="footer-column" aria-labelledby="footer-legal">
+                <h2 id="footer-legal"><a href="/legal/">Legal</a></h2>
+                <a href="/legal/privacy-policy/">Privacy Policy</a>
+                <a href="/legal/terms-of-service/">Terms of Service</a>
+                <a href="/legal/imprint/">Imprint</a>
+                <button class="footer-button" id="show-cookie-notice" type="button">Cookie settings</button>
+            </nav>
+        </div>
+    </footer>
+    <aside class="cookie-notice ad-consent-notice" id="cookie-notice" aria-labelledby="cookie-title" hidden>
+        <h2 id="cookie-title"><i class="fa-solid fa-cookie-bite" aria-hidden="true"></i> Cookies &amp; storage</h2>
+        <p>Disc-Tools uses essential storage for site features. You can also allow analytics with Umami and advertising with Google AdSense on the homepage.</p>
+        <div class="cookie-actions ad-consent-actions">
+            <button class="button button-primary" type="button" data-ad-consent="allow">Accept all</button>
+            <button class="button button-outline" type="button" data-ad-consent="deny">Only essentials</button>
+            <button class="button button-outline" id="select-ad-consent" type="button" aria-expanded="false" aria-controls="ad-consent-options">Select <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
+        </div>
+        <div class="ad-consent-options" id="ad-consent-options" hidden>
+            <div class="ad-consent-option">
+                <div>
+                    <label for="essential-storage">Essential</label>
+                    <p id="essential-storage-description">Required for login and core features.</p>
+                </div>
+                <input class="ad-consent-switch" id="essential-storage" type="checkbox" role="switch" aria-describedby="essential-storage-description" checked disabled>
+            </div>
+            <div class="ad-consent-option">
+                <label for="allow-advertising">Google AdSense advertising</label>
+                <input class="ad-consent-switch" id="allow-advertising" type="checkbox" role="switch">
+            </div>
+            <div class="ad-consent-option">
+                <label for="allow-analytics">Umami analytics</label>
+                <input class="ad-consent-switch" id="allow-analytics" type="checkbox" role="switch">
+            </div>
+            <button class="button button-primary" id="save-ad-consent" type="button">Save selection</button>
+        </div>
+        <a class="ad-consent-policy" href="/legal/privacy-policy/">Privacy Policy</a>
+    </aside>
+</body>
+</html>

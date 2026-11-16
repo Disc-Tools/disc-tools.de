@@ -1,7 +1,7 @@
 /* Disc-Tools: Timestamp Generator */
 
 .lookup-page {
-    padding: calc(var(--nav-h) + 40px) 0 100px;
+    padding: clamp(38px, 7vw, 82px) 0 100px;
 }
 
 .tg-card {
@@ -49,12 +49,12 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.4px;
-    color: var(--text-muted, #9aa5bc);
+    color: var(--muted, #9aa5bc);
 }
 
 .tg-field input,
 .tg-field select {
-    background: var(--surface-2, #171c29);
+    background: var(--hover, #171c29);
     border: 1px solid var(--border, #232c40);
     border-radius: 10px;
     padding: 0.6rem 0.8rem;
@@ -85,9 +85,10 @@
 
 .tg-row {
     display: grid;
-    grid-template-columns: 120px 1fr auto;
+    grid-template-columns: minmax(9rem, max-content) minmax(0, 1fr) auto;
     align-items: center;
     gap: 0.9rem;
+    column-gap: 1.25rem;
     padding: 0.65rem 0.9rem;
     border-radius: 10px;
     background: rgba(255, 255, 255, 0.025);
@@ -109,7 +110,7 @@
     border-radius: 6px;
     background: rgba(88, 101, 242, 0.15);
     border: 1px solid rgba(88, 101, 242, 0.4);
-    color: var(--blurple-soft, #7c85f0);
+    color: var(--accent, #7c85f0);
     font-size: 0.8rem;
     font-weight: 800;
     flex: 0 0 24px;
@@ -124,7 +125,7 @@
 
 .tg-row-example {
     font-size: 0.88rem;
-    color: var(--text-muted, #9aa5bc);
+    color: var(--muted, #9aa5bc);
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -141,7 +142,7 @@
     font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
     font-size: 0.8rem;
     color: var(--text, #edf1fa);
-    background: var(--surface-2, #171c29);
+    background: var(--hover, #171c29);
     border: 1px solid var(--border, #232c40);
     border-radius: 8px;
     padding: 0.35rem 0.6rem;
@@ -157,7 +158,7 @@
     border-radius: 8px;
     border: 1px solid var(--border, #232c40);
     background: rgba(255, 255, 255, 0.04);
-    color: var(--text-muted, #9aa5bc);
+    color: var(--muted, #9aa5bc);
     font-size: 0.8rem;
     cursor: pointer;
     flex: 0 0 auto;
@@ -202,7 +203,7 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.4px;
-    color: var(--text-muted, #9aa5bc);
+    color: var(--muted, #9aa5bc);
 }
 
 .tg-decode-value {

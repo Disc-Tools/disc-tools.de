@@ -1,212 +1,277 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Formatting Tips | Disc-Tools</title>
-    <meta name="description" content="All Discord markdown formatting shortcuts.">
-    <meta name="keywords" content="discord formatting, discord text formatting, discord markdown, discord bold italic, discord text style">
-    <meta name="robots" content="index, follow">
-    <meta name="theme-color" content="#0a0d13">
-    <link rel="icon" type="image/png" href="/static/assets/img/logo.png">
-    <link rel="apple-touch-icon" href="/static/assets/img/logo.png">
+    <meta name="description" content="All Discord markdown formatting in one place: bold, italic, headers, lists, quotes, code blocks, spoilers, timestamps, mentions & more — with copy-ready syntax and live previews.">
+    <title>Discord Text Formatting – All Markdown Tricks with Examples | Disc-Tools</title>
+    <link rel="icon" type="image/svg+xml" href="/static/assets/img/logo.svg?v=20261116-live1">
+    <link rel="stylesheet" href="/static/fa-icons/fa.min.css?v=20261116-live1">
+    <link rel="stylesheet" href="/static/css/site.css?v=20261116-live1">
+    <script src="/static/js/auth-status.js?v=20261116-live1" defer></script>
+    <script src="/static/js/header.js?v=20261116-live1" defer></script>
+    <script src="/static/js/consent-ui.js?v=20261116-live1" defer></script>
+    <link rel="stylesheet" href="/static/css/learn.css?v=20261116-live1">
+    <link rel="stylesheet" href="/static/css/learn-formatting.css?v=20261116-live1">
+    <script src="/static/js/learn.js?v=20261116-live1" defer></script>
     <link rel="canonical" href="https://disc-tools.de/tips/formatting/">
-    <link rel="stylesheet" href="/static/css/base.css">
-    <link rel="stylesheet" href="/static/fa-icons/fa.min.css">
-    <style>
-        .page { padding: calc(var(--nav-h) + 56px) 0 120px; }
-        .hero { max-width: 720px; }
-        .hero h1 { font-size: clamp(2.4rem, 5vw, 3.2rem); }
-        .hero h1 em { color: var(--success); font-style: normal; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 18px; margin-top: 40px; }
-        .cat-label { grid-column: 1/-1; display: flex; align-items: center; gap: 10px; font-size: 16px; font-weight: 700; color: var(--blurple-soft); margin-top: 8px; }
-        .cat-label i { font-size: 15px; opacity: 0.7; }
-        .card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 24px; text-decoration: none; color: var(--text); display: flex; flex-direction: column; gap: 10px; transition: border-color 0.2s, transform 0.2s; }
-        a.card:hover { border-color: var(--blurple); transform: translateY(-2px); }
-        .card i.head-icon { font-size: 24px; color: var(--blurple); }
-        .card h3 { font-size: 16px; }
-        .card p { color: var(--text-muted); font-size: 13px; line-height: 1.5; flex: 1; }
-        .card .demo { margin-top: 4px; }
-        .card .demo kbd { display: inline-block; padding: 2px 7px; background: rgba(255,255,255,0.07); border: 1px solid var(--border); border-radius: 5px; font-family: var(--font-mono); font-size: 12px; color: var(--text); }
-        .card .demo span { font-size: 13px; color: var(--text-muted); }
-        .card .demo strong { color: var(--text); }
-    </style>
 </head>
-<body>
-<a class="skip-link" href="#main">Skip to content</a>
-<header class="nav-shell" id="siteNav">
-    <div class="nav-bg" aria-hidden="true"></div>
-    <nav class="nav-inner" aria-label="Main navigation">
-        <a class="brand" href="/" aria-label="Disc-Tools home">
-            <img src="/static/assets/img/logo.png" alt="" width="32" height="32" class="brand-mark">
-            <span class="brand-name">Disc-Tools</span>
-        </a>
-        <div class="nav-links" id="navLinks">
-            <a href="/team/">Team</a>
-            <a href="/tools/">Tools</a>
-            <div class="nav-dropdown">
-                <a>Learn <i class="fa-solid fa-chevron-down"></i></a>
-                <div class="nav-dropdown-menu">
-                    <a href="/learn/"><i class="fa-solid fa-graduation-cap"></i> All Resources</a>
-                    <a href="/tips/formatting/" aria-current="page"><i class="fa-solid fa-text-height"></i> Formatting</a>
-                    <a href="/tips/shortcuts/"><i class="fa-solid fa-keyboard"></i> Shortcuts</a>
-                    <a href="/security-articles/"><i class="fa-solid fa-shield"></i> Security</a>
-                    <a href="/about/"><i class="fa-solid fa-circle-info"></i> About</a>
-                </div>
+<body class="learn-layout">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+        <div class="header-background" aria-hidden="true"></div>
+        <nav class="nav" aria-label="Main navigation">
+            <a class="brand" href="/"><img src="/static/assets/img/logo.svg?v=20261116-live1" width="32" height="32" alt="">Disc-Tools</a>
+            <div class="nav-links">
+                <a href="/tools/">Tools</a>
+                <a href="/learn/" aria-current="true">Learn</a>
+                <a href="/team/">Team</a>
+                <a href="/partners/">Partners</a>
+                <a href="https://dash.disc-tools.de/premium">Premium</a>
             </div>
-            <a href="/partner/">Partners</a>
-            <a href="https://status.disc-tools.de/#cat-main-site" rel="noopener">Status</a>
-            <a href="https://dash.disc-tools.de/premium" rel="noopener">Premium</a>
-        </div>
-        <div class="nav-actions">
-            <a href="/api/auth/login?redirect=/success/login/" class="btn btn-ghost btn-sm">Login</a>
-            <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu">
-                <span class="nav-toggle-bar" aria-hidden="true"></span>
-                <span class="nav-toggle-bar" aria-hidden="true"></span>
-                <span class="nav-toggle-bar" aria-hidden="true"></span>
-            </button>
-        </div>
-    </nav>
-    <div class="mobile-menu" id="mobileMenu" hidden>
-        <nav aria-label="Mobile navigation">
-            <a href="/team/" class="btn btn-ghost btn-block"><i class="fa-solid fa-users" aria-hidden="true"></i> Team</a>
-            <a href="/partner/" class="btn btn-ghost btn-block"><i class="fa-solid fa-handshake" aria-hidden="true"></i> Partners</a>
-            <a href="https://status.disc-tools.de/#cat-main-site" class="btn btn-ghost btn-block" rel="noopener"><i class="fa-solid fa-heart-pulse" aria-hidden="true"></i> Status</a>
-            <a href="https://dash.disc-tools.de/premium" class="btn btn-primary btn-block" rel="noopener"><i class="fa-solid fa-crown" aria-hidden="true"></i> Premium</a>
-            <a href="/api/auth/login?redirect=/success/login/" class="btn btn-ghost btn-block">Login</a>
+            <div class="account-control">
+                <details class="announcement-notifications" id="announcement-notifications">
+                    <summary aria-label="Announcement notifications">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/>
+                        </svg>
+                    </summary>
+                    <div class="announcement-notification-panel">
+                        <ul id="announcement-notification-list" aria-live="polite"><li>Loading announcements…</li></ul>
+                        <button type="button" id="announcement-mark-all" aria-disabled="true">Mark all as read</button>
+                    </div>
+                </details>
+                <a id="account-link" class="button button-outline login" href="https://disc-tools.de/api/auth/login?redirect=/success/login/">Log in</a>
+                <details id="account-menu" class="account-menu" hidden>
+                    <summary id="account-trigger" class="button account-profile"></summary>
+                    <div class="account-dropdown">
+                        <a href="/profile/">Profile</a>
+                        <a href="https://developers.disc-tools.de/">Developers</a>
+                        <a href="https://dash.disc-tools.de/">Dashboard</a>
+                        <a href="https://hosting.disc-tools.de/">Hosting</a>
+                        <a href="https://disc-tools.de/api/auth/logout">Logout</a>
+                    </div>
+                </details>
+            </div>
         </nav>
-    </div>
-</header>
-<main id="main" class="page">
+    </header>
+
+    <main id="main" class="page learn-category">
     <div class="container">
+        <nav class="crumbs" aria-label="Breadcrumb">
+            <a href="/learn/">Learn</a><span class="sep" aria-hidden="true">/</span>
+            <span aria-current="page">Message formatting</span>
+        </nav>
         <div class="hero">
-            <h1>Text <em>Formatting</em></h1>
-            <p class="team-intro">All Discord markdown formatting shortcuts — make your messages stand out.</p>
+            <h1>Message formatting</h1>
+            <p class="hero-sub">Add emphasis, structure, links and timestamps to your Discord messages. Copy the syntax or open a guide for examples.</p>
+            <div class="toolbar">
+                <div class="search-wrap">
+                    <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                    <label for="filterInput" class="sr-only" style="position:absolute;left:-9999px">Filter formatting tricks</label>
+                    <input type="search" id="filterInput" placeholder="Filter: try “header”, “spoiler”, “mention”…" autocomplete="off">
+                </div>
+                <p class="learn-result-count" aria-live="polite"><span id="cardCount">18</span> of 18 examples</p>
+            </div>
         </div>
-        <div class="grid">
+        <div class="grid" id="cardGrid">
 
-            <a href="/tips/formatting/bold/" class="card">
-                <i class="fa-solid fa-bold head-icon"></i>
-                <h3>Bold</h3>
-                <p>Make text stand out with bold formatting.</p>
-                <div class="demo"><kbd>**</kbd>text<kbd>**</kbd> <span>&rarr;</span> <strong>text</strong></div>
-            </a>
-            <a href="/tips/formatting/italic/" class="card">
-                <i class="fa-solid fa-italic head-icon"></i>
-                <h3>Italic</h3>
-                <p>Add emphasis with italic formatting.</p>
-                <div class="demo"><kbd>*</kbd>text<kbd>*</kbd> <span>&rarr;</span> <em>text</em></div>
-            </a>
-            <a href="/tips/formatting/underline/" class="card">
-                <i class="fa-solid fa-underline head-icon"></i>
-                <h3>Underline</h3>
-                <p>Underline text for extra emphasis.</p>
-                <div class="demo"><kbd>__</kbd>text<kbd>__</kbd> <span>&rarr;</span> <u>text</u></div>
-            </a>
-            <a href="/tips/formatting/strikethrough/" class="card">
-                <i class="fa-solid fa-strikethrough head-icon"></i>
-                <h3>Strikethrough</h3>
-                <p>Cross out text — great for edits.</p>
-                <div class="demo"><kbd>~~</kbd>text<kbd>~~</kbd> <span>&rarr;</span> <s>text</s></div>
-            </a>
-            <a href="/tips/formatting/spoiler/" class="card">
-                <i class="fa-solid fa-eye-slash head-icon"></i>
-                <h3>Spoiler</h3>
-                <p>Hide sensitive content so users click to reveal.</p>
-                <div class="demo"><kbd>||</kbd>text<kbd>||</kbd> <span>&rarr;</span> <span style="background:rgba(255,255,255,0.1);border-radius:3px;padding:0 4px">text</span></div>
-            </a>
-            <a href="/tips/formatting/code/" class="card">
-                <i class="fa-solid fa-code head-icon"></i>
-                <h3>Inline Code</h3>
-                <p>Highlight single words with backticks.</p>
-                <div class="demo"><kbd>`</kbd>code<kbd>`</kbd> <span>&rarr;</span> <code style="font-family:var(--font-mono);background:rgba(255,255,255,0.06);padding:2px 5px;border-radius:4px;font-size:12px">code</code></div>
-            </a>
-            <a href="/tips/formatting/code-block/" class="card">
-                <i class="fa-solid fa-terminal head-icon"></i>
-                <h3>Code Block</h3>
-                <p>Multi-line code with syntax highlighting.</p>
-                <div class="demo"><kbd>```</kbd><span>js</span> <kbd>⏎</kbd><span>code</span><kbd>⏎</kbd><kbd>```</kbd></div>
-            </a>
-            <a href="/tips/formatting/quote/" class="card">
-                <i class="fa-solid fa-quote-left head-icon"></i>
-                <h3>Quote</h3>
-                <p>Block quotes and multi-line quoting.</p>
-                <div class="demo"><kbd>&gt;</kbd> <span>text</span> <span>/</span> <kbd>&gt;&gt;&gt;</kbd> <span>multiline</span></div>
-            </a>
-            <a href="/tips/formatting/subtext/" class="card">
-                <i class="fa-solid fa-fill head-icon"></i>
-                <h3>Subtext</h3>
-                <p>Smaller grey text — perfect for footnotes.</p>
-                <div class="demo"><kbd>-#</kbd> <span style="color:var(--text-muted);font-size:12px">subtext</span></div>
-            </a>
-            <a href="/tips/formatting/timestamp/" class="card">
-                <i class="fa-solid fa-clock head-icon"></i>
-                <h3>Timestamp</h3>
-                <p>Dynamic timestamps in the viewer's timezone.</p>
-                <div class="demo"><kbd>&lt;t:</kbd><span>unix</span><kbd>&gt;</kbd></div>
-            </a>
+            <div class="cat-label"><i class="fa-solid fa-pen-nib"></i> Text styles <small>7</small></div>
 
-            <div class="cat-label"><i class="fa-solid fa-at"></i> Mentions &amp; References</div>
+            <article class="card" data-search="bold strong ** double asterisk stand out">
+                <div class="card-top"><i class="fa-solid fa-bold head-icon"></i><h3><a href="/tips/formatting/bold/">Bold</a></h3></div>
+                <p>Make text stand out. Wraps the word in double asterisks.</p>
+                <div class="demo"><kbd>**</kbd><span class="preview"><strong>text</strong></span><kbd>**</kbd><span class="arrow">&rarr;</span><span class="preview"><strong>text</strong></span><button class="copy-btn" data-copy="**text**" aria-label="Copy bold syntax"><i class="fa-solid fa-copy"></i><span>copy</span></button></div>
+            </article>
+            <article class="card" data-search="italic emphasis * underscore _ slanted">
+                <div class="card-top"><i class="fa-solid fa-italic head-icon"></i><h3><a href="/tips/formatting/italic/">Italic</a></h3></div>
+                <p>Subtle emphasis for quotes, titles or asides.</p>
+                <div class="demo"><kbd>*</kbd><span class="preview"><em>text</em></span><kbd>*</kbd><span class="arrow">&rarr;</span><span class="preview"><em>text</em></span><button class="copy-btn" data-copy="*text*" aria-label="Copy italic syntax"><i class="fa-solid fa-copy"></i><span>copy</span></button></div>
+            </article>
+            <article class="card" data-search="bold italic combined *** strong emphasis combo">
+                <div class="card-top"><i class="fa-solid fa-star head-icon"></i><h3><a href="/tips/formatting/bold-italic/">Bold + Italic</a></h3></div>
+                <p>Maximum emphasis — combine both styles in one marker.</p>
+                <div class="demo"><kbd>***</kbd><span class="preview"><strong><em>text</em></strong></span><kbd>***</kbd><button class="copy-btn" data-copy="***text***" aria-label="Copy bold italic syntax"><i class="fa-solid fa-copy"></i><span>copy</span></button></div>
+            </article>
+            <article class="card" data-search="underline __ double underscore emphasis discord-specific">
+                <div class="card-top"><i class="fa-solid fa-underline head-icon"></i><h3><a href="/tips/formatting/underline/">Underline</a></h3></div>
+                <p>Discord-only style. Great for headings inside a message.</p>
+                <div class="demo"><kbd>__</kbd><span class="preview"><u>text</u></span><kbd>__</kbd><span class="arrow">&rarr;</span><span class="preview"><u>text</u></span><button class="copy-btn" data-copy="__text__" aria-label="Copy underline syntax"><i class="fa-solid fa-copy"></i><span>copy</span></button></div>
+            </article>
+            <article class="card" data-search="strikethrough strike ~~ crossed edit correction">
+                <div class="card-top"><i class="fa-solid fa-strikethrough head-icon"></i><h3><a href="/tips/formatting/strikethrough/">Strikethrough</a></h3></div>
+                <p>Cross text out — perfect for edits without deleting.</p>
+                <div class="demo"><kbd>~~</kbd><span class="preview"><s>text</s></span><kbd>~~</kbd><span class="arrow">&rarr;</span><span class="preview"><s>text</s></span><button class="copy-btn" data-copy="~~text~~" aria-label="Copy strikethrough syntax"><i class="fa-solid fa-copy"></i><span>copy</span></button></div>
+            </article>
+            <article class="card" data-search="spoiler || hidden blur secret movies games click reveal">
+                <div class="card-top"><i class="fa-solid fa-eye-slash head-icon"></i><h3><a href="/tips/formatting/spoiler/">Spoiler</a></h3></div>
+                <p>Blur content until someone clicks to reveal it.</p>
+                <div class="demo"><kbd>||</kbd><span class="preview" style="background:rgba(255,255,255,0.14);border-radius:4px;padding:0 6px">text</span><kbd>||</kbd><button class="copy-btn" data-copy="||text||" aria-label="Copy spoiler syntax"><i class="fa-solid fa-copy"></i><span>copy</span></button></div>
+            </article>
+            <article class="card" data-search="subtext small grey footnote -# disclaimer caption">
+                <div class="card-top"><i class="fa-solid fa-paragraph head-icon"></i><h3><a href="/tips/formatting/subtext/">Subtext</a></h3></div>
+                <p>Small grey footnote text. Must start on its own line.</p>
+                <div class="demo"><kbd>-#</kbd><span class="preview-muted">subtext</span><button class="copy-btn" data-copy="-# subtext" aria-label="Copy subtext syntax"><i class="fa-solid fa-copy"></i><span>copy</span></button></div>
+            </article>
 
-            <a href="/tips/formatting/channel-mention/" class="card">
-                <i class="fa-solid fa-hashtag head-icon"></i>
-                <h3>Channel Mention</h3>
-                <p>Link to a channel so others can jump there.</p>
-                <div class="demo"><kbd>&lt;#</kbd><span>id</span><kbd>&gt;</kbd> <span>&rarr;</span> <span style="background:rgba(88,101,242,0.12);color:var(--blurple-soft);padding:1px 6px;border-radius:4px;font-size:12px">#channel</span></div>
-            </a>
-            <a href="/tips/formatting/user-mention/" class="card">
-                <i class="fa-solid fa-user head-icon"></i>
-                <h3>User Mention</h3>
-                <p>Mention a user by ID to ping them.</p>
-                <div class="demo"><kbd>&lt;@</kbd><span>id</span><kbd>&gt;</kbd> <span>&rarr;</span> <span style="background:rgba(88,101,242,0.12);color:var(--blurple-soft);padding:1px 6px;border-radius:4px;font-size:12px">@user</span></div>
-            </a>
-            <a href="/tips/formatting/role-mention/" class="card">
-                <i class="fa-solid fa-users head-icon"></i>
-                <h3>Role Mention</h3>
-                <p>Ping an entire role using its ID.</p>
-                <div class="demo"><kbd>&lt;@&amp;</kbd><span>id</span><kbd>&gt;</kbd> <span>&rarr;</span> <span style="background:rgba(88,101,242,0.12);color:var(--blurple-soft);padding:1px 6px;border-radius:4px;font-size:12px">@role</span></div>
-            </a>
-            <a href="/tips/formatting/custom-emoji/" class="card">
-                <i class="fa-solid fa-face-grin head-icon"></i>
-                <h3>Custom Emoji</h3>
-                <p>Use custom emoji from any server your bot is in.</p>
-                <div class="demo"><kbd>&lt;:</kbd><span>name</span><kbd>:</kbd><span>id</span><kbd>&gt;</kbd></div>
-            </a>
+            <div class="cat-label"><i class="fa-solid fa-layer-group"></i> Structure &amp; blocks <small>6</small></div>
 
+            <article class="card" data-search="headers heading h1 h2 h3 # titles announcements structure">
+                <div class="card-top"><i class="fa-solid fa-heading head-icon"></i><h3><a href="/tips/formatting/headers/">Headers</a></h3></div>
+                <p>Three headline sizes for rules, announcements and events.</p>
+                <div class="demo"><kbd>#</kbd><span class="preview"><strong style="font-size:15px">Big</strong></span><kbd>##</kbd><span class="preview"><strong>Medium</strong></span><kbd>###</kbd><span class="preview">Small</span><button class="copy-btn" data-copy="# Heading" aria-label="Copy header syntax"><i class="fa-solid fa-copy"></i><span>copy</span></button></div>
+            </article>
+            <article class="card" data-search="lists bullet numbered - * ordered rules steps indent">
+                <div class="card-top"><i class="fa-solid fa-list-ul head-icon"></i><h3><a href="/tips/formatting/lists/">Lists</a></h3></div>
+                <p>Bulleted or numbered lists — indent with 2 spaces.</p>
+                <div class="demo"><kbd>-</kbd><span class="preview-muted">item</span><kbd>1.</kbd><span class="preview-muted">item</span><button class="copy-btn" data-copy="- item 1&#10;- item 2&#10;1. first&#10;2. second" aria-label="Copy list syntax"><i class="fa-solid fa-copy"></i><span>copy</span></button></div>
+            </article>
+            <article class="card" data-search="quote blockquote > >>> cite reply multiline">
+                <div class="card-top"><i class="fa-solid fa-quote-left head-icon"></i><h3><a href="/tips/formatting/quote/">Quote</a></h3></div>
+                <p>Single-line quotes with <kbd>&gt;</kbd>, whole-message quotes with <kbd>&gt;&gt;&gt;</kbd>.</p>
+                <div class="demo"><kbd>&gt;</kbd><span class="preview-muted">text</span><span class="arrow">/</span><kbd>&gt;&gt;&gt;</kbd><span class="preview-muted">multiline</span><button class="copy-btn" data-copy="> quoted text" aria-label="Copy quote syntax"><i class="fa-solid fa-copy"></i><span>copy</span></button></div>
+            </article>
+            <article class="card" data-search="inline code ` backtick variable command mono">
+                <div class="card-top"><i class="fa-solid fa-code head-icon"></i><h3><a href="/tips/formatting/code/">Inline Code</a></h3></div>
+                <p>Highlight commands, variables or single words.</p>
+                <div class="demo"><kbd>`</kbd><code class="preview" style="font-family:var(--font-mono);background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;font-size:12px">code</code><kbd>`</kbd><button class="copy-btn" data-copy="`code`" aria-label="Copy inline code syntax"><i class="fa-solid fa-copy"></i><span>copy</span></button></div>
+            </article>
+            <article class="card" data-search="code block ``` multiline syntax highlight js python diff multiline">
+                <div class="card-top"><i class="fa-solid fa-terminal head-icon"></i><h3><a href="/tips/formatting/code-block/">Code Block</a></h3></div>
+                <p>Multi-line blocks with optional language highlighting.</p>
+                <div class="demo"><kbd>```js</kbd><span class="preview-muted">code</span><kbd>```</kbd><button class="copy-btn" data-copy="```js&#10;code here&#10;```" aria-label="Copy code block syntax"><i class="fa-solid fa-copy"></i><span>copy</span></button></div>
+            </article>
+            <article class="card" data-search="link masked hyperlink [text](url) embed no preview <url>">
+                <div class="card-top"><i class="fa-solid fa-link head-icon"></i><h3><a href="/tips/formatting/links/">Masked Links</a></h3></div>
+                <p>Clickable label instead of a raw URL. Best in embeds &amp; bots.</p>
+                <div class="demo"><kbd>[label](url)</kbd><span class="arrow">&rarr;</span><span class="preview" style="color:var(--blurple-soft)">label</span><button class="copy-btn" data-copy="[label](https://example.com)" aria-label="Copy masked link syntax"><i class="fa-solid fa-copy"></i><span>copy</span></button></div>
+            </article>
+
+            <div class="cat-label"><i class="fa-solid fa-at"></i> Mentions, time &amp; extras <small>5</small></div>
+
+            <article class="card" data-search="timestamp time date <t: relative timezone event countdown unix">
+                <div class="card-top"><i class="fa-solid fa-clock head-icon"></i><h3><a href="/tips/formatting/timestamp/">Timestamp</a></h3></div>
+                <p>Auto-converts to every reader's timezone. Try <kbd>:R</kbd> for countdowns.</p>
+                <div class="demo"><kbd>&lt;t:unix:R&gt;</kbd><span class="arrow">&rarr;</span><span class="preview-muted">in 2 hours</span><button class="copy-btn" data-copy="<t:1716595200:R>" aria-label="Copy timestamp syntax"><i class="fa-solid fa-copy"></i><span>copy</span></button></div>
+            </article>
+            <article class="card" data-search="channel mention <# #channel link jump id">
+                <div class="card-top"><i class="fa-solid fa-hashtag head-icon"></i><h3><a href="/tips/formatting/channel-mention/">Channel Mention</a></h3></div>
+                <p>Clickable channel link — needs the channel ID.</p>
+                <div class="demo"><kbd>&lt;#id&gt;</kbd><span class="arrow">&rarr;</span><span class="mention-chip">#channel</span><button class="copy-btn" data-copy="<#123456789012345678>" aria-label="Copy channel mention syntax"><i class="fa-solid fa-copy"></i><span>copy</span></button></div>
+            </article>
+            <article class="card" data-search="user mention <@ @user ping id dm">
+                <div class="card-top"><i class="fa-solid fa-user head-icon"></i><h3><a href="/tips/formatting/user-mention/">User Mention</a></h3></div>
+                <p>Ping a specific user by ID, even without autocomplete.</p>
+                <div class="demo"><kbd>&lt;@id&gt;</kbd><span class="arrow">&rarr;</span><span class="mention-chip">@user</span><button class="copy-btn" data-copy="<@123456789012345678>" aria-label="Copy user mention syntax"><i class="fa-solid fa-copy"></i><span>copy</span></button></div>
+            </article>
+            <article class="card" data-search="role mention <@& @role ping id mods admins">
+                <div class="card-top"><i class="fa-solid fa-users head-icon"></i><h3><a href="/tips/formatting/role-mention/">Role Mention</a></h3></div>
+                <p>Ping a whole role. Use sparingly — it notifies everyone.</p>
+                <div class="demo"><kbd>&lt;@&amp;id&gt;</kbd><span class="arrow">&rarr;</span><span class="mention-chip">@role</span><button class="copy-btn" data-copy="&lt;@&amp;123456789012345678&gt;" aria-label="Copy role mention syntax"><i class="fa-solid fa-copy"></i><span>copy</span></button></div>
+            </article>
+            <article class="card" data-search="custom emoji <: :id animated <a: nitro stickerper server">
+                <div class="card-top"><i class="fa-solid fa-face-grin head-icon"></i><h3><a href="/tips/formatting/custom-emoji/">Custom Emoji</a></h3></div>
+                <p>Post server emoji by name + ID. Prefix with <kbd>a</kbd> if animated.</p>
+                <div class="demo"><kbd>&lt;:name:id&gt;</kbd><button class="copy-btn" data-copy="<:name:123456789012345678>" aria-label="Copy custom emoji syntax"><i class="fa-solid fa-copy"></i><span>copy</span></button></div>
+            </article>
+
+            <div class="empty-state" id="emptyState" hidden>No tricks match your search. Try “bold”, “list” or “mention”.</div>
+
+        </div>
+
+        <div class="help-grid">
+            <div class="help-card">
+                <h2><i class="fa-solid fa-wand-magic-sparkles"></i> Combine styles</h2>
+                <p>Most markers stack. The most useful combos:</p>
+                <ul>
+                    <li><code>***bold italic***</code> → <strong><em>bold italic</em></strong></li>
+                    <li><code>__*underline italic*__</code> → <u><em>underline italic</em></u></li>
+                    <li><code>~~__underline strike__~~</code> → <s><u>underline strike</u></s></li>
+                    <li><code>||`spoiler code`||</code> → hidden code</li>
+                </ul>
+            </div>
+            <div class="help-card">
+                <h2><i class="fa-solid fa-id-badge"></i> Where do I get IDs?</h2>
+                <p>Channel, user, role and emoji syntax all need numeric IDs:</p>
+                <ul>
+                    <li>Discord Settings → Advanced → enable <code>Developer Mode</code></li>
+                    <li>Right-click a user / channel / role → <code>Copy ID</code></li>
+                    <li>Emoji: type <code>\:name:</code> in chat to reveal <code>&lt;:name:id&gt;</code></li>
+                </ul>
+            </div>
+            <div class="help-card">
+                <h2><i class="fa-solid fa-triangle-exclamation"></i> Good to know</h2>
+                <ul>
+                    <li><code># ## ###</code> and <code>-#</code> only work at the <strong>start of a line</strong>.</li>
+                    <li><code>[label](url)</code> renders reliably in <strong>embeds, bots &amp; webhooks</strong> — typed manually it may stay raw (anti-phishing).</li>
+                    <li>Use <code>&lt;https://…&gt;</code> to post a link <strong>without</strong> the big preview card.</li>
+                    <li>Escape a marker with backslash: <code>\*not italic\*</code>.</li>
+                </ul>
+            </div>
         </div>
     </div>
 </main>
-<footer class="footer">
-    <div class="container footer-grid">
-        <div class="footer-brand">
-            <a class="brand" href="/" aria-label="Disc-Tools home">
-                <img src="/static/assets/img/logo.png" alt="" width="32" height="32" class="brand-mark">
-                <span class="brand-name">Disc-Tools</span>
-            </a>
-            <p>The ultimate collection of free Discord utilities. Built for people who actually use Discord.</p>
-            <div class="footer-social">
-                <a href="https://discord.gg/rtRs8rhj5u" aria-label="Discord" rel="noopener"><i class="fa-brands fa-discord" aria-hidden="true"></i></a>
-                <a href="https://github.com/Disc-Tools/disc-tools.de" aria-label="GitHub" rel="noopener"><i class="fa-brands fa-github" aria-hidden="true"></i></a>
-                <a href="https://www.instagram.com/disc.tools" aria-label="Instagram" rel="noopener"><i class="fa-brands fa-instagram" aria-hidden="true"></i></a>
-                <a href="https://www.tiktok.com/@disc.tools" aria-label="TikTok" rel="noopener"><i class="fa-brands fa-tiktok" aria-hidden="true"></i></a>
-                <a href="https://x.com/disc_tools" aria-label="X" rel="noopener"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+
+    <footer class="site-footer">
+        <div class="container footer-grid">
+            <div class="footer-brand">
+                <a class="brand" href="/"><img src="/static/assets/img/logo.svg?v=20261116-live1" width="28" height="28" alt="">Disc-Tools</a>
+                <nav class="footer-social-nav" aria-label="Social media">
+                    <ul class="footer-socials">
+                        <li><a href="https://discord.gg/rtRs8rhj5u" aria-label="Discord" title="Discord"><i class="fa-brands fa-discord" aria-hidden="true"></i></a></li>
+                        <li><a href="https://www.twitch.tv/disc_tools" aria-label="Twitch" title="Twitch"><i class="fa-brands fa-twitch" aria-hidden="true"></i></a></li>
+                        <li><a href="https://www.youtube.com/@disc-tools" aria-label="YouTube" title="YouTube"><i class="fa-brands fa-youtube" aria-hidden="true"></i></a></li>
+                        <li><a href="https://github.com/Disc-Tools/disc-tools.de" aria-label="GitHub" title="GitHub"><i class="fa-brands fa-github" aria-hidden="true"></i></a></li>
+                        <li><a href="https://www.instagram.com/disc.tools" aria-label="Instagram" title="Instagram"><i class="fa-brands fa-instagram" aria-hidden="true"></i></a></li>
+                        <li><a href="https://www.tiktok.com/@disc.tools" aria-label="TikTok" title="TikTok"><i class="fa-brands fa-tiktok" aria-hidden="true"></i></a></li>
+                        <li><a href="https://x.com/disc_tools" aria-label="X" title="X"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a></li>
+                    </ul>
+                </nav>
+                <p>Not affiliated with Discord Inc.</p>
             </div>
-            <p class="footer-note">Not affiliated with Discord Inc.</p>
+            <nav class="footer-column" aria-labelledby="footer-explore">
+                <h2 id="footer-explore">Explore</h2>
+                <a href="/tools/">Tool directory</a>
+                <a href="/learn/">Discord guides</a>
+                <a href="https://dash.disc-tools.de/">Dashboard</a>
+                <a href="https://status.disc-tools.de/#cat-main-site">Service status</a>
+            </nav>
+            <nav class="footer-column" aria-labelledby="footer-legal">
+                <h2 id="footer-legal"><a href="/legal/">Legal</a></h2>
+                <a href="/legal/privacy-policy/">Privacy Policy</a>
+                <a href="/legal/terms-of-service/">Terms of Service</a>
+                <a href="/legal/imprint/">Imprint</a>
+                <button class="footer-button" id="show-cookie-notice" type="button">Cookie settings</button>
+            </nav>
         </div>
-        <nav class="footer-col" aria-label="Tools"><h3>Tools</h3><a href="/tools/">User Lookup</a><a href="/tools/">Embed Builder</a><a href="/tools/">Snowflake Decoder</a><a href="/tools/">Webhook Manager</a><a href="/tools/">Emoji Stealer</a><a href="/tools/">All tools</a></nav>
-        <nav class="footer-col" aria-label="Learn"><h3>Learn</h3><a href="/learn/">Learn</a><a href="/tips/formatting/">Formatting tips</a><a href="/tips/shortcuts/">Shortcuts</a><a href="/security-articles/">Security articles</a></nav>
-        <nav class="footer-col" aria-label="Site"><h3>Site</h3><a href="/team/">Team</a><a href="/partner/">Partners</a>
-            <a href="/partner/terms/">Partner Terms</a><a href="/announcements/">Announcements</a><a href="https://status.disc-tools.de/#cat-main-site" rel="noopener">Status</a><a href="https://dash.disc-tools.de" rel="noopener">Dashboard</a><a href="https://dash.disc-tools.de/premium" rel="noopener">Premium</a></nav>
-        <nav class="footer-col" aria-label="Legal"><h3>Legal</h3><a href="/legal/privacy-policy/">Privacy Policy</a><a href="/legal/terms-of-service/">Terms of Service</a>
-            <a href="/partner/terms/">Partner Terms</a><a href="/legal/imprint/">Imprint</a><a href="https://dash.disc-tools.de/legal/refund-policy/">Refund Policy</a></nav>
-    </div>
-</footer>
-<button class="back-to-top" id="backToTop" aria-label="Back to top" type="button"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></button>
-<script src="/static/js/backtotop.js" defer></script>
-<script src="/static/js/landing.js" defer></script>
-<script src="/static/js/consent.js" defer></script>
-<script src="/static/js/authnav.js" defer></script>
-<script src="/static/js/sw-cache.js" defer></script>
-<script defer src="https://umami.disc-tools.de/script.js" data-website-id="0cf82497-80c8-42a2-b6e4-8a8ae179d1fe"></script>
+    </footer>
+    <aside class="cookie-notice ad-consent-notice" id="cookie-notice" aria-labelledby="cookie-title" hidden>
+        <h2 id="cookie-title"><i class="fa-solid fa-cookie-bite" aria-hidden="true"></i> Cookies &amp; storage</h2>
+        <p>Disc-Tools uses essential storage for site features. You can also allow analytics with Umami and advertising with Google AdSense on the homepage.</p>
+        <div class="cookie-actions ad-consent-actions">
+            <button class="button button-primary" type="button" data-ad-consent="allow">Accept all</button>
+            <button class="button button-outline" type="button" data-ad-consent="deny">Only essentials</button>
+            <button class="button button-outline" id="select-ad-consent" type="button" aria-expanded="false" aria-controls="ad-consent-options">Select <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
+        </div>
+        <div class="ad-consent-options" id="ad-consent-options" hidden>
+            <div class="ad-consent-option">
+                <div>
+                    <label for="essential-storage">Essential</label>
+                    <p id="essential-storage-description">Required for login and core features.</p>
+                </div>
+                <input class="ad-consent-switch" id="essential-storage" type="checkbox" role="switch" aria-describedby="essential-storage-description" checked disabled>
+            </div>
+            <div class="ad-consent-option">
+                <label for="allow-advertising">Google AdSense advertising</label>
+                <input class="ad-consent-switch" id="allow-advertising" type="checkbox" role="switch">
+            </div>
+            <div class="ad-consent-option">
+                <label for="allow-analytics">Umami analytics</label>
+                <input class="ad-consent-switch" id="allow-analytics" type="checkbox" role="switch">
+            </div>
+            <button class="button button-primary" id="save-ad-consent" type="button">Save selection</button>
+        </div>
+        <a class="ad-consent-policy" href="/legal/privacy-policy/">Privacy Policy</a>
+    </aside>
 </body>
 </html>

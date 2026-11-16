@@ -4,7 +4,7 @@
    ============================================================ */
 
 .invite-head-icon {
-    color: var(--blurple-soft);
+    color: var(--accent);
     font-size: 0.75em;
 }
 
@@ -24,14 +24,14 @@
     height: 52px;
     border-radius: 50%;
     object-fit: cover;
-    background: var(--surface-2);
+    background: var(--hover);
 }
 .invite-inviter-avatar-none {
     display: flex;
     align-items: center;
     justify-content: center;
     border: 1px solid var(--border);
-    color: var(--text-muted);
+    color: var(--muted);
     font-size: 20px;
 }
 .invite-inviter-meta {
@@ -50,9 +50,9 @@
     color: var(--text);
 }
 .invite-inviter-user {
-    font-family: var(--font-mono);
+    font-family: ui-monospace, monospace;
     font-size: 13px;
-    color: var(--text-muted);
+    color: var(--muted);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

@@ -1,0 +1,9 @@
+.generator-layout { display: flex; flex-direction: column; min-height: 100vh; min-height: 100dvh; }
+.generator-layout > .site-footer { margin-top: auto; }
+.lookup-page .back-link { color: var(--accent); font-size: 14px; }
+.lookup-page .back-link:hover { text-decoration: underline; }
+.lookup-page .tool-hero { margin: 18px 0 24px; }
+.lookup-page .tool-hero h1 { font-size: clamp(2.4rem, 6vw, 4rem); letter-spacing: -.045em; }
+.lookup-page .tool-hero p { max-width: 68ch; margin: 12px 0 0; color: var(--muted); }
+.lookup-page .button { color: var(--text); font-family: inherit; cursor: pointer; }
+.lookup-page button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }

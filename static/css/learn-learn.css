@@ -1,0 +1,75 @@
+.learn-heading { margin-bottom: clamp(28px, 5vw, 52px); }
+
+.learn-heading h1 {
+    font-size: clamp(2.5rem, 6vw, 4.4rem);
+    letter-spacing: -.045em;
+}
+
+.learn-heading p {
+    max-width: 58ch;
+    margin: 12px 0 0;
+    color: var(--muted);
+    font-size: clamp(1rem, 2vw, 1.125rem);
+}
+
+.learn-topics { border-top: 1px solid var(--border); }
+
+.learn-topic {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    gap: 16px clamp(28px, 7vw, 96px);
+    align-items: center;
+    padding-block: clamp(20px, 3vw, 32px);
+    border-bottom: 1px solid var(--border);
+}
+
+.learn-topic-intro {
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr);
+    gap: 14px;
+}
+
+.learn-topic-intro > i {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface);
+    color: var(--accent);
+    font-size: 17px;
+}
+
+.learn-topic h2 { font-size: clamp(1.25rem, 3vw, 1.6rem); }
+.learn-topic p { max-width: 49ch; margin: 7px 0 10px; color: var(--muted); font-size: 14px; }
+.learn-topic-all { display: inline-block; padding-block: 4px; color: var(--accent); font-size: 14px; font-weight: 650; }
+.learn-topic-all:hover { text-decoration: underline; text-underline-offset: 4px; }
+.learn-topic-all span { margin-inline-start: 4px; }
+
+.learn-topic-links {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface);
+}
+
+.learn-topic-links li + li { border-top: 1px solid var(--border); }
+.learn-topic-links a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 13px;
+    font-size: 14px;
+}
+
+.learn-topic-links a:hover { background: var(--hover); }
+.learn-topic-links a:focus-visible { outline-offset: -2px; }
+.learn-topic-links span { color: var(--accent); }
+
+@media (max-width: 650px) {
+    .learn-topic { grid-template-columns: 1fr; }
+}

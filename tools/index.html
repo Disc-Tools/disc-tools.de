@@ -1,321 +1,252 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>All tools | Disc-Tools</title>
-    <meta name="description" content="All Disc-Tools utilities in one place: user lookup, embed builder, snowflake decoder, webhook manager, emoji stealer and more. Filter by category and save your favorites.">
-    <meta name="keywords" content="discord tools list, all discord utilities, discord online tools, discord bot tools, discord web tools">
-    <meta name="robots" content="index, follow">
+    <meta name="description" content="Find Discord utilities for account lookups, timestamps, Markdown, webhooks and more.">
+    <title>Discord tools · Disc-Tools</title>
+    <link rel="icon" type="image/svg+xml" href="/static/assets/img/logo.svg?v=20261116-live1">
+    <link rel="stylesheet" href="/static/fa-icons/fa.min.css?v=20261116-live1">
+    <link rel="stylesheet" href="/static/css/site.css?v=20261116-live1">
+    <script src="/static/js/auth-status.js?v=20261116-live1" defer></script>
+    <script src="/static/js/header.js?v=20261116-live1" defer></script>
+    <script src="/static/js/consent-ui.js?v=20261116-live1" defer></script>
+    <link rel="stylesheet" href="/static/css/tools.css?v=20261116-live1">
+    <script src="/static/js/tools/tools.js?v=20261116-live1" defer></script>
     <link rel="canonical" href="https://disc-tools.de/tools/">
-    <meta name="theme-color" content="#0a0d13">
-
-    <link rel="icon" type="image/png" href="/static/assets/img/logo.png">
-    <link rel="apple-touch-icon" href="/static/assets/img/logo.png">
-
-    <meta property="og:type" content="website">
-    <meta property="og:site_name" content="Disc-Tools">
-    <meta property="og:title" content="All tools | Disc-Tools">
-    <meta property="og:description" content="Every Disc-Tools utility in one place. Filter by category and save your favorites.">
-    <meta property="og:url" content="https://disc-tools.de/tools/">
-    <meta property="og:image" content="https://disc-tools.de/static/assets/img/og-v2.png">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="All tools | Disc-Tools">
-    <meta name="twitter:description" content="Every Disc-Tools utility in one place. Filter by category and save your favorites.">
-    <meta name="twitter:image" content="https://disc-tools.de/static/assets/img/og-v2.png">
-
-    <link rel="stylesheet" href="/static/css/base.css">
-    <link rel="stylesheet" href="/static/css/tools.css?v=2">
-    <link rel="stylesheet" href="/static/fa-icons/fa.min.css">
 </head>
 <body>
     <a class="skip-link" href="#main">Skip to content</a>
-    <header class="nav-shell" id="siteNav">
-    <div class="nav-bg" aria-hidden="true"></div>
-    <nav class="nav-inner" aria-label="Main navigation">
-        <a class="brand" href="/" aria-label="Disc-Tools home">
-            <img src="/static/assets/img/logo.png" alt="" width="32" height="32" class="brand-mark">
-            <span class="brand-name">Disc-Tools</span>
-        </a>
-
-        <div class="nav-links" id="navLinks">
-            <a href="/team/">Team</a>
-            <a href="/tools/">Tools</a>
-            <div class="nav-dropdown">
-                <a>Learn <i class="fa-solid fa-chevron-down"></i></a>
-                <div class="nav-dropdown-menu">
-                    <a href="/learn/"><i class="fa-solid fa-graduation-cap"></i> All Resources</a>
-                    <a href="/tips/formatting/"><i class="fa-solid fa-text-height"></i> Formatting</a>
-                    <a href="/tips/shortcuts/"><i class="fa-solid fa-keyboard"></i> Shortcuts</a>
-                    <a href="/security-articles/"><i class="fa-solid fa-shield"></i> Security</a>
-                    <a href="/about/"><i class="fa-solid fa-circle-info"></i> About</a>
-                </div>
+    <header class="site-header">
+        <div class="header-background" aria-hidden="true"></div>
+        <nav class="nav" aria-label="Main navigation">
+            <a class="brand" href="/"><img src="/static/assets/img/logo.svg?v=20261116-live1" width="32" height="32" alt="">Disc-Tools</a>
+            <div class="nav-links">
+                <a href="/tools/" aria-current="page">Tools</a>
+                <a href="/learn/">Learn</a>
+                <a href="/team/">Team</a>
+                <a href="/partners/">Partners</a>
+                <a href="https://dash.disc-tools.de/premium">Premium</a>
             </div>
-            <a href="/partner/">Partners</a>
-            <a href="https://status.disc-tools.de/#cat-main-site" rel="noopener">Status</a>
-            <a href="https://dash.disc-tools.de/premium" rel="noopener">Premium</a>
-        </div>
-
-        <div class="nav-actions">
-            <a href="/api/auth/login?redirect=/success/login/" class="btn btn-ghost btn-sm">Login</a>
-            <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu">
-                <span class="nav-toggle-bar" aria-hidden="true"></span>
-                <span class="nav-toggle-bar" aria-hidden="true"></span>
-                <span class="nav-toggle-bar" aria-hidden="true"></span>
-            </button>
-        </div>
-    </nav>
-
-    <div class="mobile-menu" id="mobileMenu" hidden>
-        <nav aria-label="Mobile navigation">
-            <a href="/tools/">Tools</a>
-            <a href="/learn/">Learn</a>
-            <a href="/security-articles/">Security</a>
-            <a href="https://discord.gg/rtRs8rhj5u" rel="noopener">Community</a>
-            <a href="/team/" class="btn btn-ghost btn-block"><i class="fa-solid fa-users" aria-hidden="true"></i> Team</a>
-            <a href="https://status.disc-tools.de/#cat-main-site" class="btn btn-ghost btn-block" rel="noopener"><i class="fa-solid fa-heart-pulse" aria-hidden="true"></i> Status</a>
-            <a href="https://dash.disc-tools.de/premium" class="btn btn-primary btn-block" rel="noopener"><i class="fa-solid fa-crown" aria-hidden="true"></i> Premium</a>
-            <a href="/api/auth/login?redirect=/success/login/" class="btn btn-ghost btn-block">Login</a>
+            <div class="account-control">
+                <details class="announcement-notifications" id="announcement-notifications">
+                    <summary aria-label="Announcement notifications">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/>
+                        </svg>
+                    </summary>
+                    <div class="announcement-notification-panel">
+                        <ul id="announcement-notification-list" aria-live="polite"><li>Loading announcements…</li></ul>
+                        <button type="button" id="announcement-mark-all" aria-disabled="true">Mark all as read</button>
+                    </div>
+                </details>
+                <a id="account-link" class="button button-outline login" href="https://disc-tools.de/api/auth/login?redirect=/success/login/">Log in</a>
+                <details id="account-menu" class="account-menu" hidden>
+                    <summary id="account-trigger" class="button account-profile"></summary>
+                    <div class="account-dropdown">
+                        <a href="/profile/">Profile</a>
+                        <a href="https://developers.disc-tools.de/">Developers</a>
+                        <a href="https://dash.disc-tools.de/">Dashboard</a>
+                        <a href="https://hosting.disc-tools.de/">Hosting</a>
+                        <a href="https://disc-tools.de/api/auth/logout">Logout</a>
+                    </div>
+                </details>
+            </div>
         </nav>
-    </div>
-</header>
+    </header>
 
-    <main id="main" class="tools-page">
-        <div class="container">
-            <p class="eyebrow">The toolbelt</p>
-            <h1>All tools.</h1>
-            <p class="page-intro">Sixteen utilities for Discord, sorted into three categories. Fourteen are live, two are coming soon — star the ones you want and we build them next.</p>
-
-            <div class="filter-bar" role="group" aria-label="Filter tools by category">
-                <button class="filter-chip active" data-filter="all" aria-pressed="false">All</button><button class="filter-chip" data-filter="favorites" aria-pressed="false">Favorites <span class="fav-count">0</span></button><button class="filter-chip" data-filter="look-things-up" aria-pressed="false">Look things up</button><button class="filter-chip" data-filter="create-format" aria-pressed="false">Create & format</button><button class="filter-chip" data-filter="manage-extract" aria-pressed="false">Manage & extract</button>
-            </div>
-
-            <div class="tools-grid">
-            <article class="tool-card tool-card-live" data-slug="user-lookup" data-cat="look-things-up" onclick="window.location.href='/tools/user-lookup/'" style="cursor:pointer">
-                <button class="star-btn" aria-label="Add User Lookup to favorites" aria-pressed="false"><i class="fa-solid fa-star" aria-hidden="true"></i></button>
-                <span class="tool-card-icon"><i class="fa-solid fa-user" aria-hidden="true"></i></span>
-                <h3 class="tool-card-name">User Lookup</h3>
-                <p class="tool-card-desc">Badges, account age and details for any user ID.</p>
-                <a class="tool-open-link" href="/tools/user-lookup/">Open <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
-            </article>
-            <article class="tool-card tool-card-live" data-slug="username-history" data-cat="look-things-up" onclick="window.location.href='/tools/username-history/'" style="cursor:pointer">
-                <button class="star-btn" aria-label="Add Username History to favorites" aria-pressed="false"><i class="fa-solid fa-star" aria-hidden="true"></i></button>
-                <span class="tool-card-icon"><i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i></span>
-                <h3 class="tool-card-name">Username History <span class="premium-badge" title="Premium only"><i class="fa-solid fa-crown" aria-hidden="true"></i> Premium</span></h3>
-                <p class="tool-card-desc">Premium tool: every past username and discriminator of an account.</p>
-                <a class="tool-open-link" href="/tools/username-history/">Open <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
-            </article>
-            <article class="tool-card tool-card-live" data-slug="server-lookup" data-cat="look-things-up" onclick="window.location.href='/tools/server-lookup/'" style="cursor:pointer">
-                <button class="star-btn" aria-label="Add Server Lookup to favorites" aria-pressed="false"><i class="fa-solid fa-star" aria-hidden="true"></i></button>
-                <span class="tool-card-icon"><i class="fa-solid fa-server" aria-hidden="true"></i></span>
-                <h3 class="tool-card-name">Server Lookup</h3>
-                <p class="tool-card-desc">Members, channels and invites via Discord's widget API.</p>
-                <a class="tool-open-link" href="/tools/server-lookup/">Open <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
-            </article>
-            <article class="tool-card tool-card-live" data-slug="invite-lookup" data-cat="look-things-up" onclick="window.location.href='/tools/invite-lookup/'" style="cursor:pointer">
-                <button class="star-btn" aria-label="Add Invite Lookup to favorites" aria-pressed="false"><i class="fa-solid fa-star" aria-hidden="true"></i></button>
-                <span class="tool-card-icon"><i class="fa-solid fa-link" aria-hidden="true"></i></span>
-                <h3 class="tool-card-name">Invite Lookup</h3>
-                <p class="tool-card-desc">Guild info, member count, inviter and expiry of any invite.</p>
-                <a class="tool-open-link" href="/tools/invite-lookup/">Open <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
-            </article>
-            <article class="tool-card tool-card-live" data-slug="alt-account-lookup" data-cat="look-things-up" onclick="window.location.href='/tools/alt-account-lookup/'" style="cursor:pointer">
-                <button class="star-btn" aria-label="Add Alt Account Lookup to favorites" aria-pressed="false"><i class="fa-solid fa-star" aria-hidden="true"></i></button>
-                <span class="tool-card-icon"><i class="fa-solid fa-user-secret" aria-hidden="true"></i></span>
-                <h3 class="tool-card-name">Alt Account Lookup <span class="premium-badge" title="Premium only"><i class="fa-solid fa-crown" aria-hidden="true"></i> Premium</span></h3>
-                <p class="tool-card-desc">Premium tool: find alt accounts linked to a user via IP hash history.</p>
-                <a class="tool-open-link" href="/tools/alt-account-lookup/">Open <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
-            </article>
-            <article class="tool-card tool-card-live" data-slug="account-checker" data-cat="look-things-up" onclick="window.location.href='/tools/account-checker/'" style="cursor:pointer">
-                <button class="star-btn" aria-label="Add Account Checker to favorites" aria-pressed="false"><i class="fa-solid fa-star" aria-hidden="true"></i></button>
-                <span class="tool-card-icon"><i class="fa-solid fa-fingerprint" aria-hidden="true"></i></span>
-                <h3 class="tool-card-name">Account Checker</h3>
-                <p class="tool-card-desc">Account quality score from age, badges and profile signals.</p>
-                <a class="tool-open-link" href="/tools/account-checker/">Open <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
-            </article>
-            <article class="tool-card tool-card-live" data-slug="snowflake-decoder" data-cat="look-things-up" onclick="window.location.href='/tools/snowflake-decoder/'" style="cursor:pointer">
-                <button class="star-btn" aria-label="Add Snowflake Decoder to favorites" aria-pressed="false"><i class="fa-solid fa-star" aria-hidden="true"></i></button>
-                <span class="tool-card-icon"><i class="fa-solid fa-snowflake" aria-hidden="true"></i></span>
-                <h3 class="tool-card-name">Snowflake Decoder</h3>
-                <p class="tool-card-desc">Creation date, worker, process and increment from any ID.</p>
-                <a class="tool-open-link" href="/tools/snowflake-decoder/">Open <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
-            </article>
-            <article class="tool-card" data-slug="embed-builder" data-cat="create-format">
-                <button class="star-btn" aria-label="Add Embed Builder to favorites" aria-pressed="false"><i class="fa-solid fa-star" aria-hidden="true"></i></button>
-                <span class="tool-card-icon"><i class="fa-solid fa-code" aria-hidden="true"></i></span>
-                <h3 class="tool-card-name">Embed Builder</h3>
-                <p class="tool-card-desc">Design embeds visually, export the ready JSON payload.</p>
-                <span class="soon-badge">Coming soon</span>
-            </article>
-            <article class="tool-card tool-card-live" data-slug="markdown-generator" data-cat="create-format" onclick="window.location.href='/tools/markdown-generator/'" style="cursor:pointer">
-                <button class="star-btn" aria-label="Add Markdown Generator to favorites" aria-pressed="false"><i class="fa-solid fa-star" aria-hidden="true"></i></button>
-                <span class="tool-card-icon"><i class="fa-solid fa-pen-nib" aria-hidden="true"></i></span>
-                <h3 class="tool-card-name">Markdown Generator</h3>
-                <p class="tool-card-desc">Format messages with live preview and quick copy.</p>
-                <a class="tool-open-link" href="/tools/markdown-generator/">Open <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
-            </article>
-            <article class="tool-card tool-card-live" data-slug="timestamp-generator" data-cat="create-format" onclick="window.location.href='/tools/timestamp-generator/'" style="cursor:pointer">
-                <button class="star-btn" aria-label="Add Timestamp Generator to favorites" aria-pressed="false"><i class="fa-solid fa-star" aria-hidden="true"></i></button>
-                <span class="tool-card-icon"><i class="fa-solid fa-clock" aria-hidden="true"></i></span>
-                <h3 class="tool-card-name">Timestamp Generator</h3>
-                <p class="tool-card-desc">All &lt;t:&gt; formats for any date and timezone.</p>
-                <a class="tool-open-link" href="/tools/timestamp-generator/">Open <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
-            </article>
-            <article class="tool-card tool-card-live" data-slug="color-picker" data-cat="create-format" onclick="window.location.href='/tools/color-picker/'" style="cursor:pointer">
-                <button class="star-btn" aria-label="Add Color Picker to favorites" aria-pressed="false"><i class="fa-solid fa-star" aria-hidden="true"></i></button>
-                <span class="tool-card-icon"><i class="fa-solid fa-palette" aria-hidden="true"></i></span>
-                <h3 class="tool-card-name">Color Picker</h3>
-                <p class="tool-card-desc">Role colors as HEX, RGB, HSL and integer values.</p>
-                <a class="tool-open-link" href="/tools/color-picker/">Open <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
-            </article>
-            <article class="tool-card" data-slug="webhook-manager" data-cat="manage-extract">
-                <button class="star-btn" aria-label="Add Webhook Manager to favorites" aria-pressed="false"><i class="fa-solid fa-star" aria-hidden="true"></i></button>
-                <span class="tool-card-icon"><i class="fa-solid fa-robot" aria-hidden="true"></i></span>
-                <h3 class="tool-card-name">Webhook Manager</h3>
-                <p class="tool-card-desc">Send messages and delete webhooks without a bot.</p>
-                <span class="soon-badge">Coming soon</span>
-            </article>
-            <article class="tool-card tool-card-live" data-slug="emoji-stealer" data-cat="manage-extract" onclick="window.location.href='/tools/emoji-stealer/'" style="cursor:pointer">
-                <button class="star-btn" aria-label="Add Emoji Stealer to favorites" aria-pressed="false"><i class="fa-solid fa-star" aria-hidden="true"></i></button>
-                <span class="tool-card-icon"><i class="fa-solid fa-face-smile" aria-hidden="true"></i></span>
-                <h3 class="tool-card-name">Emoji Stealer</h3>
-                <p class="tool-card-desc">High-quality CDN links for any emoji or sticker.</p>
-                <a class="tool-open-link" href="/tools/emoji-stealer/">Open <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
-            </article>
-            <article class="tool-card tool-card-live" data-slug="avatar-cdn" data-cat="manage-extract" onclick="window.location.href='/tools/avatar-cdn/'" style="cursor:pointer">
-                <button class="star-btn" aria-label="Add Avatar CDN to favorites" aria-pressed="false"><i class="fa-solid fa-star" aria-hidden="true"></i></button>
-                <span class="tool-card-icon"><i class="fa-solid fa-image" aria-hidden="true"></i></span>
-                <h3 class="tool-card-name">Avatar CDN</h3>
-                <p class="tool-card-desc">Direct CDN links for any avatar, every size and format.</p>
-                <a class="tool-open-link" href="/tools/avatar-cdn/">Open <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
-            </article>
-            <article class="tool-card tool-card-live" data-slug="collectibles-inspector" data-cat="manage-extract" onclick="window.location.href='/tools/collectibles-inspector/'" style="cursor:pointer">
-                <button class="star-btn" aria-label="Add Collectibles Inspector to favorites" aria-pressed="false"><i class="fa-solid fa-star" aria-hidden="true"></i></button>
-                <span class="tool-card-icon"><i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i></span>
-                <h3 class="tool-card-name">Collectibles Inspector</h3>
-                <p class="tool-card-desc">Avatar, banner, decoration, nameplate &amp; clan tag — all CDN links.</p>
-                <a class="tool-open-link" href="/tools/collectibles-inspector/">Open <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
-            </article>
-            <article class="tool-card tool-card-live" data-slug="link-cleaner" data-cat="manage-extract" onclick="window.location.href='/tools/link-cleaner/'" style="cursor:pointer">
-                <button class="star-btn" aria-label="Add Link Cleaner to favorites" aria-pressed="false"><i class="fa-solid fa-star" aria-hidden="true"></i></button>
-                <span class="tool-card-icon"><i class="fa-solid fa-link-slash" aria-hidden="true"></i></span>
-                <h3 class="tool-card-name">Link Cleaner</h3>
-                <p class="tool-card-desc">Strip fbclid, ttclid, utm_*, is_from_webapp & 60+ trackers. TikTok-ready, bulk.</p>
-                <a class="tool-open-link" href="/tools/link-cleaner/">Open <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
-            </article>
-            </div>
-
-            <div class="empty-state hidden" id="emptyState">
-                <span class="empty-icon"><i class="fa-solid fa-star" aria-hidden="true"></i></span>
-                <h2>No favorites yet</h2>
-                <p>Tap the star on any tool to pin it here.</p>
-                <button class="btn btn-ghost" id="emptyAll">Browse all tools</button>
+    <main id="main" class="container tools-page">
+        <h1>Discord tools</h1>
+        <p class="tools-intro">Look up Discord accounts and servers, format messages, and manage webhooks.</p>
+        <div class="directory-controls" hidden>
+            <label for="directory-search">Find a tool</label>
+            <input id="directory-search" type="search" placeholder="Search by name or task" maxlength="100">
+            <div class="filter-bar" role="group" aria-label="Filter tools">
+                <button type="button" class="filter-chip" data-filter="all" aria-pressed="true">All</button>
+                <button type="button" class="filter-chip" data-filter="favorites" aria-pressed="false">Favorites <span class="fav-count">0</span></button>
+                <button type="button" class="filter-chip" data-filter="look-things-up" aria-pressed="false">Look things up</button>
+                <button type="button" class="filter-chip" data-filter="create-format" aria-pressed="false">Create &amp; format</button>
+                <button type="button" class="filter-chip" data-filter="manage-extract" aria-pressed="false">Manage &amp; extract</button>
             </div>
         </div>
+        <p class="directory-status" id="directory-status" role="status"></p>
+        <div class="tools-grid">
+            <article class="tool-card tool-card-live" data-slug="user-lookup" data-cat="look-things-up">
+                <button type="button" class="star-btn" hidden aria-label="Favorite: User Lookup" aria-pressed="false"><i class="fa-solid fa-star" aria-hidden="true"></i></button>
+                <span class="tool-card-icon"><i class="fa-solid fa-user" aria-hidden="true"></i></span>
+                <h2 class="tool-card-name">User Lookup</h2>
+                <p class="tool-card-desc">Badges, account age and details for any user ID. Discord login required.</p>
+                <a class="tool-open-link" href="/tools/user-lookup/" aria-label="Open user lookup">Open <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+            </article>
+            <article class="tool-card tool-card-live" data-slug="username-history" data-cat="look-things-up">
+                <button type="button" class="star-btn" hidden aria-label="Favorite: Username History" aria-pressed="false"><i class="fa-solid fa-star" aria-hidden="true"></i></button>
+                <span class="tool-card-icon"><i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i></span>
+                <h2 class="tool-card-name">Username History <span class="premium-badge" title="Discord login and Premium required"><i class="fa-solid fa-crown" aria-hidden="true"></i> Premium</span></h2>
+                <p class="tool-card-desc">View recorded usernames and discriminators. Discord login and Premium required.</p>
+                <a class="tool-open-link" href="/tools/username-history/" aria-label="Open username history">Open <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+            </article>
+            <article class="tool-card tool-card-live" data-slug="server-lookup" data-cat="look-things-up">
+                <button type="button" class="star-btn" hidden aria-label="Favorite: Server Lookup" aria-pressed="false"><i class="fa-solid fa-star" aria-hidden="true"></i></button>
+                <span class="tool-card-icon"><i class="fa-solid fa-server" aria-hidden="true"></i></span>
+                <h2 class="tool-card-name">Server Lookup</h2>
+                <p class="tool-card-desc">Members, channels and invites via Discord's widget API. Discord login required.</p>
+                <a class="tool-open-link" href="/tools/server-lookup/" aria-label="Open server lookup">Open <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+            </article>
+            <article class="tool-card tool-card-live" data-slug="invite-lookup" data-cat="look-things-up">
+                <button type="button" class="star-btn" hidden aria-label="Favorite: Invite Lookup" aria-pressed="false"><i class="fa-solid fa-star" aria-hidden="true"></i></button>
+                <span class="tool-card-icon"><i class="fa-solid fa-link" aria-hidden="true"></i></span>
+                <h2 class="tool-card-name">Invite Lookup</h2>
+                <p class="tool-card-desc">Guild info, member count, inviter and expiry of any invite. Discord login required.</p>
+                <a class="tool-open-link" href="/tools/invite-lookup/" aria-label="Open invite lookup">Open <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+            </article>
+            <article class="tool-card tool-card-live" data-slug="alt-account-lookup" data-cat="look-things-up">
+                <button type="button" class="star-btn" hidden aria-label="Favorite: Alt Account Lookup" aria-pressed="false"><i class="fa-solid fa-star" aria-hidden="true"></i></button>
+                <span class="tool-card-icon"><i class="fa-solid fa-user-secret" aria-hidden="true"></i></span>
+                <h2 class="tool-card-name">Alt Account Lookup <span class="premium-badge" title="Discord login and Premium required"><i class="fa-solid fa-crown" aria-hidden="true"></i> Premium</span></h2>
+                <p class="tool-card-desc">Look up potentially linked accounts using verification records. Discord login and Premium required.</p>
+                <a class="tool-open-link" href="/tools/alt-account-lookup/" aria-label="Open alt account lookup">Open <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+            </article>
+            <article class="tool-card tool-card-live" data-slug="account-checker" data-cat="look-things-up">
+                <button type="button" class="star-btn" hidden aria-label="Favorite: Account Checker" aria-pressed="false"><i class="fa-solid fa-star" aria-hidden="true"></i></button>
+                <span class="tool-card-icon"><i class="fa-solid fa-fingerprint" aria-hidden="true"></i></span>
+                <h2 class="tool-card-name">Account Checker</h2>
+                <p class="tool-card-desc">Account quality score from age, badges and profile signals. Discord login required.</p>
+                <a class="tool-open-link" href="/tools/account-checker/" aria-label="Open account checker">Open <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+            </article>
+            <article class="tool-card tool-card-live" data-slug="snowflake-decoder" data-cat="look-things-up">
+                <button type="button" class="star-btn" hidden aria-label="Favorite: Snowflake Decoder" aria-pressed="false"><i class="fa-solid fa-star" aria-hidden="true"></i></button>
+                <span class="tool-card-icon"><i class="fa-solid fa-snowflake" aria-hidden="true"></i></span>
+                <h2 class="tool-card-name">Snowflake Decoder</h2>
+                <p class="tool-card-desc">Creation date, worker, process and increment from any ID.</p>
+                <a class="tool-open-link" href="/tools/snowflake-decoder/" aria-label="Open snowflake decoder">Open <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+            </article>
+            <article class="tool-card tool-card-live" data-slug="embed-builder" data-cat="create-format">
+                <button type="button" class="star-btn" hidden aria-label="Favorite: Embed Builder" aria-pressed="false"><i class="fa-solid fa-star" aria-hidden="true"></i></button>
+                <span class="tool-card-icon"><i class="fa-solid fa-code" aria-hidden="true"></i></span>
+                <h2 class="tool-card-name">Embed Builder</h2>
+                <p class="tool-card-desc">Design embeds visually, export the ready JSON payload.</p>
+                <a class="tool-open-link" href="/tools/embed-builder/" aria-label="Open Embed Builder">Open <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+            </article>
+            <article class="tool-card tool-card-live" data-slug="markdown-generator" data-cat="create-format">
+                <button type="button" class="star-btn" hidden aria-label="Favorite: Markdown Generator" aria-pressed="false"><i class="fa-solid fa-star" aria-hidden="true"></i></button>
+                <span class="tool-card-icon"><i class="fa-solid fa-pen-nib" aria-hidden="true"></i></span>
+                <h2 class="tool-card-name">Markdown Generator</h2>
+                <p class="tool-card-desc">Format messages with live preview and quick copy.</p>
+                <a class="tool-open-link" href="/tools/markdown-generator/" aria-label="Open markdown generator">Open <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+            </article>
+            <article class="tool-card tool-card-live" data-slug="timestamp-generator" data-cat="create-format">
+                <button type="button" class="star-btn" hidden aria-label="Favorite: Timestamp Generator" aria-pressed="false"><i class="fa-solid fa-star" aria-hidden="true"></i></button>
+                <span class="tool-card-icon"><i class="fa-solid fa-clock" aria-hidden="true"></i></span>
+                <h2 class="tool-card-name">Timestamp Generator</h2>
+                <p class="tool-card-desc">All &lt;t:&gt; formats for any date and timezone.</p>
+                <a class="tool-open-link" href="/tools/timestamp-generator/" aria-label="Open timestamp generator">Open <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+            </article>
+            <article class="tool-card tool-card-live" data-slug="color-picker" data-cat="create-format">
+                <button type="button" class="star-btn" hidden aria-label="Favorite: Color Picker" aria-pressed="false"><i class="fa-solid fa-star" aria-hidden="true"></i></button>
+                <span class="tool-card-icon"><i class="fa-solid fa-palette" aria-hidden="true"></i></span>
+                <h2 class="tool-card-name">Color Picker</h2>
+                <p class="tool-card-desc">Role colors as HEX, RGB, HSL and integer values.</p>
+                <a class="tool-open-link" href="/tools/color-picker/" aria-label="Open color picker">Open <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+            </article>
+            <article class="tool-card tool-card-live" data-slug="webhook-manager" data-cat="manage-extract">
+                <button type="button" class="star-btn" hidden aria-label="Favorite: Webhook Manager" aria-pressed="false"><i class="fa-solid fa-star" aria-hidden="true"></i></button>
+                <span class="tool-card-icon"><i class="fa-solid fa-robot" aria-hidden="true"></i></span>
+                <h2 class="tool-card-name">Webhook Manager</h2>
+                <p class="tool-card-desc">Send messages and delete webhooks without a bot.</p>
+                <a class="tool-open-link" href="/tools/webhook-manager/" aria-label="Open webhook manager">Open <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+            </article>
+            <article class="tool-card tool-card-live" data-slug="emoji-stealer" data-cat="manage-extract">
+                <button type="button" class="star-btn" hidden aria-label="Favorite: Emoji Stealer" aria-pressed="false"><i class="fa-solid fa-star" aria-hidden="true"></i></button>
+                <span class="tool-card-icon"><i class="fa-solid fa-face-smile" aria-hidden="true"></i></span>
+                <h2 class="tool-card-name">Emoji Stealer</h2>
+                <p class="tool-card-desc">High-quality CDN links for any emoji or sticker.</p>
+                <a class="tool-open-link" href="/tools/emoji-stealer/" aria-label="Open emoji stealer">Open <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+            </article>
+            <article class="tool-card tool-card-live" data-slug="avatar-cdn" data-cat="manage-extract">
+                <button type="button" class="star-btn" hidden aria-label="Favorite: Avatar CDN" aria-pressed="false"><i class="fa-solid fa-star" aria-hidden="true"></i></button>
+                <span class="tool-card-icon"><i class="fa-solid fa-image" aria-hidden="true"></i></span>
+                <h2 class="tool-card-name">Avatar CDN</h2>
+                <p class="tool-card-desc">Direct CDN links for any avatar, every size and format.</p>
+                <a class="tool-open-link" href="/tools/avatar-cdn/" aria-label="Open avatar cdn">Open <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+            </article>
+            <article class="tool-card tool-card-live" data-slug="collectibles-inspector" data-cat="manage-extract">
+                <button type="button" class="star-btn" hidden aria-label="Favorite: Collectibles Inspector" aria-pressed="false"><i class="fa-solid fa-star" aria-hidden="true"></i></button>
+                <span class="tool-card-icon"><i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i></span>
+                <h2 class="tool-card-name">Collectibles Inspector</h2>
+                <p class="tool-card-desc">Avatar, banner, decoration, nameplate &amp; clan tag — all CDN links.</p>
+                <a class="tool-open-link" href="/tools/collectibles-inspector/" aria-label="Open collectibles inspector">Open <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+            </article>
+            <article class="tool-card tool-card-live" data-slug="link-cleaner" data-cat="manage-extract">
+                <button type="button" class="star-btn" hidden aria-label="Favorite: Link Cleaner" aria-pressed="false"><i class="fa-solid fa-star" aria-hidden="true"></i></button>
+                <span class="tool-card-icon"><i class="fa-solid fa-link-slash" aria-hidden="true"></i></span>
+                <h2 class="tool-card-name">Link Cleaner</h2>
+                <p class="tool-card-desc">Strip fbclid, ttclid, utm_*, is_from_webapp & 60+ trackers. TikTok-ready, bulk.</p>
+                <a class="tool-open-link" href="/tools/link-cleaner/" aria-label="Open link cleaner">Open <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+            </article>
+        </div>
+        <button type="button" class="button button-outline" id="directory-reset" hidden>Show all tools</button>
     </main>
 
-    <footer class="footer">
-    <div class="container footer-grid">
-        <div class="footer-brand">
-            <a class="brand" href="/" aria-label="Disc-Tools home">
-                <img src="/static/assets/img/logo.png" alt="" width="32" height="32" class="brand-mark">
-                <span class="brand-name">Disc-Tools</span>
-            </a>
-            <p>The ultimate collection of free Discord utilities. Built for people who actually use Discord.</p>
-            <div class="footer-social">
-                <a href="https://discord.gg/rtRs8rhj5u" aria-label="Discord" rel="noopener"><i class="fa-brands fa-discord" aria-hidden="true"></i></a>
-                <a href="https://github.com/Disc-Tools/disc-tools.de" aria-label="GitHub" rel="noopener"><i class="fa-brands fa-github" aria-hidden="true"></i></a>
-                <a href="https://www.instagram.com/disc.tools" aria-label="Instagram" rel="noopener"><i class="fa-brands fa-instagram" aria-hidden="true"></i></a>
-                <a href="https://www.tiktok.com/@disc.tools" aria-label="TikTok" rel="noopener"><i class="fa-brands fa-tiktok" aria-hidden="true"></i></a>
-                <a href="https://x.com/disc_tools" aria-label="X" rel="noopener"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+    <footer class="site-footer">
+        <div class="container footer-grid">
+            <div class="footer-brand">
+                <a class="brand" href="/"><img src="/static/assets/img/logo.svg?v=20261116-live1" width="28" height="28" alt="">Disc-Tools</a>
+                <nav class="footer-social-nav" aria-label="Social media">
+                    <ul class="footer-socials">
+                        <li><a href="https://discord.gg/rtRs8rhj5u" aria-label="Discord" title="Discord"><i class="fa-brands fa-discord" aria-hidden="true"></i></a></li>
+                        <li><a href="https://www.twitch.tv/disc_tools" aria-label="Twitch" title="Twitch"><i class="fa-brands fa-twitch" aria-hidden="true"></i></a></li>
+                        <li><a href="https://www.youtube.com/@disc-tools" aria-label="YouTube" title="YouTube"><i class="fa-brands fa-youtube" aria-hidden="true"></i></a></li>
+                        <li><a href="https://github.com/Disc-Tools/disc-tools.de" aria-label="GitHub" title="GitHub"><i class="fa-brands fa-github" aria-hidden="true"></i></a></li>
+                        <li><a href="https://www.instagram.com/disc.tools" aria-label="Instagram" title="Instagram"><i class="fa-brands fa-instagram" aria-hidden="true"></i></a></li>
+                        <li><a href="https://www.tiktok.com/@disc.tools" aria-label="TikTok" title="TikTok"><i class="fa-brands fa-tiktok" aria-hidden="true"></i></a></li>
+                        <li><a href="https://x.com/disc_tools" aria-label="X" title="X"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a></li>
+                    </ul>
+                </nav>
+                <p>Not affiliated with Discord Inc.</p>
             </div>
-            <p class="footer-note">Not affiliated with Discord Inc.</p>
+            <nav class="footer-column" aria-labelledby="footer-explore">
+                <h2 id="footer-explore">Explore</h2>
+                <a href="/tools/">Tool directory</a>
+                <a href="/learn/">Discord guides</a>
+                <a href="https://dash.disc-tools.de/">Dashboard</a>
+                <a href="https://status.disc-tools.de/#cat-main-site">Service status</a>
+            </nav>
+            <nav class="footer-column" aria-labelledby="footer-legal">
+                <h2 id="footer-legal"><a href="/legal/">Legal</a></h2>
+                <a href="/legal/privacy-policy/">Privacy Policy</a>
+                <a href="/legal/terms-of-service/">Terms of Service</a>
+                <a href="/legal/imprint/">Imprint</a>
+                <button class="footer-button" id="show-cookie-notice" type="button">Cookie settings</button>
+            </nav>
         </div>
-        <nav class="footer-col" aria-label="Tools">
-            <h3>Tools</h3>
-            <a href="/tools/">User Lookup</a>
-            <a href="/tools/">Embed Builder</a>
-            <a href="/tools/">Snowflake Decoder</a>
-            <a href="/tools/">Webhook Manager</a>
-            <a href="/tools/">Emoji Stealer</a>
-            <a href="/tools/">All tools</a>
-        </nav>
-        <nav class="footer-col" aria-label="Learn">
-            <h3>Learn</h3>
-            <a href="/learn/">Learn</a>
-            <a href="/tips/formatting/">Formatting tips</a>
-            <a href="/tips/shortcuts/">Shortcuts</a>
-            <a href="/security-articles/">Security articles</a>
-        </nav>
-        <nav class="footer-col" aria-label="Site">
-            <h3>Site</h3>
-            <a href="/team/">Team</a>
-            <a href="/partner/">Partners</a>
-            <a href="/partner/terms/">Partner Terms</a>
-            <a href="/announcements/">Announcements</a>
-            <a href="https://status.disc-tools.de/#cat-main-site" rel="noopener">Status</a>
-            <a href="https://dash.disc-tools.de" rel="noopener">Dashboard</a>
-            <a href="https://dash.disc-tools.de/premium" rel="noopener">Premium</a>
-        </nav>
-        <nav class="footer-col" aria-label="Legal">
-            <h3>Legal</h3>
-            <a href="/legal/privacy-policy/">Privacy Policy</a>
-            <a href="/legal/terms-of-service/">Terms of Service</a>
-            <a href="/partner/terms/">Partner Terms</a>
-            <a href="/legal/imprint/">Imprint</a>
-            <a href="https://dash.disc-tools.de/legal/refund-policy/">Refund Policy</a>
-        </nav>
-    </div>
-<div class="container" style="padding: 18px 0; text-align:center; border-top: 1px solid var(--border); margin-top: 24px;"></div>
-</footer>
-
-    <button class="back-to-top" id="backToTop" aria-label="Back to top" type="button"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></button>
-
-    
-    <div class="cookie-banner" id="cookieBanner" role="dialog" aria-label="Cookie settings" hidden>
-        <div class="cookie-banner-inner">
-            <span class="cookie-title">We respect your privacy</span>
-            <p class="cookie-text">This site uses essential cookies to keep it working, plus optional cookies for analytics and preferences. You decide what we may store.</p>
-            <div class="cookie-actions">
-                <button class="btn btn-ghost btn-sm" data-consent="essential">Only essentials</button>
-                <button class="btn btn-primary btn-sm" data-consent="all">Accept all</button>
-                <button class="btn btn-ghost btn-sm" id="cookieSelectBtn">Select <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
-            </div>
-            <div class="cookie-panel" id="cookiePanel" hidden>
-                <label class="cookie-row">
-                    <span class="cookie-row-text"><strong>Essential</strong><small>Required for login and core functions. Always on.</small></span>
-                    <span class="switch">
-                        <input type="checkbox" checked disabled aria-label="Essential cookies always on">
-                        <span class="switch-track" aria-hidden="true"></span>
-                    </span>
-                </label>
-                <label class="cookie-row">
-                    <span class="cookie-row-text"><strong>Analytics</strong><small>Helps us understand how the tools are used.</small></span>
-                    <span class="switch">
-                        <input type="checkbox" data-cat="analytics" aria-label="Analytics cookies">
-                        <span class="switch-track" aria-hidden="true"></span>
-                    </span>
-                </label>
-                <label class="cookie-row">
-                    <span class="cookie-row-text"><strong>Preferences</strong><small>Remembers your favorites and settings on this device.</small></span>
-                    <span class="switch">
-                        <input type="checkbox" data-cat="preferences" aria-label="Preference cookies">
-                        <span class="switch-track" aria-hidden="true"></span>
-                    </span>
-                </label>
-                <button class="btn btn-primary btn-sm" id="cookieSaveBtn">Save selection</button>
-            </div>
+    </footer>
+    <aside class="cookie-notice ad-consent-notice" id="cookie-notice" aria-labelledby="cookie-title" hidden>
+        <h2 id="cookie-title"><i class="fa-solid fa-cookie-bite" aria-hidden="true"></i> Cookies &amp; storage</h2>
+        <p>Disc-Tools uses essential storage for site features. You can also allow analytics with Umami and advertising with Google AdSense on the homepage.</p>
+        <div class="cookie-actions ad-consent-actions">
+            <button class="button button-primary" type="button" data-ad-consent="allow">Accept all</button>
+            <button class="button button-outline" type="button" data-ad-consent="deny">Only essentials</button>
+            <button class="button button-outline" id="select-ad-consent" type="button" aria-expanded="false" aria-controls="ad-consent-options">Select <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
         </div>
-    </div>
-
-<script src="/static/js/backtotop.js" defer></script>
-<script src="/static/js/landing.js" defer></script>
-<script src="/static/js/consent.js" defer></script>
-    <script src="/static/js/tools.js" defer></script>
-<script src="/static/js/authnav.js" defer></script>
-<script src="/static/js/sw-cache.js" defer></script>
-<script defer src="https://umami.disc-tools.de/script.js" data-website-id="0cf82497-80c8-42a2-b6e4-8a8ae179d1fe"></script>
+        <div class="ad-consent-options" id="ad-consent-options" hidden>
+            <div class="ad-consent-option">
+                <div>
+                    <label for="essential-storage">Essential</label>
+                    <p id="essential-storage-description">Required for login and core features.</p>
+                </div>
+                <input class="ad-consent-switch" id="essential-storage" type="checkbox" role="switch" aria-describedby="essential-storage-description" checked disabled>
+            </div>
+            <div class="ad-consent-option">
+                <label for="allow-advertising">Google AdSense advertising</label>
+                <input class="ad-consent-switch" id="allow-advertising" type="checkbox" role="switch">
+            </div>
+            <div class="ad-consent-option">
+                <label for="allow-analytics">Umami analytics</label>
+                <input class="ad-consent-switch" id="allow-analytics" type="checkbox" role="switch">
+            </div>
+            <button class="button button-primary" id="save-ad-consent" type="button">Save selection</button>
+        </div>
+        <a class="ad-consent-policy" href="/legal/privacy-policy/">Privacy Policy</a>
+    </aside>
 </body>
 </html>

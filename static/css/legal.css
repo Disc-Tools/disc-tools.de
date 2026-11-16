@@ -1,102 +1,17 @@
-/* ============================================================
-   Disc-Tools: Landing Page
-   Design: Blurple #5865f2 als CTA/Fokus-Akzent, tiefer Anthrazit-
-   Hintergrund (kein #000), warmes Grün als Erfolgs-Akzent.
-   Typo: Space Grotesk (Display) / Onest (Body) / JetBrains Mono.
-   Navbar-Pill: ausschließlich transform/opacity (kein Layout-Jank).
-   ============================================================ */
-/* ---------- Legal pages ---------- */
-.legal-page {
-    padding: calc(var(--nav-h) + 56px) 0 120px;
-}
-.legal-page h1 {
-    font-size: clamp(2rem, 4vw, 2.8rem);
-}
-.legal-meta {
-    margin-top: 10px;
-    font-family: var(--font-mono);
-    font-size: 13px;
-    color: var(--text-muted);
-}
-.legal-page section {
-    margin-top: 44px;
-}
-.legal-page h2 {
-    font-family: var(--font-body);
-    font-size: 19px;
-    font-weight: 700;
-    color: var(--text);
-}
-.legal-page p,
-.legal-page ul,
-.legal-page address {
-    margin-top: 10px;
-    font-size: 15px;
-    line-height: 1.65;
-    color: var(--text-muted);
-}
-.legal-page ul {
-    padding-left: 22px;
-    list-style: disc;
-}
-.legal-page li {
-    margin-top: 6px;
-}
-.legal-page address {
-    font-style: normal;
-    color: var(--text);
-}
-.legal-page a {
-    color: var(--blurple-soft);
-}
-.legal-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 16px;
-    margin-top: 40px;
-}
-.legal-card {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    padding: 22px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    text-decoration: none;
-    color: var(--text);
-    transition: transform 0.2s var(--ease-out), border-color 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out);
-}
-a.legal-card:hover {
-    transform: translateY(-2px);
-    border-color: rgba(124, 133, 240, 0.45);
-    box-shadow: 0 12px 32px rgba(3, 6, 12, 0.4);
-}
-.legal-card h2 {
-    font-family: var(--font-body);
-    font-size: 17px;
-    font-weight: 700;
-    color: var(--text);
-}
-.legal-card p {
-    font-size: 14px;
-    color: var(--text-muted);
-    flex-grow: 1;
-}
-.legal-card .card-go {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 10px;
-    font-size: 13.5px;
-    font-weight: 600;
-    color: var(--blurple-soft);
-    transition: gap 0.2s var(--ease-out);
-}
-a.legal-card:hover .card-go {
-    gap: 12px;
-}
-.legal-card .soon-badge {
-    margin-top: auto;
-    align-self: flex-start;
-}
+.legal-layout { display: flex; flex-direction: column; min-height: 100vh; min-height: 100dvh; }
+.legal-layout > .site-footer { margin-top: auto; }
+
+.legal-page { padding-block: clamp(38px, 6vw, 80px); }
+.legal-content, .legal-list { max-width: 760px; }
+.legal-content { margin-inline: auto; }
+.legal-page h1 { font-size: clamp(2.4rem, 6vw, 4rem); letter-spacing: -.045em; }
+.legal-page h2 { margin: 28px 0 10px; font-size: clamp(1.2rem, 3vw, 1.6rem); }
+.legal-page p, .legal-page li { color: var(--muted); }
+.legal-page li + li { margin-top: 5px; }
+.legal-content a { color: var(--accent); text-decoration: underline; overflow-wrap: anywhere; }
+.legal-content .legal-back { display: inline-block; margin-bottom: 16px; font-size: 14px; }
+.legal-meta { font-size: 14px; }
+.legal-list { margin-top: 26px; border-top: 1px solid var(--border); }
+.legal-list a { display: flex; justify-content: space-between; padding: 14px 8px; border-bottom: 1px solid var(--border); }
+.legal-list a:hover { background: var(--surface); }
+.legal-list span { color: var(--accent); }

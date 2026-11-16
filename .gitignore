@@ -1,6 +1,4 @@
 /fonts/
-sw.js
-ads.txt
 node_modules/
 .env
 *.log

@@ -1,154 +1,148 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Invite Lookup | Disc-Tools</title>
-    <meta name="description" content="Look up any Discord invite — guild info, member count, inviter and expiry.">
-    <meta name="keywords" content="discord invite lookup, discord invite info, discord server invite, invite code lookup, discord invite stats, discord server id from invite">
-    <meta name="robots" content="index, follow">
-    <meta name="theme-color" content="#0a0d13">
-    <link rel="icon" type="image/png" href="/static/assets/img/logo.png">
-    <link rel="apple-touch-icon" href="/static/assets/img/logo.png">
-    <link rel="stylesheet" href="/static/css/base.css">
-    <link rel="stylesheet" href="/static/css/tools.css">
-    <link rel="stylesheet" href="/static/css/user-lookup.css">
-    <link rel="stylesheet" href="/static/css/server-lookup.css?v=6">
-    <link rel="stylesheet" href="/static/css/invite-lookup.css?v=3">
-    <link rel="stylesheet" href="/static/fa-icons/fa.min.css">
+    <meta name="description" content="Look up a Discord invite by link or code.">
+    <title>Invite Lookup · Disc-Tools</title>
+    <link rel="icon" type="image/svg+xml" href="/static/assets/img/logo.svg?v=20261116-live1">
+    <link rel="stylesheet" href="/static/fa-icons/fa.min.css?v=20261116-live1">
+    <link rel="stylesheet" href="/static/css/site.css?v=20261116-live1">
+    <script src="/static/js/auth-status.js?v=20261116-live1" defer></script>
+    <script src="/static/js/header.js?v=20261116-live1" defer></script>
+    <script src="/static/js/consent-ui.js?v=20261116-live1" defer></script>
+    <link rel="stylesheet" href="/static/css/user-lookup.css?v=20261116-live1">
+    <link rel="stylesheet" href="/static/css/server-lookup.css?v=20261116-live1">
+    <link rel="stylesheet" href="/static/css/invite-lookup.css?v=20261116-live1">
+    <script src="/static/js/tools/invite-lookup.js?v=20261116-live1" defer></script>
+    <link rel="canonical" href="https://disc-tools.de/tools/invite-lookup/">
 </head>
-<body>
-<a class="skip-link" href="#main">Skip to content</a>
-<header class="nav-shell" id="siteNav">
-    <div class="nav-bg" aria-hidden="true"></div>
-    <nav class="nav-inner" aria-label="Main navigation">
-        <a class="brand" href="/" aria-label="Disc-Tools home">
-            <img src="/static/assets/img/logo.png" alt="" width="32" height="32" class="brand-mark">
-            <span class="brand-name">Disc-Tools</span>
-        </a>
-        <div class="nav-links" id="navLinks">
-            <a href="/team/">Team</a>
-            <a href="/tools/">Tools</a>
-            <div class="nav-dropdown">
-                <a>Learn <i class="fa-solid fa-chevron-down"></i></a>
-                <div class="nav-dropdown-menu">
-                    <a href="/learn/"><i class="fa-solid fa-graduation-cap"></i> All Resources</a>
-                    <a href="/tips/formatting/"><i class="fa-solid fa-text-height"></i> Formatting</a>
-                    <a href="/tips/shortcuts/"><i class="fa-solid fa-keyboard"></i> Shortcuts</a>
-                    <a href="/security-articles/"><i class="fa-solid fa-shield"></i> Security</a>
-                    <a href="/about/"><i class="fa-solid fa-circle-info"></i> About</a>
-                </div>
+<body class="lookup-layout">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+        <div class="header-background" aria-hidden="true"></div>
+        <nav class="nav" aria-label="Main navigation">
+            <a class="brand" href="/"><img src="/static/assets/img/logo.svg?v=20261116-live1" width="32" height="32" alt="">Disc-Tools</a>
+            <div class="nav-links">
+                <a href="/tools/">Tools</a>
+                <a href="/learn/">Learn</a>
+                <a href="/team/">Team</a>
+                <a href="/partners/">Partners</a>
+                <a href="https://dash.disc-tools.de/premium">Premium</a>
             </div>
-            <a href="/partner/">Partners</a>
-            <a href="https://status.disc-tools.de/#cat-main-site" rel="noopener">Status</a>
-            <a href="https://dash.disc-tools.de/premium" rel="noopener">Premium</a>
-        </div>
-        <div class="nav-actions">
-            <a href="/api/auth/login?redirect=/success/login/" class="btn btn-ghost btn-sm">Login</a>
-            <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu">
-                <span class="nav-toggle-bar" aria-hidden="true"></span>
-                <span class="nav-toggle-bar" aria-hidden="true"></span>
-                <span class="nav-toggle-bar" aria-hidden="true"></span>
-            </button>
-        </div>
-    </nav>
-    <div class="mobile-menu" id="mobileMenu" hidden>
-        <nav aria-label="Mobile navigation">
-            <a href="/tools/">Tools</a>
-            <a href="/learn/">Learn</a>
-            <a href="/security-articles/">Security</a>
-            <a href="https://discord.gg/rtRs8rhj5u" rel="noopener">Community</a>
-            <a href="/team/" class="btn btn-ghost btn-block"><i class="fa-solid fa-users" aria-hidden="true"></i> Team</a>
-            <a href="https://status.disc-tools.de/#cat-main-site" class="btn btn-ghost btn-block" rel="noopener"><i class="fa-solid fa-heart-pulse" aria-hidden="true"></i> Status</a>
-            <a href="https://dash.disc-tools.de/premium" class="btn btn-primary btn-block" rel="noopener"><i class="fa-solid fa-crown" aria-hidden="true"></i> Premium</a>
-            <a href="/api/auth/login?redirect=/success/login/" class="btn btn-ghost btn-block">Login</a>
+            <div class="account-control">
+                <details class="announcement-notifications" id="announcement-notifications">
+                    <summary aria-label="Announcement notifications">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/>
+                        </svg>
+                    </summary>
+                    <div class="announcement-notification-panel">
+                        <ul id="announcement-notification-list" aria-live="polite"><li>Loading announcements…</li></ul>
+                        <button type="button" id="announcement-mark-all" aria-disabled="true">Mark all as read</button>
+                    </div>
+                </details>
+                <a id="account-link" class="button button-outline login" href="https://disc-tools.de/api/auth/login?redirect=/success/login/">Log in</a>
+                <details id="account-menu" class="account-menu" hidden>
+                    <summary id="account-trigger" class="button account-profile"></summary>
+                    <div class="account-dropdown">
+                        <a href="/profile/">Profile</a>
+                        <a href="https://developers.disc-tools.de/">Developers</a>
+                        <a href="https://dash.disc-tools.de/">Dashboard</a>
+                        <a href="https://hosting.disc-tools.de/">Hosting</a>
+                        <a href="https://disc-tools.de/api/auth/logout">Logout</a>
+                    </div>
+                </details>
+            </div>
         </nav>
-    </div>
-</header>
-<main id="main" class="lookup-page">
+    </header>
+
+    <main id="main" class="lookup-page">
     <div class="container">
 
         <a href="/tools/" class="back-link"><i class="fa-solid fa-arrow-left"></i> All tools</a>
 
         <section class="tool-hero">
-            <h1>Invite <em>Lookup</em></h1>
+            <h1>Invite Lookup</h1>
             <p>Guild info, member count, inviter and expiry of any Discord invite.</p>
+            <p>Discord login required. Free accounts have three lookups.</p>
+            <a class="button button-outline lookup-login" href="https://disc-tools.de/api/auth/login?redirect=/tools/invite-lookup/" hidden>Log in with Discord</a>
         </section>
 
-    <!-- TrustBox - visible -->
         <form id="lookup-form" class="lookup-form">
             <div class="lookup-input-wrap">
                 <i class="fa-solid fa-link search-icon" aria-hidden="true"></i>
-                <input type="text" id="lookup-input" placeholder="Enter an invite code, e.g. discord.gg/rtRs8rhj5u" autocomplete="off" spellcheck="false">
-                <button type="submit" class="btn btn-primary" id="lookup-submit"><i class="fa-solid fa-magnifying-glass"></i> Lookup</button>
+                <input type="text" id="lookup-input" aria-label="Discord invite link or code" required placeholder="Enter an invite code, e.g. discord.gg/rtRs8rhj5u" autocomplete="off" spellcheck="false">
+                <button type="submit" class="button button-primary" id="lookup-submit"><i class="fa-solid fa-magnifying-glass"></i> Lookup</button>
             </div>
             <p class="lookup-hint">Enter just the code or a full invite link — e.g. <button type="button" class="hint-example" data-id="rtRs8rhj5u">rtRs8rhj5u</button></p>
         </form>
 
-        <div id="result" class="result"></div>
+        <div id="result" class="result" aria-live="polite"></div>
 
     </div>
 </main>
-<footer class="footer">
-    <div class="container footer-grid">
-        <div class="footer-brand">
-            <a class="brand" href="/" aria-label="Disc-Tools home">
-                <img src="/static/assets/img/logo.png" alt="" width="32" height="32" class="brand-mark">
-                <span class="brand-name">Disc-Tools</span>
-            </a>
-            <p>The ultimate collection of free Discord utilities. Built for people who actually use Discord.</p>
-            <div class="footer-social">
-                <a href="https://discord.gg/rtRs8rhj5u" aria-label="Discord" rel="noopener"><i class="fa-brands fa-discord" aria-hidden="true"></i></a>
-                <a href="https://github.com/Disc-Tools/disc-tools.de" aria-label="GitHub" rel="noopener"><i class="fa-brands fa-github" aria-hidden="true"></i></a>
-                <a href="https://www.instagram.com/disc.tools" aria-label="Instagram" rel="noopener"><i class="fa-brands fa-instagram" aria-hidden="true"></i></a>
-                <a href="https://www.tiktok.com/@disc.tools" aria-label="TikTok" rel="noopener"><i class="fa-brands fa-tiktok" aria-hidden="true"></i></a>
-                <a href="https://x.com/disc_tools" aria-label="X" rel="noopener"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+
+    <footer class="site-footer">
+        <div class="container footer-grid">
+            <div class="footer-brand">
+                <a class="brand" href="/"><img src="/static/assets/img/logo.svg?v=20261116-live1" width="28" height="28" alt="">Disc-Tools</a>
+                <nav class="footer-social-nav" aria-label="Social media">
+                    <ul class="footer-socials">
+                        <li><a href="https://discord.gg/rtRs8rhj5u" aria-label="Discord" title="Discord"><i class="fa-brands fa-discord" aria-hidden="true"></i></a></li>
+                        <li><a href="https://www.twitch.tv/disc_tools" aria-label="Twitch" title="Twitch"><i class="fa-brands fa-twitch" aria-hidden="true"></i></a></li>
+                        <li><a href="https://www.youtube.com/@disc-tools" aria-label="YouTube" title="YouTube"><i class="fa-brands fa-youtube" aria-hidden="true"></i></a></li>
+                        <li><a href="https://github.com/Disc-Tools/disc-tools.de" aria-label="GitHub" title="GitHub"><i class="fa-brands fa-github" aria-hidden="true"></i></a></li>
+                        <li><a href="https://www.instagram.com/disc.tools" aria-label="Instagram" title="Instagram"><i class="fa-brands fa-instagram" aria-hidden="true"></i></a></li>
+                        <li><a href="https://www.tiktok.com/@disc.tools" aria-label="TikTok" title="TikTok"><i class="fa-brands fa-tiktok" aria-hidden="true"></i></a></li>
+                        <li><a href="https://x.com/disc_tools" aria-label="X" title="X"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a></li>
+                    </ul>
+                </nav>
+                <p>Not affiliated with Discord Inc.</p>
             </div>
-            <p class="footer-note">Not affiliated with Discord Inc.</p>
+            <nav class="footer-column" aria-labelledby="footer-explore">
+                <h2 id="footer-explore">Explore</h2>
+                <a href="/tools/">Tool directory</a>
+                <a href="/learn/">Discord guides</a>
+                <a href="https://dash.disc-tools.de/">Dashboard</a>
+                <a href="https://status.disc-tools.de/#cat-main-site">Service status</a>
+            </nav>
+            <nav class="footer-column" aria-labelledby="footer-legal">
+                <h2 id="footer-legal"><a href="/legal/">Legal</a></h2>
+                <a href="/legal/privacy-policy/">Privacy Policy</a>
+                <a href="/legal/terms-of-service/">Terms of Service</a>
+                <a href="/legal/imprint/">Imprint</a>
+                <button class="footer-button" id="show-cookie-notice" type="button">Cookie settings</button>
+            </nav>
         </div>
-        <nav class="footer-col" aria-label="Tools">
-            <h3>Tools</h3>
-            <a href="/tools/user-lookup/">User Lookup</a>
-            <a href="/tools/server-lookup/">Server Lookup</a>
-            <a href="/tools/invite-lookup/">Invite Lookup</a>
-            <a href="/tools/">Embed Builder</a>
-            <a href="/tools/">Snowflake Decoder</a>
-            <a href="/tools/">Webhook Manager</a>
-            <a href="/tools/">All tools</a>
-        </nav>
-        <nav class="footer-col" aria-label="Learn">
-            <h3>Learn</h3>
-            <a href="/learn/">Learn</a>
-            <a href="/tips/formatting/">Formatting tips</a>
-            <a href="/tips/shortcuts/">Shortcuts</a>
-            <a href="/security-articles/">Security articles</a>
-        </nav>
-        <nav class="footer-col" aria-label="Site">
-            <h3>Site</h3>
-            <a href="/team/">Team</a>
-            <a href="/partner/">Partners</a>
-            <a href="/partner/terms/">Partner Terms</a>
-            <a href="/announcements/">Announcements</a>
-            <a href="https://status.disc-tools.de/#cat-main-site" rel="noopener">Status</a>
-            <a href="https://dash.disc-tools.de" rel="noopener">Dashboard</a>
-            <a href="https://dash.disc-tools.de/premium" rel="noopener">Premium</a>
-        </nav>
-        <nav class="footer-col" aria-label="Legal">
-            <h3>Legal</h3>
-            <a href="/legal/privacy-policy/">Privacy Policy</a>
-            <a href="/legal/terms-of-service/">Terms of Service</a>
-            <a href="/partner/terms/">Partner Terms</a>
-            <a href="/legal/imprint/">Imprint</a>
-            <a href="https://dash.disc-tools.de/legal/refund-policy/">Refund Policy</a>
-        </nav>
-    </div>
-</footer>
-<button class="back-to-top" id="backToTop" aria-label="Back to top" type="button"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></button>
-<script src="/static/js/backtotop.js" defer></script>
-<script src="/static/js/landing.js" defer></script>
-<script src="/static/js/invite-lookup.js?v=3" defer></script>
-<script src="/static/js/authnav.js" defer></script>
-<script src="/static/js/sw-cache.js" defer></script>
-<script defer src="https://umami.disc-tools.de/script.js" data-website-id="0cf82497-80c8-42a2-b6e4-8a8ae179d1fe"></script>
+    </footer>
+    <aside class="cookie-notice ad-consent-notice" id="cookie-notice" aria-labelledby="cookie-title" hidden>
+        <h2 id="cookie-title"><i class="fa-solid fa-cookie-bite" aria-hidden="true"></i> Cookies &amp; storage</h2>
+        <p>Disc-Tools uses essential storage for site features. You can also allow analytics with Umami and advertising with Google AdSense on the homepage.</p>
+        <div class="cookie-actions ad-consent-actions">
+            <button class="button button-primary" type="button" data-ad-consent="allow">Accept all</button>
+            <button class="button button-outline" type="button" data-ad-consent="deny">Only essentials</button>
+            <button class="button button-outline" id="select-ad-consent" type="button" aria-expanded="false" aria-controls="ad-consent-options">Select <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
+        </div>
+        <div class="ad-consent-options" id="ad-consent-options" hidden>
+            <div class="ad-consent-option">
+                <div>
+                    <label for="essential-storage">Essential</label>
+                    <p id="essential-storage-description">Required for login and core features.</p>
+                </div>
+                <input class="ad-consent-switch" id="essential-storage" type="checkbox" role="switch" aria-describedby="essential-storage-description" checked disabled>
+            </div>
+            <div class="ad-consent-option">
+                <label for="allow-advertising">Google AdSense advertising</label>
+                <input class="ad-consent-switch" id="allow-advertising" type="checkbox" role="switch">
+            </div>
+            <div class="ad-consent-option">
+                <label for="allow-analytics">Umami analytics</label>
+                <input class="ad-consent-switch" id="allow-analytics" type="checkbox" role="switch">
+            </div>
+            <button class="button button-primary" id="save-ad-consent" type="button">Save selection</button>
+        </div>
+        <a class="ad-consent-policy" href="/legal/privacy-policy/">Privacy Policy</a>
+    </aside>
 </body>
 </html>

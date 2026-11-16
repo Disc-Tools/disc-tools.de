@@ -1,67 +1,39 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Access Restricted | Disc-Tools</title>
     <meta name="robots" content="noindex, nofollow">
-    <meta name="theme-color" content="#0a0d13">
-
-    <link rel="icon" type="image/png" href="/static/assets/img/logo.png">
-    <link rel="apple-touch-icon" href="/static/assets/img/logo.png">
-
-    <link rel="stylesheet" href="/static/css/base.css">
-    <link rel="stylesheet" href="/static/fa-icons/fa.min.css">
-
-    <style>
-        body { display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; text-align: center; }
-        .blocked-box { position: relative; max-width: 420px; }
-        .blocked-box .icon { width: 96px; height: 96px; background: rgba(240,71,71,0.1); color: #f04747; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 38px; margin: 0 auto 20px; }
-        .blocked-box h1 { font-size: clamp(1.6rem, 4vw, 2rem); margin-bottom: 8px; }
-        .blocked-box p { color: var(--text-muted); font-size: 15px; line-height: 1.6; margin-bottom: 24px; }
-        .blocked-box .details { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 24px; }
-        .blocked-box .details .row { display: flex; justify-content: space-between; padding: 10px 16px; border-bottom: 1px solid var(--border); font-size: 13px; }
-        .blocked-box .details .row:last-child { border-bottom: none; }
-        .blocked-box .details .label { color: var(--text-muted); }
-        .blocked-box .details .value { color: #f04747; font-family: var(--font-mono); font-weight: 700; }
-        .blocked-box .btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 48px; border-radius: 12px; font-family: var(--font-body); font-size: 15px; font-weight: 600; cursor: pointer; text-decoration: none; border: none; transition: background 0.2s, transform 0.15s; }
-        .btn-retry { background: #f04747; color: #fff; margin-bottom: 12px; }
-        .btn-retry:hover { background: #d13b3b; }
-        .btn-discord { background: var(--blurple); color: #fff; }
-        .btn-discord:hover { background: var(--blurple-strong); }
-        .divider { display: flex; align-items: center; gap: 14px; margin: 14px 0; color: var(--text-muted); font-size: 11px; font-weight: 700; text-transform: uppercase; }
-        .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-        .note { font-size: 12px; color: var(--text-muted); margin-top: 14px; }
-    </style>
+    <meta name="referrer" content="no-referrer">
+    <title>Access Restricted · Disc-Tools</title>
+    <link rel="icon" href="/static/assets/img/logo.svg?v=20261116-live1" type="image/svg+xml">
+    <link rel="stylesheet" href="/static/css/site.css?v=20261116-live1">
+    <link rel="stylesheet" href="/static/css/errors.css?v=20261116-live1">
+    <script src="/static/js/blocked-vpn.js?v=20261116-live1" defer></script>
 </head>
 <body>
-    <div class="blocked-box">
-        <div class="icon"><i class="fa-solid fa-shield-halved"></i></div>
-        <h1>Access Restricted</h1>
-        <p>Our security system detected a VPN, Proxy, or Hosting connection. Access is restricted for these connection types.</p>
-
-        <div class="details">
-            <div class="row"><span class="label">IP Address</span><span class="value" id="ip-addr">-</span></div>
-            <div class="row"><span class="label">Type</span><span class="value" id="conn-type">-</span></div>
-            <div class="row"><span class="label">Provider</span><span class="value" id="provider">-</span></div>
-            <div class="row"><span class="label">ASN</span><span class="value" id="asn">-</span></div>
+    <header class="error-header">
+        <div class="container error-header-inner">
+            <a class="brand" href="/"><img src="/static/assets/img/logo.svg?v=20261116-live1" width="32" height="32" alt="">Disc-Tools</a>
+            <a class="error-status-link" href="https://status.disc-tools.de/#cat-main-site">Service status</a>
         </div>
-
-        <a href="/" class="btn btn-retry"><i class="fa-solid fa-rotate-right"></i> Retry</a>
-
-        <div class="divider">or</div>
-
-        <a href="/api/auth/login?redirect=/success/login/" class="btn btn-discord"><i class="fa-brands fa-discord"></i> Login with Discord</a>
-        <p class="note">Logged-in users are exempt from this check.</p>
-    </div>
-
-    <script>
-        var p = new URLSearchParams(location.search);
-        var map = [['ip-addr','ip'],['conn-type','type'],['provider','provider'],['asn','asn']];
-        map.forEach(function (pair) {
-            document.getElementById(pair[0]).textContent = p.get(pair[1]) || '-';
-        });
-    </script>
-<script defer src="https://umami.disc-tools.de/script.js" data-website-id="0cf82497-80c8-42a2-b6e4-8a8ae179d1fe"></script>
+    </header>
+    <main class="container error-page">
+        <div>
+            <h1>Access restricted</h1>
+            <p class="error-message">Our security system detected a VPN, proxy, or hosting connection. Access is restricted for these connection types.</p>
+            <dl class="error-details">
+                <div><dt>IP address</dt><dd data-connection-detail="ip">—</dd></div>
+                <div><dt>Type</dt><dd data-connection-detail="type">—</dd></div>
+                <div><dt>Provider</dt><dd data-connection-detail="provider">—</dd></div>
+                <div><dt>ASN</dt><dd data-connection-detail="asn">—</dd></div>
+            </dl>
+            <a class="button button-primary" href="/">Retry</a>
+        </div>
+        <nav class="error-links" aria-label="Account and support">
+            <a href="https://disc-tools.de/api/auth/login?redirect=/success/login/">Log in with Discord <span aria-hidden="true">→</span></a>
+            <a href="https://discord.gg/rtRs8rhj5u">Contact support <span aria-hidden="true">→</span></a>
+        </nav>
+    </main>
 </body>
 </html>

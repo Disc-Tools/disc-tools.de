@@ -23,7 +23,7 @@ Disc-Tools is a web app with free utilities, guides and educational content for 
 
 ## Tools
 
-16 utilities in three categories — 14 live, 2 coming soon. Premium tools are marked with 👑 and require a subscription via the [dashboard](https://dash.disc-tools.de/premium).
+16 live utilities. Premium tools are marked with 👑 and require a subscription via the [dashboard](https://dash.disc-tools.de/premium).
 
 **Look things up**
 
@@ -36,7 +36,7 @@ Disc-Tools is a web app with free utilities, guides and educational content for 
 | [Alt Account Lookup](https://disc-tools.de/tools/alt-account-lookup/) 👑 | Alt accounts linked to a user | ✅ Live |
 | [Account Checker](https://disc-tools.de/tools/account-checker/) | Account quality score from age, badges and profile signals | ✅ Live |
 | [Snowflake Decoder](https://disc-tools.de/tools/snowflake-decoder/) | Creation date, worker, process and increment from any ID | ✅ Live |
-| Embed Builder | Design embeds visually, export the ready JSON payload | 🔜 Soon |
+| [Embed Builder](https://disc-tools.de/tools/embed-builder/) | Design embeds visually and export JSON | ✅ Live |
 | [Markdown Generator](https://disc-tools.de/tools/markdown-generator/) | Format messages with live preview and quick copy | ✅ Live |
 | [Timestamp Generator](https://disc-tools.de/tools/timestamp-generator/) | All `<t:>` formats for any date and timezone | ✅ Live |
 | [Color Picker](https://disc-tools.de/tools/color-picker/) | Role colors as HEX, RGB, HSL and integer values | ✅ Live |
@@ -45,7 +45,7 @@ Disc-Tools is a web app with free utilities, guides and educational content for 
 
 | Tool | Description | Status |
 |------|-------------|--------|
-| Webhook Manager | Send messages and delete webhooks without a bot | 🔜 Soon |
+| [Webhook Manager](https://disc-tools.de/tools/webhook-manager/) | Send messages and delete webhooks | ✅ Live |
 | [Emoji Stealer](https://disc-tools.de/tools/emoji-stealer/) | High-quality CDN links for any emoji or sticker | ✅ Live |
 | [Avatar CDN](https://disc-tools.de/tools/avatar-cdn/) | Direct CDN links for any avatar, every size and format | ✅ Live |
 | [Collectibles Inspector](https://disc-tools.de/tools/collectibles-inspector/) | Avatar, banner, decoration, nameplate & clan tag links | ✅ Live |
@@ -58,11 +58,11 @@ Disc-Tools is a web app with free utilities, guides and educational content for 
 - **Learn** (`/learn/`) — guides hub, formatting tips, keyboard shortcuts
 - **Security Articles** (`/security-articles/`) — phishing, token grabbers, account security
 - **Team** (`/team/`) — team members with roles synced from the Discord guild
-- **Partners** (`/partner/`) — partner showcase with request system and admin approval flow
+- **Partners** (`/partners/`) — partner showcase with request system and admin approval flow
 - **Announcements** (`/announcements/`) — site announcements
 - **Premium** (`/premium/`) — subscription info (checkout via dashboard)
-- **Profile** (`/profile/`, `/u/`) — user profile with linked accounts (Spotify, Twitch, GitHub), music embeds, custom links
-- **GIFs** (`/gifs/`) — community GIF gallery with upload, moderation queue and age gate
+- **Profile** (`/profile/`, `/u/`) — signed-in Discord account details
+- **Polls** (`/polls/`) — community votes and discussion
 - **Verify** (`/verify/`) — server verification (VPN check enforced)
 - **Legal** (`/legal/`) — privacy policy, terms of service, imprint
 - **Status** — [status.disc-tools.de](https://status.disc-tools.de)
@@ -71,10 +71,10 @@ Disc-Tools is a web app with free utilities, guides and educational content for 
 
 **Frontend**
 - Vanilla HTML, CSS, JavaScript — no frameworks, no build step
-- Self-hosted fonts (Inter) and Font Awesome icons
-- Service worker for offline caching (generated at deploy time, not tracked in git)
+- Self-hosted fonts (Onest and Space Grotesk) and Font Awesome icons
+- Service worker that retires the old offline cache
 - Open Graph / Twitter Cards / JSON-LD for rich embeds
-- Umami for privacy-friendly analytics
+- Opt-in Umami analytics and Google AdSense controls
 
 **Backend** (`api/`, Node 20+)
 - Express 5, `helmet`, `cors`, `cookie-parser`
@@ -88,7 +88,7 @@ Disc-Tools is a web app with free utilities, guides and educational content for 
 
 ```
 ├── index.html                 # Home page
-├── 404.html                   # Error page
+├── _errors/                   # Custom 4xx and 5xx pages
 ├── about/                     # About page
 ├── announcements/             # Site announcements
 ├── api/                       # Express backend (port 3000)
@@ -101,14 +101,13 @@ Disc-Tools is a web app with free utilities, guides and educational content for 
 │   ├── test/                  # node:test smoke tests
 │   └── uploads/               # runtime uploads (gitignored)
 ├── blocked/                   # Banned / VPN-blocked pages
-├── gifs/                      # GIF gallery
 ├── learn/                     # Learn hub (guides, formatting, shortcuts)
 ├── legal/                     # Privacy policy, ToS, imprint
-├── partner/                   # Partner showcase + request flow
-├── premium/                   # Premium info page
+├── partner/                   # Partner application form
+├── partners/                  # Partner directory
+├── polls/                     # Community polls
 ├── profile/                   # User profile pages
 ├── security-articles/         # Security content
-├── stream-ad/                 # Stream ad page
 ├── success/                   # Post-login/logout pages
 ├── team/                      # Team page
 ├── tips/                      # Formatting + shortcuts (legacy path)

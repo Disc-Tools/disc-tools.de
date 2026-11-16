@@ -68,6 +68,24 @@
         if (e.target.closest('a')) setMenu(false);
     });
 
+    /* Learn dropdown: keep aria-expanded in sync with hover/focus */
+    var dropdown = document.querySelector('.nav-dropdown');
+    var dropdownTrigger = dropdown && dropdown.querySelector(':scope > a[aria-haspopup]');
+    if (dropdown && dropdownTrigger) {
+        var setExpanded = function (open) {
+            dropdownTrigger.setAttribute('aria-expanded', String(open));
+        };
+        var syncExpanded = function () {
+            setExpanded(dropdown.matches(':hover, :focus-within'));
+        };
+        dropdown.addEventListener('mouseenter', syncExpanded);
+        dropdown.addEventListener('mouseleave', syncExpanded);
+        dropdown.addEventListener('focusin', syncExpanded);
+        dropdown.addEventListener('focusout', function () {
+            window.requestAnimationFrame(syncExpanded);
+        });
+    }
+
     /* Number Ticker (Hero-Stats) */
     var statNums = Array.prototype.slice.call(document.querySelectorAll('.stat-num[data-count]'));
     var reduceMotion = window.matchMedia &&
