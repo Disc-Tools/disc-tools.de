@@ -332,9 +332,8 @@
 
         // Links: [label](https://...)
         text = text.replace(/\[([^\]]+?)\]\((https?:\/\/[^\s\)]+)\)/g, function (m, label, url) {
-            var href = url.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'");
-            var hrefEsc = esc(href);
-            return '<a href="' + hrefEsc + '" target="_blank" rel="noopener">' + label + '</a>';
+            // The URL and label have already been escaped by the renderer.
+            return '<a href="' + url + '" target="_blank" rel="noopener">' + label + '</a>';
         });
 
         // Spoiler: ||...|| (non-greedy, allow spaces)
@@ -375,9 +374,13 @@
             return;
         }
         var html = renderDiscordMarkdown(val);
-        const template = document.createElement('template');
-        template.innerHTML = html;
-        for (const node of template.content.querySelectorAll('*')) {
+        const fragment = DOMPurify.sanitize(html, {
+            RETURN_DOM_FRAGMENT: true,
+            ALLOWED_TAGS: ['a', 'blockquote', 'br', 'code', 'del', 'div', 'em', 'i', 'pre', 'span', 'strong', 'u'],
+            ALLOWED_ATTR: ['class', 'title', 'aria-hidden', 'tabindex', 'style', 'href'],
+            ALLOW_DATA_ATTR: false
+        });
+        for (const node of fragment.querySelectorAll('*')) {
             if (node.namespaceURI !== 'http://www.w3.org/1999/xhtml' ||
                 !node.matches('a, blockquote, br, code, del, div, em, i, pre, span, strong, u')) {
                 node.remove();
@@ -396,7 +399,7 @@
                 node.rel = 'noopener noreferrer';
             }
         }
-        preview.replaceChildren(template.content);
+        preview.replaceChildren(fragment);
 
         // Attach spoiler toggle
         var spoilers = preview.querySelectorAll('.mg-spoiler');
